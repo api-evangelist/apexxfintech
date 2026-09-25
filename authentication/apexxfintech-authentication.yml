@@ -1,0 +1,17 @@
+generated: '2026-09-25'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://sandbox.apexx.global/atomic/redoc/api/doc#operation/hostedTokenUsingPOST
+sources:
+- https://sandbox.apexx.global/atomic/redoc/api/doc#operation/hostedTokenUsingPOST
+- https://sandbox.apexx.global/atomic/redoc/api/doc
+description: Authentication is managed using an API key, which is provided to you. Every HTTP call to our API should contain a custom header called
+  X-APIKEY. The value of this header must be the API key.
+schemes:
+- type: apiKey
+  name: X-APIKEY
+  evidence: Authentication is managed using an API key, which is provided to you. Every HTTP call to our API should contain a custom header called
+    X-APIKEY. The value of this header must be the API key.
+  location: header
+  header: X-APIKEY
+docs: https://sandbox.apexx.global/atomic/redoc/api/doc#operation/hostedTokenUsingPOST

@@ -1,0 +1,210 @@
+generated: '2026-09-25'
+method: derived
+generator: derive-mcp-candidate.py
+source:
+- openapi/_original/apexxfintech-openapi.json
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: probed
+note: 'No MCP server was found. The pre-flight posted tools/list to /mcp on api.apexx.global, apexx.global, sandbox.apexx.global, support.apexx.global;
+  verdict opaque (https://sandbox.apexx.global/mcp answered 403: the edge authenticates before it routes, which proves nothing either way). Candidate
+  tools below are derived from the 39 operation(s) in the provider''s own OpenAPI (39 listed); they describe what a server WOULD expose, not one
+  that exists.'
+tools:
+- name: three_ds_verify_auth_using_post
+  operationId: threeDsVerifyAuthUsingPOST
+  method: POST
+  path: /api/3ds/authenticate
+  description: 3DS Verify Authentication Request
+- name: check_bin_using_post
+  operationId: checkBinUsingPOST
+  method: POST
+  path: /api/bincheck
+  description: Validate BIN
+- name: cancel_hosted_request_using_post
+  operationId: cancelHostedRequestUsingPOST
+  method: POST
+  path: '/api/cancel-hosted/{id} '
+  description: Voids a hosted transaction
+- name: cancel_request_using_post
+  operationId: cancelRequestUsingPOST
+  method: POST
+  path: /api/cancel/{cancelType}/{id}
+  description: Voids an authorised transaction
+- name: cancel_capture_request_using_post
+  operationId: cancelCaptureRequestUsingPOST
+  method: POST
+  path: '/api/cancel/{cancelType}/{id} '
+  description: Voids a captured transaction
+- name: cancel_refund_request_using_post
+  operationId: cancelRefundRequestUsingPOST
+  method: POST
+  path: '/api/cancel/{cancelType}/{id}  '
+  description: Voids a refund transaction
+- name: capture_request_using_post
+  operationId: captureRequestUsingPOST
+  method: POST
+  path: /api/capture/{transactionId}
+  description: Capture an authorised transaction
+- name: paypal_complet_order_using_post
+  operationId: paypalCompletOrderUsingPOST
+  method: POST
+  path: '/api/complete_order/{transactionId}           '
+  description: Paypal Complete Order
+- name: create_credit_transaction_using_post
+  operationId: createCreditTransactionUsingPOST
+  method: POST
+  path: /api/creditTransaction
+  description: Create a new Credit transaction
+- name: cancel_credit_transaction_using_put
+  operationId: cancelCreditTransactionUsingPUT
+  method: PUT
+  path: /api/creditTransaction/cancel/{transactionId}
+  description: Voids the created credit transactions
+- name: encrypted_payload_using_post
+  operationId: EncryptedPayloadUsingPOST
+  method: POST
+  path: '/api/encryptedpayload        '
+  description: Get Encrypted Payload
+- name: paypal_sdk_payment_request_using_post
+  operationId: paypalSdkPaymentRequestUsingPOST
+  method: POST
+  path: '/api/encryptedpayload           '
+  description: Paypal SDK Payment
+- name: after_pay_payment_request_using_post
+  operationId: afterPayPaymentRequestUsingPOST
+  method: POST
+  path: '/api/payment '
+  description: AfterPay Payment
+- name: encrypted_card_transaction_using_post
+  operationId: encryptedCardTransactionUsingPOST
+  method: POST
+  path: '/api/payment  '
+  description: Encrypted Card Transaction
+- name: authorize_payment_request_using_post
+  operationId: authorizePaymentRequestUsingPOST
+  method: POST
+  path: '/api/payment   '
+  description: Authorises Payment Request.
+- name: apple_pay_payment_request_using_post
+  operationId: applePayPaymentRequestUsingPOST
+  method: POST
+  path: '/api/payment    '
+  description: ApplePay Payment
+- name: googplepay_payment_using_post
+  operationId: googplepayPaymentUsingPOST
+  method: POST
+  path: '/api/payment      '
+  description: GooglePay Payment
+- name: dragon_pay_payment_using_post
+  operationId: dragonPayPaymentUsingPOST
+  method: POST
+  path: '/api/payment          '
+  description: Dragonpay Payment
+- name: validate_bnplhosted_using_post
+  operationId: validateBNPLHostedUsingPOST
+  method: POST
+  path: '/api/payment/bnpl '
+  description: Create Order
+- name: hosted_pay_using_post
+  operationId: hostedPayUsingPOST
+  method: POST
+  path: '/api/payment/hosted '
+  description: Hosted Payment Request.
+- name: hosted_pay_direct_debit_using_post
+  operationId: hostedPayDirectDebitUsingPOST
+  method: POST
+  path: '/api/payment/hosted  '
+  description: Hosted DirectDebit Request.
+- name: paypal_payment_request_using_post
+  operationId: paypalPaymentRequestUsingPOST
+  method: POST
+  path: '/api/payment/hosted   '
+  description: Paypal Payment
+- name: ppro_bancontact_payment_using_post
+  operationId: pproBancontactPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted    '
+  description: Ppro Bancontact Payment
+- name: hosted_pay_open_banking_using_post
+  operationId: hostedPayOpenBankingUsingPOST
+  method: POST
+  path: '/api/payment/hosted      '
+  description: Hosted Open Banking Request.
+- name: ppro_blik_payment_using_post
+  operationId: pproBlikPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted       '
+  description: Ppro Blik Payment
+- name: ppro_giro_payment_using_post
+  operationId: pproGiroPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted        '
+  description: Ppro Giropay Payment
+- name: ppro_ideal_payment_using_post
+  operationId: pproIdealPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted         '
+  description: Ppro Ideal Payment
+- name: ppro_pix_payment_using_post
+  operationId: pproPixPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted            '
+  description: Ppro Pix Payment
+- name: paysafe_skrill_payment_using_post
+  operationId: paysafeSkrillPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted             '
+  description: Paysafe Skrill Payment
+- name: paysafe_card_payment_using_post
+  operationId: paysafeCardPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted              '
+  description: Paysafecard Payment
+- name: antom_payment_using_post
+  operationId: antomPaymentUsingPOST
+  method: POST
+  path: '/api/payment/hosted                '
+  description: Antom Payment
+- name: hosted_payment_select_using_post
+  operationId: hostedPaymentSelectUsingPOST
+  method: POST
+  path: /api/payment/hosted/select
+  description: Payment Selector Request
+- name: refund_request_using_post
+  operationId: refundRequestUsingPOST
+  method: POST
+  path: /api/refund/{transactionId}
+  description: Refund a captured transaction
+- name: create_token_using_post
+  operationId: createTokenUsingPOST
+  method: POST
+  path: /api/token
+  description: Token Creation
+- name: create_encrypted_card_token_using_post
+  operationId: createEncryptedCardTokenUsingPOST
+  method: POST
+  path: '/api/token '
+  description: Create Encrypted Card Token
+- name: hosted_token_using_post
+  operationId: hostedTokenUsingPOST
+  method: POST
+  path: /api/token/hosted
+  description: hostedTokenPage
+- name: delete_token_using_delete
+  operationId: deleteTokenUsingDELETE
+  method: DELETE
+  path: /api/token/{cardToken}
+  description: Token Deactivation
+- name: retrieve_by_merchant_ref_using_get
+  operationId: retrieveByMerchantRefUsingGET
+  method: GET
+  path: /api/transaction/organisation/{merchantReference}
+  description: Get Transaction By Organisation and Merchant Reference
+- name: get_transaction_using_get
+  operationId: getTransactionUsingGET
+  method: GET
+  path: /api/transaction/{transactionId}
+  description: Get transaction details By Id

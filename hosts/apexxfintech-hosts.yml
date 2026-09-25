@@ -1,0 +1,86 @@
+generated: '2026-09-25'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 5
+  own: 0
+  other_domain: 4
+  platform: 1
+  roles:
+  - api
+  - docs
+  - marketing
+  - support
+  - website
+hosts:
+- host: apexx.global
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Blog
+  - TermsOfService
+  - PrivacyPolicy
+  serves:
+  - docs
+  - hosting
+  vendor: netlify
+  registrable_domain: apexx.global
+  role: marketing
+  relation: other-domain
+- host: api.apexx.global
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: apexx.global
+  role: api
+  relation: other-domain
+- host: equityzen.com
+  found_by:
+  - pointer
+  - vendor-detect
+  types:
+  - Website
+  serves:
+  - cdn
+  vendor: akamai
+  registrable_domain: equityzen.com
+  role: website
+  relation: platform
+- host: sandbox.apexx.global
+  found_by:
+  - pointer
+  - probed
+  - docs-index
+  - spec-found
+  - contract-discovery
+  - well-known
+  types:
+  - APIReference
+  serves:
+  - docs
+  - spec
+  registrable_domain: apexx.global
+  role: docs
+  relation: other-domain
+- host: support.apexx.global
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Support
+  serves:
+  - support
+  vendor: freshdesk
+  registrable_domain: apexx.global
+  role: support
+  relation: other-domain

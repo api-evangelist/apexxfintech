@@ -1,23 +1,92 @@
 aid: apexxfintech
+
 name: Apexxfintech
-description: 'Apexxfintech is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+
+description: Apexxfintech provides a cloud‑native payment orchestration platform that consolidates global payment providers into a single integration
+  point. It offers intelligent routing, cost routing, decline cascading, network tokenisation, and a suite of APIs for merchants to optimise transaction
+  processing, reduce costs, and improve acceptance rates across multiple regions and payment methods.
+
 url: https://raw.githubusercontent.com/api-evangelist/apexxfintech/refs/heads/main/apis.yml
+
+website: https://apexx.global
+
 x-type: company
+
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-25 (modular-v1; was harvest)
+
 specificationVersion: '0.20'
+
 created: '2026-09-25'
+
 modified: '2026-09-25'
+
 tags:
 - Company
-apis: []
+- Payments
+- Fintech
+- API
+- Orchestration
+- Global
+
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
 common:
+- type: Spectral
+  url: rules/apexxfintech-rules.yml
+- type: Vocabulary
+  url: vocabulary/apexxfintech-vocabulary.yml
+- type: DataModel
+  url: data-model/apexxfintech-data-model.yml
+- type: Authentication
+  url: authentication/apexxfintech-authentication.yml
+- type: ErrorCatalog
+  url: errors/apexxfintech-problem-types.yml
+- type: Conformance
+  url: conformance/apexxfintech-conformance.yml
+- type: Hosts
+  url: hosts/apexxfintech-hosts.yml
+- type: Vendors
+  url: vendors/apexxfintech-vendors.yml
+- type: DomainSecurity
+  url: security/apexxfintech-domain-security.yml
 - type: Website
   url: https://equityzen.com/company/apexxfintech
+- type: APIReference
+  url: https://sandbox.apexx.global/atomic/redoc/api/doc
+- type: Blog
+  url: https://apexx.global/blog
+- type: TermsOfService
+  url: https://apexx.global/terms-and-conditions/
+- type: PrivacyPolicy
+  url: https://apexx.global/privacy-policy/
+- type: Support
+  url: https://support.apexx.global/support/home/
+
+apis:
+- name: Apexx API
+  description: Apexx provides a payment orchestration platform with APIs for merchants.
+  humanURL: https://apexx.global
+  baseURL: null
+  aid: apexxfintech:apexx-api
+
+x-coverage:
+  state: unreadable
+  reason: no-machine-readable-spec
+  method: derived
+  generated: '2026-09-25'
+  generator: derive-coverage.py (pre-flight evidence)
+  detail: the company publishes developer documentation but serves no machine-readable contract from it
+  evidence: apexx.global
+x-enrichment:
+  date: '2026-09-25'
+  status: enriched
+  artifacts_added: 14
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local

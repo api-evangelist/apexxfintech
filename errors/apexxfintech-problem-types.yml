@@ -1,0 +1,49 @@
+generated: '2026-09-25'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/_original/apexxfintech-openapi.json
+format: custom
+envelope:
+  media_type: null
+  schema: FailureResponseDTO
+coverage:
+  operations: 39
+  statuses_declared: 6
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad / Invalid request
+  operations: 39
+  media_types: []
+  schema: FailureResponseDTO
+- status: 401
+  title: Unauthorized
+  description: Unauthenticated user / missing API Key
+  operations: 39
+  media_types: []
+  schema: FailureResponseDTO
+- status: 403
+  title: Forbidden
+  description: Forbidden error
+  operations: 35
+  media_types: []
+  schema: FailureResponseDTO
+- status: 412
+  title: Precondition Failed
+  description: Processing Errors
+  operations: 27
+  media_types: []
+  schema: ThreeDsAuthenticationFailResponse
+- status: 500
+  title: Internal Server Error
+  description: Internal Server Error / Unexpected Error
+  operations: 39
+  media_types: []
+  schema: FailureResponseDTO
+- status: 503
+  title: Service Unavailable
+  description: Service Unavailable
+  operations: 36
+  media_types: []
+  schema: FailureResponseDTO

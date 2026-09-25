@@ -1,0 +1,32 @@
+generated: '2026-09-25'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/_original/apexxfintech-openapi.json
+vocabulary:
+  name: Apexxfintech Domain Vocabulary
+  description: 'Terms declared by Apexxfintech''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-09-25'
+  terms:
+  - term: SDK
+    definition: JavaScript SDK Integration 1.0.0 The Apexx Payment Integration SDK is a comprehensive solution designed to streamline payment
+      processing for merchants by integrating multiple payment methods into a single, unified platform. With support for providers like PayPal,
+      Volt, and others, the SDK enables merchants to offer their customers a diverse range of payment options while ensuring seamless manageme
+    tags:
+    - Resource Group
+    source: openapi/_original/apexxfintech-openapi.json
+  - term: SERVER-SIDE ENCRYPTION
+    definition: Server Side Encryption Controller
+    tags:
+    - Resource Group
+    source: openapi/_original/apexxfintech-openapi.json
+  - term: Hosted Token
+    definition: Hosted Token Controller
+    tags:
+    - Resource Group
+    source: openapi/_original/apexxfintech-openapi.json
+  - term: Buy Now Pay Later
+    definition: BNPL Controller
+    tags:
+    - Resource Group
+    source: openapi/_original/apexxfintech-openapi.json
