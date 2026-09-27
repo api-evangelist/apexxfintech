@@ -1,0 +1,1608 @@
+openapi: 3.2.0
+info:
+  description: '# Using the API
+
+
+    ## Authentication
+
+    Authentication is managed using an API key, which is provided to you.'
+  version: '2.0'
+  title: APEXX FINTECH Transaction Update API
+  license:
+    name: Apexx Fintech Ltd
+    url: https://www.apexxfintech.com/legal-documentation/
+servers:
+- url: https://sandbox.apexx.global/atomic/v1/
+tags:
+- name: Transaction Update
+paths:
+  '/api/cancel-hosted/{id} ':
+    post:
+      tags:
+      - Transaction Update
+      summary: Voids a hosted transaction
+      description: To cancel a hosted transaction, use the id received in the hosted response
+      operationId: cancelHostedRequestUsingPOST
+      parameters:
+      - name: id
+        in: path
+        description: Id for cancel hosted request
+        required: true
+        schema:
+          type: string
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedCancelResponseDto'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+  /api/cancel/{cancelType}/{id}:
+    post:
+      tags:
+      - Transaction Update
+      summary: Voids an authorised transaction
+      description: To cancel an authorised transaction, use the id received in the authorisation request
+      operationId: cancelRequestUsingPOST
+      parameters:
+      - name: cancelType
+        in: path
+        description: Cancel Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - payment
+          - capture
+          - refund
+          - mandate
+          - deposit
+          - drawdown
+      - name: id
+        in: path
+        description: Id for cancel request
+        required: true
+        schema:
+          type: string
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CancelResponseDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CancelProcessingErrorResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelRequestDTO'
+        description: ' '
+  '/api/cancel/{cancelType}/{id} ':
+    post:
+      tags:
+      - Transaction Update
+      summary: Voids a captured transaction
+      description: To cancel a captured transaction, use the id received in the capture request
+      operationId: cancelCaptureRequestUsingPOST
+      parameters:
+      - name: cancelType
+        in: path
+        description: Cancel Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - payment
+          - capture
+          - refund
+      - name: id
+        in: path
+        description: Id for capture request
+        required: true
+        schema:
+          type: string
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CancelResponseDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CancelProcessingErrorResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelCaptureRequestRedocDTO'
+        description: ' '
+  '/api/cancel/{cancelType}/{id}  ':
+    post:
+      tags:
+      - Transaction Update
+      summary: Voids a refund transaction
+      description: To cancel a refunded transaction, use the id received in the refund request
+      operationId: cancelRefundRequestUsingPOST
+      parameters:
+      - name: cancelType
+        in: path
+        description: Cancel Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - payment
+          - capture
+          - refund
+      - name: id
+        in: path
+        description: Id for cancel request
+        required: true
+        schema:
+          type: string
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CancelResponseDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CancelProcessingErrorResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelRefundRequestRedocDTO'
+        description: ' '
+  /api/capture/{transactionId}:
+    post:
+      tags:
+      - Transaction Update
+      summary: Capture an authorised transaction
+      description: CAPTURED can be treated as a final state for the majority of connections where settlement ingestion is unavailable.
+      operationId: captureRequestUsingPOST
+      parameters:
+      - name: transactionId
+        in: path
+        description: The ID of the transaction
+        required: true
+        schema:
+          type: string
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CaptureResponseDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProcessingErrorResponseCaptureDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaptureRequestDTO'
+        description: ' '
+  /api/refund/{transactionId}:
+    post:
+      tags:
+      - Transaction Update
+      summary: Refund a captured transaction
+      description: Refunds, including partial refunds, are supported for transactions in CAPTURED status
+      operationId: refundRequestUsingPOST
+      parameters:
+      - name: transactionId
+        in: path
+        description: The ID of the transaction
+        required: true
+        schema:
+          type: string
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RefundResponseDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProcessingErrorResponseRefundDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequestDTO'
+        description: ' '
+components:
+  schemas:
+    SubscriptionPaymentScheduleDTO:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date on which customer would be charge against the mandate.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. This is a 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        schedule_amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+    FailureResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+        message:
+          type: string
+          description: A description of the response.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        errors:
+          type: array
+          description: Details of each error occured.
+          items:
+            $ref: '#/components/schemas/Errors'
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+    PspInformation:
+      type: object
+      properties:
+        routing_sequence_id:
+          type: integer
+          format: int32
+        psp_id:
+          type: string
+          description: The ID of the payment service provider.
+        psp_name:
+          type: string
+          description: The name of the payment service provider as setup within the APEXX payment gateway.
+        apexx_name:
+          type: string
+          description: Name of the psp as setup within the APEXX payment gateway.
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        cascading_acquirer:
+          type: string
+          description: The name of the acquirer which declined/authorised the cascaded transaction.
+        organisation_psp_name:
+          type: string
+          description: The name of the processor as setup within the APEXX payment gateway. i.e. Merchant Name - Acquirer Name.
+        transport_method:
+          type: string
+        start_time_stamp:
+          type: string
+        end_time_stamp:
+          type: string
+        ellapsed_time:
+          type: string
+        status:
+          type: string
+          description: The status of the transaction as provided by the psp.
+        sub_status:
+          type: string
+        time_out:
+          type: integer
+          format: int32
+        response_code:
+          type: string
+          description: The response code received from the payment service provider for the transaction.
+        response_message:
+          type: string
+          description: The response message received from the payment service provider for the transaction.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PspErrorDTO'
+        mid_country:
+          type: string
+          description: The country setup for the “mid” used to process the transaction as setup within the APEXX payment gateway.
+        psp_transaction_reference:
+          type: string
+          description: The unique id provided by the payment service provider for the transaction.
+        category_code:
+          type: string
+        category_message:
+          type: string
+        reconciliation_id:
+          type: string
+          description: Reference number for the transaction generated by the PSP or Acquirer to provide end to end traceability for reconciliation purposes. Only supported by some PSP or Acquirers. Please speak to your implementation number to understand more.
+    CaptureResponseDTO:
+      type: object
+      required:
+      - merchant_reference
+      properties:
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        authorization_code:
+          type: string
+          description: An authorisation code assigned by the processing platform
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        captured_amount:
+          type: number
+          description: Total amount captured
+        authorized_amount:
+          type: number
+          description: Total amount authorised
+        remaining_authorized_amount:
+          type: number
+          description: Total authorised remaining amount of order.
+        capture_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        last_status_update:
+          type: string
+          description: The last time when the status of the transaction was updated
+        final_capture:
+          type: string
+          description: Indicates whether you can make additional captures against the authorised payment. Set to true if you do not intend to capture additional payments against the authorisation. Set to false if you intend to capture additional payments against the authorisation.
+        psp_info:
+          description: PSP Information.
+          $ref: '#/components/schemas/PspInformation'
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - AUTHORISED
+          - CAPTURED
+          - DECLINED
+        direct_debit:
+          description: Direct Debit specific Object
+          $ref: '#/components/schemas/DirectDebit'
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        request_id:
+          type: string
+          description: Unique Id for each request.
+        duplicate_check:
+          type: string
+          description: This is the duplicate check of request, 'true' in case of request is duplicate
+        response_code:
+          type: string
+          description: Response code is sent only when the source of the response looks suspicious. In this case Apexx immediately cancels the transaction placed with the gateway.
+        response_message:
+          type: string
+          description: A description of the response_code.
+    RefundCustomerDetailsDTO:
+      type: object
+      properties:
+        customer_id:
+          type: string
+          description: The customer_id of recipient's
+    DirectDebit:
+      type: object
+      required:
+      - dd_capture_reference
+      properties:
+        dd_capture_reference:
+          type: string
+          description: ' A reference specified by the merchant to identify the capture. This is mandatory only when direct debit block is present'
+        settlement_date:
+          type: string
+          description: Future date by which settlement request should be done. If this is too early in time, it will be postponed to the earliest payment Date.
+        customer_id:
+          type: string
+          description: Unique ID of the customer.
+    RefundResponseDTO:
+      type: object
+      required:
+      - amount
+      - merchant_reference
+      properties:
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - REFUNDED
+          - DECLINED
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        amount:
+          type: number
+          description: The amount to be refunded.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        authorization_code:
+          type: string
+          description: An authorisation code assigned by the processing platform
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        total_refunded_amount:
+          type: number
+          description: Total amount refunded
+        total_captured_amount:
+          type: number
+          description: Total amount captured
+        total_authorised_amount:
+          type: number
+          description: Total amount authorised
+        transaction:
+          type: string
+          description: The ID of the authorised transaction
+        last_status_update:
+          type: string
+          description: The last time when the status of the transaction was updated
+        reason:
+          type: string
+          description: The reason for the refund
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        capture_id:
+          type: string
+          description: This is the unique capture identifier returned in the capture API as _id. Capture Id is a mandatory field for partial captures.
+        refund_numbers:
+          type: array
+          description: This is the unique capture identifier returned in the capture API as _id. Capture Id is a mandatory field for partial captures.
+          items:
+            type: string
+        psp_info:
+          description: PSP Information.
+          $ref: '#/components/schemas/PspInformation'
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        request_id:
+          type: string
+          description: Unique Id for each request.
+        duplicate_check:
+          type: string
+          description: This is the duplicate check of request, 'true' in case of request is duplicate
+        response_code:
+          type: string
+          description: Response code is sent only when the source of the response looks suspicious. In this case Apexx immediately cancels the transaction placed with the gateway.
+        response_message:
+          type: string
+          description: A description of the response_code.
+    CancelRequestDTO:
+      type: object
+      properties:
+        cancel_reference:
+          type: string
+          description: 'Only supported by some acquirers.
+
+
+            A reference specified by the merchant to identify the cancel. This field must be unique per cancel.'
+        cancel_time:
+          type: string
+          format: date-time
+          description: Date and time of the request. Format - YYYY-MM-DD HH:mm:ss.
+        duplicate_check:
+          type: string
+          description: 'Only supported by some acquirers.
+
+
+            This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.'
+    CancelResponseDTO:
+      type: object
+      required:
+      - amount
+      - merchant_reference
+      properties:
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - CANCELLED
+          - DECLINED
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        authorization_code:
+          type: string
+          description: An authorisation code assigned by the processing platform
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        cancelled_amount:
+          type: number
+          description: Total amount cancelled
+        captured_amount:
+          type: number
+          description: Total amount captured
+        authorized_amount:
+          type: number
+          description: Total amount authorised
+        psp_info:
+          description: PSP Information.
+          $ref: '#/components/schemas/PspInformation'
+        last_status_update:
+          type: string
+          description: The last time when the status of the transaction was updated
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        request_id:
+          type: string
+          description: Unique Id for each request.
+        duplicate_check:
+          type: string
+          description: This is the duplicate check of request, 'true' in case of request is duplicate
+        response_code:
+          type: string
+          description: Response code is sent only when the source of the response looks suspicious. In this case Apexx immediately cancels the transaction placed with the gateway.
+        response_message:
+          type: string
+          description: A description of the response_code.
+    ProcessingErrorResponseCaptureDTO:
+      type: object
+      required:
+      - merchant_reference
+      properties:
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        authorization_code:
+          type: string
+          description: An authorisation code assigned by the processing platform
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        captured_amount:
+          type: number
+          description: Total amount captured
+        authorized_amount:
+          type: number
+          description: Total amount authorised
+        remaining_authorized_amount:
+          type: number
+          description: Total authorised remaining amount of order.
+        capture_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        last_status_update:
+          type: string
+          description: The last time when the status of the transaction was updated
+        final_capture:
+          type: string
+          description: Indicates whether you can make additional captures against the authorised payment. Set to true if you do not intend to capture additional payments against the authorisation. Set to false if you intend to capture additional payments against the authorisation.
+        psp_info:
+          description: PSP Information.
+          $ref: '#/components/schemas/PspInformation'
+        direct_debit:
+          description: Direct Debit specific Object
+          $ref: '#/components/schemas/DirectDebit'
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        status:
+          type: string
+          enum:
+          - FAILED
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        request_id:
+          type: string
+          description: Unique Id for each request.
+        duplicate_check:
+          type: string
+          description: This is the duplicate check of request, 'true' in case of request is duplicate
+        response_code:
+          type: string
+          description: Response code is sent only when the source of the response looks suspicious. In this case Apexx immediately cancels the transaction placed with the gateway.
+        response_message:
+          type: string
+          description: A description of the response_code.
+    CancelRefundRequestRedocDTO:
+      type: object
+      properties:
+        cancel_refund_reference:
+          type: string
+          description: A reference specified by the merchant to identify the cancel. This field must be unique per refund.
+        duplicate_check:
+          type: string
+          description: 'Only supported by some acquirers.
+
+
+            This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.'
+    HostedCancelResponseDto:
+      type: object
+      required:
+      - amount
+      - merchant_reference
+      properties:
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - CANCELLED
+    FlightDetails:
+      type: object
+      properties:
+        carrier_code:
+          type: string
+          description: Travel carrier code
+        flight_number:
+          type: integer
+          format: int32
+          description: Flight number excluding carrier code.
+        origin_airport:
+          type: string
+          description: Origin airport/city IATA code.
+        origin_city:
+          type: string
+          description: Origin city name.
+        service_class:
+          type: string
+          description: Ticket category/class (“0” if no class).
+          enum:
+          - economy
+          - premium economy
+          - business class
+          - first class
+          - '0'
+        stop_over_code:
+          type: string
+          description: 'Stop over code -
+
+
+            O (capital letter "O") or 0 (zero) : Stopover allowed
+
+
+            X (capital letter "X") or 1 : Stopover not allowed'
+          enum:
+          - X
+          - O
+          - '1'
+          - '0'
+        departure_date:
+          type: string
+          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
+        destination_airport:
+          type: string
+          description: Destination airport/city IATA code.
+        destination_city:
+          type: string
+          description: Destination city name
+        fare_basis_code:
+          type: string
+          description: Fare basis code
+        departure_tax_amount:
+          type: integer
+          format: int32
+          description: Amount of departure tax for this leg of the trip.
+        conjunction_ticket:
+          type: string
+          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments.
+        exchange_ticket_number:
+          type: string
+          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
+        coupon_number:
+          type: string
+          description: Coupon number for the leg
+        endorsements_restrictions:
+          type: string
+          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
+        total_fare_amount:
+          type: integer
+          format: int32
+          description: Total fare for this leg of the trip.
+        fee_amount:
+          type: integer
+          format: int32
+          description: Fee for this leg of the trip, such as an airport fee or country fee.
+        tax_amount:
+          type: integer
+          format: int32
+          description: Tax for this leg of the trip.
+    CancelCaptureRequestRedocDTO:
+      type: object
+      properties:
+        cancel_capture_reference:
+          type: string
+          description: A reference specified by the merchant to identify the cancel. This field must be unique per capture.
+        duplicate_check:
+          type: string
+          description: 'Only supported by some acquirers.
+
+
+            This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.'
+    AchCaptureRequestDTO:
+      type: object
+      properties:
+        payment_method:
+          type: string
+          description: Payment processor to process the payment
+          enum:
+          - trustly
+    airlineData:
+      type: object
+      properties:
+        pnr:
+          type: string
+          description: Reference number for the airline booking. Required if ticket numbers are not issued.
+        airline_name:
+          type: string
+          description: Name of the airline.
+        agency:
+          description: Agency
+          $ref: '#/components/schemas/Agency'
+        airline_numeric_code:
+          type: integer
+          format: int32
+          description: Airline numeric code
+        ticket_number:
+          type: string
+          description: Ticket/document number, or PNR locator code.
+        check_digit:
+          type: integer
+          format: int32
+          description: 'Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:
+
+
+            1. The value is numeric.
+
+            2. The first three digits are a valid IATA2 license plate carrier code.
+
+            3. The last digit is a check digit or zero (0).
+
+            4. All remaining digits are nonzero.'
+        is_restricted:
+          type: string
+          description: " Flag that indicates whether or not the ticket is restricted (nonrefundable). \ntrue - Restricted (nonrefundable). false - No restriction (refundable)."
+          enum:
+          - 'true'
+          - 'false'
+        transaction_type:
+          type: string
+          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
+          enum:
+          - '01'
+          - '02'
+        extended_payment_code:
+          type: string
+          description: 'Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+
+            '
+        passenger_title:
+          type: string
+          description: Title of the passenger.
+        passenger_name:
+          type: string
+          description: 'Name of passenger.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘)).'
+        passenger_age_group:
+          type: string
+          description: Travelling passenger's age group.
+        is_lead:
+          type: string
+          description: Indicates whether the passenger is a lead passenger within the group.
+          enum:
+          - 'true'
+          - 'false'
+        customer_code:
+          type: string
+          description: '1. Reference number or code that identifies the cardholder.
+
+            2. Code provided by the cardholder.
+
+            3. Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.
+
+            4. Customer reference..'
+        document_type:
+          type: integer
+          format: int32
+          description: Airline document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
+        document_number:
+          type: string
+          description: Ticket number or a value that might be a booking reference number.
+        travel_legs_count:
+          type: integer
+          format: int32
+          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        invoice_date:
+          type: string
+          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
+        additional_charge_description:
+          type: string
+          description: Description of the charge.
+        total_fee_amount:
+          type: integer
+          format: int32
+          description: Total fee for the ticket.
+        clearing_sequence:
+          type: integer
+          format: int32
+          description: Total number of captures when requesting multiple partial captures for one authorization.
+        clearing_count:
+          type: integer
+          format: int32
+          description: Total number of clearing count associated with the authorization request.
+        total_clearing_count:
+          type: integer
+          format: int32
+        passenger_count:
+          type: integer
+          format: int32
+          description: Number of passengers for whom the ticket was issued.
+        reservation_system_code:
+          type: string
+          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
+        process_identifier:
+          type: string
+          description: Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+        issue_date:
+          type: string
+          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
+        is_eticket:
+          type: string
+          description: Indicates whether the issued ticket was electronic or not.
+          enum:
+          - 'true'
+          - 'false'
+        original_ticket_number:
+          type: string
+          description: Original ticket number when the transaction is for a replacement ticket.
+        purchase_type:
+          type: string
+          description: 'Type of purchase
+
+            EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket'
+          enum:
+          - EXC
+          - MSC
+          - REF
+          - TKT
+        credit_reason:
+          type: string
+          description: 'Reason for the credit.A: Cancellation of the ancillary passenger transport purchase,
+
+            B: Cancellation of the airline ticket and the passenger transport ancillary purchase,
+
+            C: Cancellation of the airline ticket,
+
+            O: Other,
+
+            P: Partial refund of the airline ticket.'
+          enum:
+          - A
+          - B
+          - C
+          - O
+          - P
+        ticket_change_indicator:
+          type: string
+          description: 'Type of update.C: Change to the existing ticket., N: New ticket.'
+          enum:
+          - C
+          - N
+        plan_number:
+          type: string
+          description: Plan number based on the fare. This value is provided by the airline.
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        restricted_ticket_description:
+          type: string
+          description: Text that describes the ticket limitations, such as nonrefundable.
+        exchange_ticket_amount:
+          type: integer
+          format: int32
+          description: Amount of the exchanged ticket.
+        exchange_ticket_fee_amount:
+          type: integer
+          format: int32
+          description: Fee for exchanging the ticket.
+        reservation_type:
+          type: string
+          description: Type of journey such as one way or round trip.
+        boarding_fee_amount:
+          type: string
+          description: Boarding fee.
+        issuer_city:
+          type: string
+          description: City of the issuer
+        legs:
+          type: array
+          description: Leg
+          items:
+            $ref: '#/components/schemas/FlightDetails'
+    CancelProcessingErrorResponseDTO:
+      type: object
+      required:
+      - amount
+      - merchant_reference
+      properties:
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        authorization_code:
+          type: string
+          description: An authorisation code assigned by the processing platform
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        cancelled_amount:
+          type: number
+          description: Total amount cancelled
+        captured_amount:
+          type: number
+          description: Total amount captured
+        authorized_amount:
+          type: number
+          description: Total amount authorised
+        psp_info:
+          description: PSP Information.
+          $ref: '#/components/schemas/PspInformation'
+        last_status_update:
+          type: string
+          description: The last time when the status of the transaction was updated
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        status:
+          type: string
+          enum:
+          - FAILED
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        request_id:
+          type: string
+          description: Unique Id for each request.
+        duplicate_check:
+          type: string
+          description: This is the duplicate check of request, 'true' in case of request is duplicate
+        response_code:
+          type: string
+          description: Response code is sent only when the source of the response looks suspicious. In this case Apexx immediately cancels the transaction placed with the gateway.
+        response_message:
+          type: string
+          description: A description of the response_code.
+    Agency:
+      type: object
+      properties:
+        agency_code:
+          type: string
+          description: Travel agency code
+        agency_name:
+          type: string
+          description: Travel agency name
+        agency_address:
+          type: string
+          description: "Street address of the card holder. \n\nNote:  All characters support "
+        agency_city:
+          type: string
+          description: 'City of the card holder.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_state:
+          type: string
+          description: 'A region / state / province for the address.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_postal_code:
+          type: string
+          description: 'A postal code for the address.
+
+
+            Note: Only alpha-numeric characters'
+        agency_country:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address
+
+
+            . Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+    subscription:
+      type: object
+      properties:
+        payment_schedule:
+          type: array
+          description: List of payment schedule
+          items:
+            $ref: '#/components/schemas/SubscriptionPaymentScheduleDTO'
+        payment_settlement_date:
+          type: string
+          description: Future date by which settlement request should be done. If this is too early in time, it will be postponed to the earliest payment Date.
+    ProcessingErrorResponseRefundDTO:
+      type: object
+      required:
+      - amount
+      - merchant_reference
+      properties:
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        amount:
+          type: number
+          description: The amount to be refunded.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        authorization_code:
+          type: string
+          description: An authorisation code assigned by the processing platform
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        total_refunded_amount:
+          type: number
+          description: Total amount refunded
+        total_captured_amount:
+          type: number
+          description: Total amount captured
+        total_authorised_amount:
+          type: number
+          description: Total amount authorised
+        transaction:
+          type: string
+          description: The ID of the authorised transaction
+        last_status_update:
+          type: string
+          description: The last time when the status of the transaction was updated
+        reason:
+          type: string
+          description: The reason for the refund
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        capture_id:
+          type: string
+          description: This is the unique capture identifier returned in the capture API as _id. Capture Id is a mandatory field for partial captures.
+        refund_numbers:
+          type: array
+          description: This is the unique capture identifier returned in the capture API as _id. Capture Id is a mandatory field for partial captures.
+          items:
+            type: string
+        psp_info:
+          description: PSP Information.
+          $ref: '#/components/schemas/PspInformation'
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        status:
+          type: string
+          enum:
+          - FAILED
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        request_id:
+          type: string
+          description: Unique Id for each request.
+        duplicate_check:
+          type: string
+          description: This is the duplicate check of request, 'true' in case of request is duplicate
+        response_code:
+          type: string
+          description: Response code is sent only when the source of the response looks suspicious. In this case Apexx immediately cancels the transaction placed with the gateway.
+        response_message:
+          type: string
+          description: A description of the response_code.
+    PspErrorDTO:
+      type: object
+      properties:
+        apexx_return_code:
+          type: string
+          description: A return code assigned by the APEXX payment platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        apexx_return_message:
+          type: string
+          description: A return message assigned by the APEXX payment platform. Reason message will return if reason_code is not 0
+        field_reference:
+          type: string
+          description: Reference to field that caused an error.
+        psp_return_code:
+          type: string
+          description: A return code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        psp_return_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+    CaptureRequestDTO:
+      type: object
+      required:
+      - amount
+      properties:
+        amount:
+          type: number
+          description: The amount to be captured.
+        capture_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction
+        invoice_number:
+          type: string
+          description: 'Only supported by some acquirers.
+
+
+            Invoice number of the ticket.'
+        final_capture:
+          type: string
+          description: Indicates whether you can make additional captures against the authorised payment. Set to true if you do not intend to capture additional payments against the authorisation. Set to false if you intend to capture additional payments against the authorisation.
+        duplicate_check:
+          type: string
+          description: 'Only supported by some acquirers.
+
+
+            This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.'
+        direct_debit:
+          description: Direct Debit specific Object
+          $ref: '#/components/schemas/DirectDebit'
+        subscription:
+          description: subscription specific Object
+          $ref: '#/components/schemas/subscription'
+        ach:
+          description: ach specific Object
+          $ref: '#/components/schemas/AchCaptureRequestDTO'
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
+    RefundRequestDTO:
+      type: object
+      required:
+      - amount
+      properties:
+        amount:
+          type: number
+          description: The amount to be refunded.
+        reason:
+          type: string
+          description: The reason for the refund
+        merchant_refund_reference:
+          type: string
+          description: A reference specified by the merchant to identify the refund. This field must be unique per refund.
+        refund_time:
+          type: string
+          format: date-time
+          description: Date and time of the request. Format - YYYY-MM-DD HH:mm:ss.
+        capture_id:
+          type: string
+          description: 'Only supported by some acquirers.
+
+
+            This is the unique capture identifier returned in the capture API as _id. Capture Id is a mandatory field for partial captures.'
+        duplicate_check:
+          type: boolean
+          example: false
+          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        customer:
+          description: Object related to customer information
+          $ref: '#/components/schemas/RefundCustomerDetailsDTO'

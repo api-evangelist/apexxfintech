@@ -1,0 +1,385 @@
+openapi: 3.2.0
+info:
+  description: '# Using the API
+
+
+    ## Authentication
+
+    Authentication is managed using an API key, which is provided to you.'
+  version: '2.0'
+  title: APEXX FINTECH Create And Manage Card Token API
+  license:
+    name: Apexx Fintech Ltd
+    url: https://www.apexxfintech.com/legal-documentation/
+servers:
+- url: https://sandbox.apexx.global/atomic/v1/
+tags:
+- name: Create And Manage Card Token
+paths:
+  /api/token:
+    post:
+      tags:
+      - Create And Manage Card Token
+      summary: Token Creation
+      description: 'Creates new token for given card details.
+
+        Returns existing token if active token is present. If card details are encrypted, then just pass {"encryptedPayload" : "string"} in request body with EncryptedKey in the request header'
+      operationId: createTokenUsingPOST
+      parameters:
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      - name: ORG-ID
+        in: header
+        description: ORG-ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateTokenResponseDTO'
+        '400':
+          description: Bad Request / Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTokenRequest'
+        description: createTokenRequest
+        required: true
+  '/api/token ':
+    post:
+      tags:
+      - Create And Manage Card Token
+      summary: Create Encrypted Card Token
+      description: Starts a new create card token with encrypted payload
+      operationId: createEncryptedCardTokenUsingPOST
+      parameters:
+      - name: EncryptedKey
+        in: header
+        description: Required when request body is encrypted
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateTokenResponseDTO'
+        '400':
+          description: Bad Request / Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EncryptedCardTokenDTO'
+        description: createEncryptedToken
+        required: true
+  /api/token/{cardToken}:
+    delete:
+      tags:
+      - Create And Manage Card Token
+      summary: Token Deactivation
+      description: Deactivates the given card token
+      operationId: deleteTokenUsingDELETE
+      parameters:
+      - name: cardToken
+        in: path
+        description: cardToken
+        required: true
+        schema:
+          type: string
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      - name: ORG-ID
+        in: header
+        description: ORG-ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTokenResponseDTO'
+        '400':
+          description: Bad Request / Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+components:
+  schemas:
+    BillingAddress:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the card holder.
+        last_name:
+          type: string
+          description: Last name of the card holder.
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        address:
+          type: string
+          description: Street address of the card holder.
+        city:
+          type: string
+          description: City of the card holder.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal code for the address.
+
+
+            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+    DeleteTokenResponseDTO:
+      type: object
+      required:
+      - organisation_id
+      - token
+      properties:
+        token:
+          type: string
+          description: The token representing the payment card.
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        message:
+          type: string
+          description: A description of the response.
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - DELETED
+          - FAILED
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+    FailureResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+        message:
+          type: string
+          description: A description of the response.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        errors:
+          type: array
+          description: Details of each error occured.
+          items:
+            $ref: '#/components/schemas/Errors'
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+    EncryptedCardTokenDTO:
+      type: object
+      required:
+      - encryptedPayload
+      properties:
+        encryptedPayload:
+          type: string
+          description: Encrypted request body with encrypted key passed in header. This field will contain the encryption data of all the fields mentioned in the Encrypt Create Token Request section above and will be processed only when encrypted key is passed in header.
+    CreateTokenRequest:
+      type: object
+      required:
+      - card
+      - organisation_id
+      properties:
+        organisation_id:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        card:
+          description: This class holds basic card details(card number,expiry month and expiry year)
+          $ref: '#/components/schemas/CardTokenCardDetails'
+        billing_address:
+          description: Some fields may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information.
+          $ref: '#/components/schemas/BillingAddress'
+    CardTokenCardDetails:
+      type: object
+      properties:
+        card_number:
+          type: string
+          description: The new card number, also known as PAN.
+        expiry_month:
+          type: string
+          description: Card expiry month. A string representing the month, valid values are 01 to 12.
+        expiry_year:
+          type: string
+          description: Card expiry year. A string representing the last two digits of the year, e.g. 19 for 2019.
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
+    BasicCardDetail:
+      type: object
+      properties:
+        card_number:
+          type: string
+          description: The new card number, also known as PAN.
+        expiry_month:
+          type: string
+          description: Card expiry month. A string representing the month, valid values are 01 to 12.
+        expiry_year:
+          type: string
+          description: Card expiry year. A string representing the last two digits of the year, e.g. 19 for 2019.
+        card_scheme:
+          type: string
+          description: Card scheme corresponding to this transaction
+    CreateTokenResponseDTO:
+      type: object
+      properties:
+        reasonCode:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see **[reason codes](#section/Appendix)** section for declined scenarios and **[error codes](#section/Appendix)** section for failed scenarios.
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        token:
+          type: string
+          description: Card Token genreated for given card details
+        createdAt:
+          type: string
+          description: The time at which the transaction was created
+        card:
+          description: This class holds basic card details(card number,expiry month and expiry year)
+          $ref: '#/components/schemas/BasicCardDetail'

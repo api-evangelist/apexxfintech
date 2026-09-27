@@ -75,7 +75,229 @@ apis:
   humanURL: https://apexx.global
   baseURL: null
   aid: apexxfintech:apexx-api
-
+- aid: apexxfintech:apexxfintech-alternative-payment-methods-api
+  name: Apexxfintech Alternative Payment Methods API
+  description: >-
+    The Alternative Payment Methods API from Apexxfintech — 13 operation(s) for alternative payment methods.
+  humanURL: https://apexx.global
+  tags:
+  - Alternative Payment Methods
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-alternative-payment-methods-api-openapi.yml
+- aid: apexxfintech:apexxfintech-buy-now-pay-later-api
+  name: Apexxfintech Buy Now Pay Later API
+  description: BNPL Controller
+  humanURL: https://apexx.global
+  tags:
+  - Buy Now Pay Later
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-buy-now-pay-later-api-openapi.yml
+- aid: apexxfintech:apexxfintech-create-and-manage-card-token-api
+  name: Apexxfintech Create And Manage Card Token API
+  description: >-
+    The Create And Manage Card Token API from Apexxfintech — 3 operation(s) for create and manage card
+    token.
+  humanURL: https://apexx.global
+  tags:
+  - Create And Manage Card Token
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-create-and-manage-card-token-api-openapi.yml
+- aid: apexxfintech:apexxfintech-credit-transaction-api
+  name: Apexxfintech Credit Transaction API
+  description: The Credit Transaction API from Apexxfintech — 2 operation(s) for credit transaction.
+  humanURL: https://apexx.global
+  tags:
+  - Credit Transaction
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-credit-transaction-api-openapi.yml
+- aid: apexxfintech:apexxfintech-get-transactions-api
+  name: Apexxfintech Get Transactions API
+  description: The Get Transactions API from Apexxfintech — 2 operation(s) for get transactions.
+  humanURL: https://apexx.global
+  tags:
+  - Get Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-get-transactions-api-openapi.yml
+- aid: apexxfintech:apexxfintech-hosted-token-api
+  name: Apexxfintech Hosted Token API
+  description: Hosted Token Controller
+  humanURL: https://apexx.global
+  tags:
+  - Hosted Token
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-hosted-token-api-openapi.yml
+- aid: apexxfintech:apexxfintech-sdk-api
+  name: Apexxfintech SDK API
+  description: "<h2>JavaScript SDK Integration 1.0.0 </h2>\n \n The Apexx Payment Integration SDK is a\
+    \ comprehensive solution designed to streamline payment processing for merchants by integrating multiple\
+    \ payment methods into a single, unified platform. With support for providers like PayPal, Volt, and\
+    \ others, the SDK enables merchants to offer their customers a diverse range of payment options while\
+    \ ensuring seamless management of the payment flow tailored to each method.\n\n\n \n <h2>What is this\
+    \ Library for?</h2>\n\n The Apexx-PayPal SDK is designed to simplify the integration of PayPal's Embedded\
+    \ Checkout into web applications. This SDK abstracts the complexities of payment logic, enabling merchants\
+    \ to easily handle payment approval and event-driven callbacks. The SDK allows customization of funding\
+    \ sources such as PayPal and Volt, providing flexibility for developers and businesses alike. This\
+    \ document outlines the SDK’s core design, focusing on its key methods, error-handling strategy, and\
+    \ security considerations. By using this SDK, developers can streamline the integration of Apexx's\
+    \ payment services within their applications.\n\n\n \n <h2>What are the features?</h2>\n\n \n<ul style=\"\
+    list-style-type:number;\"><li><strong>Paypal</strong>\n \n <ul style=\"list-style-type:circle;\"><li>\
+    \ Express Checkout </li> \n  \n <li> Pay Later </li> \n  \n <li> Credit </li></ul></li></ul>\n\n \n\
+    \ <h2>Use Cases </h2>\n \n \n<ul style=\"list-style-type:number;\"><li><strong>Online Payments & Checkout</strong>\n\
+    \ \n<ul style=\"list-style-type:circle;\"><li> Integrate PayPal Express Checkout for faster transactions.\
+    \ </li>\n  \n <li> Accept Pay Later and Paypal Credits </li></ul></li>\n\n \n<li><strong>Option to\
+    \ auto-capture or capture later.</strong></li>\n\n \n<li><strong>Option to complete the order as per\
+    \ your flow.</strong></li></ul>\n\n \n <h2> SDK Process Flow</h2>\n\n \n <b>Apexx Completes the Order\
+    \ (CompleteOrder = true)</b>\n \n <img src=\"../resources/img/Payment flow SDK - Apexx Completes Order.png\"\
+    \ alt=\"PayPal SDK Flow Diagram\" style=\"max-size:100%; height:auto; margin:0 auto;border: 1px dotted;\
+    \ display:block;\"/>\n \n <b>Merchant Completes the Order (CompleteOrder = false)</b>\n \n <img src=\"\
+    ../resources/img/Payment flow SDK - Merchant Completes Order.png\" alt=\"PayPal SDK Flow Diagram\"\
+    \ style=\"max-size:100%; height:auto; margin:0 auto;border: 1px dotted; display:block;\"/>\n \n <h2>How\
+    \ to setup?</h2>\nThe Apexx js library can be downloaded from here:\n\n \n <div style=\"overflow-x:\
+    \ auto;\">\n  <table style=\"table-layout: fixed; width: 100%; border-collapse: collapse;\">\n   \
+    \ <thead>\n      <tr>\n        <th style=\"width: 20%;\">Environment</th>\n        <th style=\"width:\
+    \ 30%;\">Endpoint</th>\n        <th style=\"width: 50%;\">Description</th>\n      </tr>\n    </thead>\n\
+    \    <tbody>\n      <tr>\n        <td>Sandbox</td>\n        <td style=\"word-break: break-all;\"><a\
+    \ href=\"https://sandboxsdk.apexx.global/ApexxSDK.min.js\" style=\"color: black; text-decoration:\
+    \ underline;\">https://sandboxsdk.apexx.global/ApexxSDK.min.js</a></td>\n        <td>This environment\
+    \ provides you with full access to all the features available. Transactions will have no financial\
+    \ impact.</td>\n      </tr>\n      <tr>\n        <td>Production</td>\n        <td style=\"word-break:\
+    \ break-all;\"><a href=\"https://sdk.apexx.global/ApexxSDK.min.js\" style=\"color: black; text-decoration:\
+    \ underline;\">https://sdk.apexx.global/ApexxSDK.min.js</a></td>\n        <td>This environment will\
+    \ be the Live environment with access based on your configuration. Transactions will have financial\
+    \ impact.</td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n \n <h2>Where to get credentials</h2>\n\
+    \ \n If you already have a relationship with a service provider, we will help create the neccessary\
+    \ IDs and share them with your payment provider of choice.\n\n If you do not yet have an account with\
+    \ a payment service provider, please reach out to your Apexx account manager who will be happy to\
+    \ help facitlate the onboarding process.\n\n To process payments via Apexx SDK you will need an organisation\
+    \ id and an X-APIKEY which you can get from your Apexx account manager.\n\n \n <h2>How to consume\
+    \ the library? </h2>\n\n If you are consuming the library directy from our CDN (Recommended), then\
+    \ add the following JS snippet to your relevant checkout page. \n\n \n <pre>&lt;script src=\"https://paypalsandboxsdkdemo.apexx.global/ApexxSDK.min.js\"\
+    &gt;&lt;/script&gt;</pre>\n \n \n \n <pre>const paymentInstance = new Apexx(\"PayPal\", (error) =>\
+    \ {\nconsole.error(\"Error initializing payment SDK:\", error);\n}); </pre>\n \n \n \n <h2>How to\
+    \ incorporate with any existing libraries</h2>\n\n Merchants can integrate the SDK alongside their\
+    \ existing payment processing systems. The SDK is compatible with JavaScript and backend payment flows.\
+    \ Please note that any unique IDs that are used would need to be specific to the JS library.\n\n \n\
+    \ <h2>How to make a call</h2>\n \n \n <h3 >Encrypting Payment parameters</h3>\n\n Before initializing\
+    \ the SDK you would need to encrypt the data required for processing the payment. To encrypt the data\
+    \ you can call the Apexx server encryption API which will provide you with the required details to\
+    \ initiate the javascript SDK. For more details on server encryption API, visit <a href=\"#operation/paypalSdkPaymentRequestUsingPOST\"\
+    ><b>API Reference</b></a> The details of the fields required to be encrypted are mentioned in the\
+    \ schema definitions below.\n\n \n <h3>Initializing the embedded element </h3>\n\n Initialize the\
+    \ Apexx wrapper by loading the script from Apexx, using the activation instance keyword (e.g. \"PayPal\"\
+    ) and an error callback function to handle wrapper error for that payment instance. \n\n \n <pre>Eg:\
+    \ const paypalInstance = new Apexx(\"PayPal\",(error)=>{alert(console.log(\"error\"); ))}); </pre>\n\
+    \ \n \n The APEXX SDK is initialized using a configuration object that contains key parameters required\
+    \ for payment processing. The initialization process sets up the SDK environment and ensures all provided\
+    \ configurations are validated. Key Parameters & Data Type : These are needed to be provided as a\
+    \ single object.<ul> <li> encryptedkey (string) – Required <ul style=\"list-style-type:circle;\"><li>\
+    \ Encrypted Key received in the Get encryption API call.</li></ul></li> <li> encryptedpayload (string)\
+    \ – Required <ul style=\"list-style-type:circle;\"><li> Encrypted payload received in the Get encryption\
+    \ API call.</li></ul></li></ul> <ul> <li>completeOrder (boolean) - Optional <ul style=\"list-style-type:circle;\"\
+    ><li> Field defines whether transaction should be completed by the SDK or you want to complete it\
+    \ separately after the approval of the order.</li></ul></li></ul>  <ul> <li>organisation_id (string)\
+    \ - Required <ul style=\"list-style-type:circle;\"><li> The ID of an organisation.</li></ul></li></ul>\
+    \  \n \n Example\n  <pre>const apexx = new Apexx({\nencryptedkey: 'eyJraWQiOiJnM2FKMlJyUVNFYmM5WTVxUFowaDR0bVpr....',\
+    \ // Required\nencryptedpayload: 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0....', // Required\n\
+    completeOrder: 'true',\norganisation_id:'716ae509B5091A44baBaadeAc4b384e6b31d'\nsources to enable\
+    \ eventHandlers: { // Optional event handlers onApprove: (data, actions) => {\nconsole.log('Payment\
+    \ Approved', data); }, onError: (error) => {\nconsole.error('Payment Error:', error); }, onCancel:\
+    \ (error) => {\nconsole.error('Payment Error:', error); },}\n});</pre>\n\n \n \n \n  \n \n <h3 >Completing\
+    \ the order</h3>\n\n You can pass the completeOrder field as true to complete the order from the Apexx\
+    \ SDK after the approval is received from Paypal. If you wish to complete the order from your side\
+    \ via a server to server call then pass the completeOrder field as false. \n\n \n \n However if you\
+    \ chose to complete the order yourself then you will have to call the Apexx Complete Order API which\
+    \ will process the transaction and respond you back with the transaction data. \n\n \n See <a href=\"\
+    #operation/paypalCompletOrderUsingPOST\"><b>Complete Order API</b></a> for retrieving order details\n\
+    \n \n \n <b >Please Note:</b> If you are not doing an auto-capture then capture request will be required\
+    \ separately which you can find at below location. See <a href=\"#operation/captureRequestUsingPOST\"\
+    ><b>Capture API Reference</b></a> \n \n \n \n \n <h2>Error handling </h2>\n \n \n <h3 >Error Categories</h3>\n\
+    \n Use onError callback to handle errors dynamically. Log errors to capture debugging information.\
+    \ \n\n <table><thead><tr><th>Error Type</th><th>Description</th></tr></thead><tbody><tr><td>INPUT_VALIDATION</td><td>Issues\
+    \ with provided parameters.</td></tr><tr><td>SECURITY</td><td>Security-related errors.</td></tr><tr><td>GENERIC</td><td>General\
+    \ errors not categorized elsewhere.</td></tr><tr><td>SCRIPT</td><td>Issues loading the SDK.</td></tr></tbody></table>\
+    \ \n \n <h3 >Error Messages</h3>\n\n <table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td>MISSING_CONTAINER</td><td>IContainer\
+    \ not created , Instantiate container first..</td></tr><tr><td>INVALID_FORMAT</td><td>Invalid {type}\
+    \ format.</td></tr><tr><td>MALICIOUS_INPUT</td><td>Detected potentially malicious and sanitized.</td></tr><tr><td>GENERIC_ERROR</td><td>Error\
+    \ occurred during {type} operation.</td></tr> <tr><td>SCRIPT_ERROR</td><td>Failed to load {type} script\
+    \ instance.</td></tr></tbody></table> \n \n <h3>Error Statuses</h3>\n\n <table><thead><tr><th>Status</th><th>Description</th></tr></thead><tbody><tr><td>INVALID_MODE</td><td>400\
+    \ (BadRequest)</td></tr><tr><td>MISSING_PAYMENT_CONTAINER</td><td>500 (Internal Server Error)</td></tr><tr><td>INVALID_FORMAT</td><td>400\
+    \ (BadRequest)</td></tr><tr><td>MALICIOUS_INPUT</td><td>403 (Forbidden)</td></tr><tr><td>GENERIC_ERROR</td><td>500\
+    \ (Internal Server Error)</td></tr><tr><td>SCRIPT_ERROR</td><td>500 (Internal Server Error)</td></tr></tbody></table>\n\
+    \ \n <pre>&lt;script src=\"https://paypalsandboxsdkdemo.apexx.global/ApexxSDK.min.js\"\nintegrity=\"\
+    sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxjwG6ODnY7XJ5SPPc4v5Z4tM\"\"\n crossorigin=\"anonymous\"\
+    &gt;&lt;/script&gt;</pre>\n \n \n \n <h2>Security considerations </h2>\n\n To ensure a secure integration\
+    \ of the Apexx SDK, merchants should follow these security best practices:\n \n\n \n \n\n \n <ul style=\"\
+    list-style-type:disc;\"><li>  Always load the SDK and make API calls over HTTPS to prevent interception\
+    \ of sensitive payment data.</li> \n \n\n \n \n\n \n <li>Validate and Sanitize Inputs </li>\n \n\n\
+    \ \n \n\n \n <li>Ensure that all user inputs, including payment details, are properly validated and\
+    \ sanitized to prevent injection attacks.</li> \n \n\n \n \n\n \n <li>Use Apexx’s server encryption\
+    \ API to encrypt sensitive payment data before transmitting it to the SDK. </li>\n \n\n \n \n\n \n\
+    \ <li>Use HTTPS when calling the api to encrypt the payload </li>\n \n\n \n \n\n \n <li>Implement\
+    \ Content Security Policy (CSP)</li> \n \n\n \n \n\n \n <li> Configure a strict CSP header to prevent\
+    \ unauthorized script execution.</li> \n \n\n \n \n\n \n <li>Never expose API keys or encryption credentials\
+    \ on the client-side. Store them securely on your backend. </li>\n \n\n \n \n\n \n <li>Restrict cross-origin\
+    \ access to ensure that only authorized domains can interact with your payment implementation. </li>\n\
+    \ \n\n \n \n\n \n <li>Always use the latest version of the SDK to benefit from security patches and\
+    \ improvements. Handle Errors Securely </li>\n \n\n \n \n\n \n <li>Avoid exposing detailed error messages\
+    \ to users, which could leak sensitive implementation details.</li></ul>"
+  humanURL: https://apexx.global
+  tags:
+  - SDK
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-sdk-api-openapi.yml
+- aid: apexxfintech:apexxfintech-server-side-encryption-api
+  name: Apexxfintech SERVER-SIDE ENCRYPTION API
+  description: Server Side Encryption Controller
+  humanURL: https://apexx.global
+  tags:
+  - SERVER-SIDE ENCRYPTION
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-server-side-encryption-api-openapi.yml
+- aid: apexxfintech:apexxfintech-standalone-services-api
+  name: Apexxfintech STANDALONE SERVICES API
+  description: The STANDALONE SERVICES API from Apexxfintech — 1 operation(s) for standalone services.
+  humanURL: https://apexx.global
+  tags:
+  - STANDALONE SERVICES
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-standalone-services-api-openapi.yml
+- aid: apexxfintech:apexxfintech-transaction-hosted-payment-api
+  name: Apexxfintech Transaction Hosted Payment API
+  description: >-
+    The Transaction Hosted Payment API from Apexxfintech — 4 operation(s) for transaction hosted payment.
+  humanURL: https://apexx.global
+  tags:
+  - Transaction Hosted Payment
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-transaction-hosted-payment-api-openapi.yml
+- aid: apexxfintech:apexxfintech-transaction-payment-api
+  name: Apexxfintech Transaction Payment API
+  description: The Transaction Payment API from Apexxfintech — 3 operation(s) for transaction payment.
+  humanURL: https://apexx.global
+  tags:
+  - Transaction Payment
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-transaction-payment-api-openapi.yml
+- aid: apexxfintech:apexxfintech-transaction-update-api
+  name: Apexxfintech Transaction Update API
+  description: The Transaction Update API from Apexxfintech — 6 operation(s) for transaction update.
+  humanURL: https://apexx.global
+  tags:
+  - Transaction Update
+  properties:
+  - type: OpenAPI
+    url: openapi/apexxfintech-transaction-update-api-openapi.yml
 x-coverage:
   state: unreadable
   reason: no-machine-readable-spec

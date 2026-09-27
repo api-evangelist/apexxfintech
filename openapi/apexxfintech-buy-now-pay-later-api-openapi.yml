@@ -1,0 +1,1542 @@
+openapi: 3.2.0
+info:
+  description: '# Using the API
+
+
+    ## Authentication
+
+    Authentication is managed using an API key, which is provided to you.'
+  version: '2.0'
+  title: APEXX FINTECH Buy Now Pay Later API
+  license:
+    name: Apexx Fintech Ltd
+    url: https://www.apexxfintech.com/legal-documentation/
+servers:
+- url: https://sandbox.apexx.global/atomic/v1/
+tags:
+- name: Buy Now Pay Later
+  description: BNPL Controller
+paths:
+  '/api/payment/bnpl ':
+    post:
+      tags:
+      - Buy Now Pay Later
+      summary: Create Order
+      description: Create an order with the BNPL provider. This provides a single interface for all BNPL providers. In all cases Organisation and Currency is required
+      operationId: validateBNPLHostedUsingPOST
+      parameters:
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BNPLOrderResponse'
+        '201':
+          description: JSON representation of the related transaction - Redirect Response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateOrderRedirectResponse'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BNPLOrderResponse'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BNPLOrderRequest'
+        description: ' '
+components:
+  schemas:
+    BNPL_TravelData:
+      type: object
+      properties:
+        pnr:
+          type: string
+          description: Reference number for the booking.
+        booking_amount:
+          type: number
+          description: Total amount of booking.
+        booking_type:
+          type: string
+          description: The type of booking being made.
+          enum:
+          - hotel
+          - rental
+          - car
+          - cruise
+          - flight
+          - train
+          - coach
+        passengers:
+          type: array
+          description: Array of passenger names
+          items:
+            $ref: '#/components/schemas/Passengers'
+        legs:
+          type: array
+          description: Array of legs of booking.
+          items:
+            $ref: '#/components/schemas/bnplLegs'
+        discount_percentage:
+          type: number
+          description: Percentage dicount to be applied to booking
+        loyalty_number:
+          type: string
+          description: Customer loyalty scheme number
+        points:
+          type: array
+          description: Loyalty points/scheme details
+          items:
+            $ref: '#/components/schemas/Point'
+        travel_mode_name:
+          type: string
+          description: Name of your mode of travel such as Airline, Ferry, Rail etc.
+        travel_mode_numeric_code:
+          type: integer
+          format: int32
+          description: Mode of Travel (Airline, Ferry, Rail etc.) numeric code
+        agency:
+          description: Agency
+          $ref: '#/components/schemas/Agency'
+        ticket_number:
+          type: string
+          description: Ticket/document number, or PNR locator code.
+        check_digit:
+          type: integer
+          format: int32
+          description: Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:<ul><li>The value is numeric.</li><li>The first three digits are a valid IATA2 license plate carrier code.</li><li>The last digit is a check digit or zero (0).</li><li>All remaining digits are nonzero.</li></ul>
+        is_restricted:
+          type: string
+          description: True will auto-capture the transaction. False will only authorise the transaction
+          enum:
+          - 'true'
+          - 'false'
+        transaction_type:
+          type: integer
+          format: int32
+          description: Type of charge.
+        extended_payment_code:
+          type: string
+          description: Airline/Travel Mode process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets
+        passenger_title:
+          type: string
+          description: Title of the passenger
+        passenger_name:
+          type: string
+          description: "Name of passenger.\n <b>Note:</b> Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘))."
+        passenger_age_group:
+          type: string
+          description: Travelling passenger's age group.
+          enum:
+          - 16-24
+          - 25-34
+          - 35-44
+          - 45-54
+          - 55-64
+          - 65 and up
+          - Unknown
+        is_lead:
+          type: string
+          description: Indicates whether the passenger is a lead passenger within the group.
+          enum:
+          - 'true'
+          - 'false'
+        customer_code:
+          type: string
+          description: <ol><li>Reference number or code that identifies the cardholder.</li><li>Code provided by the cardholder.</li><li>Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.</li><li>Customer reference..</li></ol>
+        document_type:
+          type: integer
+          format: int32
+          description: Airline/Travel mode document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
+        document_number:
+          type: string
+          description: Ticket number or a value that might be a booking reference number.
+        travel_legs_count:
+          type: integer
+          format: int32
+          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        invoice_date:
+          type: string
+          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
+        additional_charge_description:
+          type: string
+          description: Description of the charge.
+        total_fee_amount:
+          type: integer
+          format: int32
+          description: Total fee for the ticket.
+        clearing_sequence:
+          type: integer
+          format: int32
+          description: Total number of captures when requesting multiple partial captures for one authorisation.
+        clearing_count:
+          type: integer
+          format: int32
+          description: Total number of clearing count associated with the authorisation request.
+        total_clearing_amount:
+          type: integer
+          format: int32
+          description: Total clearing amount for all transactions in the clearing count set.
+        passenger_count:
+          type: integer
+          format: int32
+          description: Number of passengers for whom the ticket was issued.
+        reservation_system_code:
+          type: string
+          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
+        process_identifier:
+          type: string
+          description: Airline/Travel mode process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+        issue_date:
+          type: string
+          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
+        is_eticket:
+          type: string
+          description: Indicates whether the issued ticket was electronic or not.
+          enum:
+          - 'true'
+          - 'false'
+        original_ticket_number:
+          type: string
+          description: Original ticket number when the transaction is for a replacement ticket.
+        purchase_type:
+          type: string
+          description: "EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket. \n\n Type of purchase"
+          enum:
+          - EXC
+          - MSC
+          - REF
+          - TKT
+        credit_reason:
+          type: string
+          description: 'valid values :"A""B""C""O""P"
+
+            A: Cancellation of the ancillary passenger transport purchase, B: Cancellation of the airline ticket and the passenger transport ancillary purchase, C: Cancellation of the airline ticket, O: Other, P: Partial refund of the airline ticket.
+
+            Reason for the credit.'
+          enum:
+          - A
+          - B
+          - C
+          - O
+          - P
+        ticket_change_indicator:
+          type: string
+          description: "C: Change to the existing ticket., \n N: New ticket.\n \n Type of update."
+          enum:
+          - C
+          - N
+        plan_number:
+          type: string
+          description: Plan number based on the fare. This value is provided by the airline/travel mode provider
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        restricted_ticket_description:
+          type: string
+          description: Text that describes the ticket limitations, such as nonrefundable.
+        exchange_ticket_amount:
+          type: integer
+          format: int32
+          description: Amount of the exchanged ticket.
+        exchange_ticket_fee_amount:
+          type: integer
+          format: int32
+          description: Fee for exchanging the ticket.
+        reservation_type:
+          type: string
+          description: Type of journey such as one way or round trip.
+        boarding_fee_amount:
+          type: number
+          description: Boarding fee.
+        affiliate_name:
+          type: string
+          description: Unique affiliate name identifier. This will help us support our merchant by attaching more details with the transaction.
+    Items_:
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: Merchant Product identification number
+        group_id:
+          type: string
+          description: Item group ID. The group this item belongs to. Provided by the merchant
+        item_description:
+          type: string
+          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
+        net_unit_price:
+          type: integer
+          format: int32
+          description: "Net unit price.\n \n <b>Note:</b> net_unit_price is only required if the vat_percent is not provided."
+        gross_unit_price:
+          type: integer
+          format: int32
+          description: Gross price per item
+        quantity:
+          type: integer
+          format: int32
+          description: Quantity
+        vat_percent:
+          type: number
+          format: float
+          description: Tax percent
+        vat_amount:
+          type: integer
+          format: int32
+          description: Tax amount per item
+        discount:
+          type: integer
+          format: int32
+          description: Discount amount per item.
+        product_image_url:
+          type: string
+          description: URL for the image of this product.
+        product_url:
+          type: string
+          description: URL to the product
+        additional_information:
+          type: string
+          description: Extended description of the order item
+    BNPL:
+      type: object
+      properties:
+        net_amount:
+          type: integer
+          format: int32
+          description: Total net amount of order charged without a decimal place.
+        payment_type:
+          type: string
+          description: Specifies the repayment plan type for providers which offer multiple options.
+          enum:
+          - installment
+          - invoice
+          - Direct Debit
+        payment_type_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentTypeData'
+    bnplLegs:
+      type: object
+      properties:
+        insurance:
+          type: array
+          items:
+            $ref: '#/components/schemas/Insurance'
+        amount:
+          type: integer
+          format: int32
+          description: Amount of leg of booking
+        passenger_index:
+          type: array
+          description: Array of passenger index values of passengers present for this leg of booking.
+          items:
+            type: number
+        check_in_date:
+          type: string
+          description: 'Start date of reservation. Format: YYYY-MM-DD HH:mm:ss'
+        check_out_date:
+          type: string
+          description: 'End date of reservation. Format: YYYY-MM-DD HH:mm:ss'
+        provider_group:
+          type: string
+          description: Name of hotel parent group
+        provider_name:
+          type: string
+          description: Name of hotel chain
+        room_count:
+          type: integer
+          format: int32
+          description: Number of rooms under booking
+        traveller_count:
+          type: integer
+          format: int32
+          description: Number of travellers under booking
+        origin_address:
+          type: string
+          description: "Street address of origin point.\n \n  Note: Supports only ISO-8859-1 characters."
+        origin_city:
+          type: string
+          description: City Journey begins
+        origin_postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        origin_country_code:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+        route_stops:
+          type: array
+          description: Array of stopping points on trip
+          items:
+            $ref: '#/components/schemas/RouteStops'
+        destination_address:
+          type: string
+          description: "Address of accomodation.\n \n  Note: Supports only ISO-8859-1 characters."
+        destination_city:
+          type: string
+          description: Final destination City
+        destination_postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        destination_country_code:
+          type: string
+          description: 'Destination country. A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU, etc.)'
+        booking_type:
+          type: string
+          description: The type of booking being made.
+          enum:
+          - hotel
+          - rental
+          - car
+          - cruise
+          - flight
+          - train
+          - coach
+        adults_count:
+          type: integer
+          format: int32
+          description: Number of adults under booking
+        child_count:
+          type: integer
+          format: int32
+          description: Number of children under booking
+        beds_count:
+          type: integer
+          format: int32
+          description: Number of rooms under booking
+        vehicle_type:
+          type: string
+          description: Name of vehicle being rented
+        class:
+          type: string
+          description: Class of travel or stay. e.g. "first", "premium", "luxury suite" - free text field, not enum
+        data:
+          type: array
+          description: Array of provider specific key values pairs, should be an array of the 'key_name' value and the 'value' value - Please speak to your Implementation manager for details on usage.
+          items:
+            $ref: '#/components/schemas/data'
+        carrier_code:
+          type: string
+          description: Travel carrier code
+        travel_mode_reference:
+          type: integer
+          format: int32
+          description: Flight/Travel mode number excluding carrier code
+        origin_port:
+          type: string
+          description: Origin airport/port/city IATA code
+        service_class:
+          type: string
+          description: Service Class
+          enum:
+          - first class
+          - Second class
+          - business
+          - Economic
+          - 0 Ticket category/class ("0" if no class)
+          - economy
+          - premium economy
+          - business class
+        stop_over_code:
+          type: string
+          description: 'Stop over code -
+
+
+            O (capital letter "O") or 0 (zero) : Stopover allowed
+
+
+            X (capital letter "X") or 1 : Stopover not allowed'
+          enum:
+          - X
+          - O
+          - '1'
+          - '0'
+        departure_date:
+          type: string
+          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        destination_port:
+          type: string
+          description: Destination airport/port/city IATA code
+        fare_basis_code:
+          type: string
+          description: Fare basis code
+        departure_tax_amount:
+          type: integer
+          format: int32
+          description: Amount of departure tax for this leg of the trip
+        conjunction_ticket:
+          type: string
+          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments
+        exchange_ticket_number:
+          type: string
+          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
+        coupon_number:
+          type: string
+          description: Coupon number for the leg
+        endorsements_restrictions:
+          type: string
+          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
+        total_fare_amount:
+          type: integer
+          format: int32
+          description: Total fare for this leg of the trip.
+        fee_amount:
+          type: integer
+          format: int32
+          description: Fee for this leg of the trip, such as an airport/port fee or country/city fee
+        tax_amount:
+          type: integer
+          format: int32
+          description: Tax for this leg of the trip
+        delivery:
+          type: string
+          description: 'Valid values: "delivery", "collection", "email". The way the item is being delivered'
+    FailureResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+        message:
+          type: string
+          description: A description of the response.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        errors:
+          type: array
+          description: Details of each error occured.
+          items:
+            $ref: '#/components/schemas/Errors'
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+    BNPL_RedirectUrls:
+      type: object
+      required:
+      - cancelled
+      - failed
+      - success
+      properties:
+        success:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is processed.
+        failed:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is unsuccessful.
+        cancelled:
+          type: string
+          description: The return url to which the customer is redirected after failing to complete provider registration and payment confirmation steps.
+    CreateOrderRedirectResponse:
+      type: object
+      properties:
+        payment_flow:
+          type: string
+          description: The type of integration with the BNPL provider, i.e. server to server or URL redirect to provider login page
+          enum:
+          - direct
+          - redirect
+        organisation:
+          type: string
+          description: The ID of the Organisation. Must be submitted along with currency.
+        url:
+          type: string
+          description: Redirection URL details
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        trace_id:
+          type: string
+          description: Transaction log ID
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - AUTHORISED
+          - DECLINED
+          - FAILED
+          - AUTHENTICATION_REQUIRED
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of AUTHENTICATION_REQUIRED/AUTHORISED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform.
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+    Passengers:
+      type: object
+      properties:
+        passenger_index:
+          type: integer
+          format: int32
+          description: Index number to identify passenger
+        salutation:
+          type: string
+          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr", etc.
+        first_name:
+          type: string
+          description: First name of the passenger
+        last_name:
+          type: string
+          description: Last name of the passenger
+        date_of_birth:
+          type: string
+          description: 'D.O.B. of passenger. Format: YYYY-MM-DD'
+    Risk_Data:
+      type: object
+      properties:
+        acquisition_channel:
+          type: string
+          description: Specify the channel which consumer has used for accessing merchant page.
+          enum:
+          - NotSet
+          - Advertisment
+          - SocialNetwork
+          - Direct
+          - SearchEngine
+          - Other
+        customer_card_classification:
+          type: string
+          description: Specifies the level of the loyalty card (e.g Gold member)
+        customer_card_since:
+          type: string
+          description: The date when the loyalty card was issued to the customer, 10 characters, ISO-8601 (YYYY-MM-DD)
+        customer_classification:
+          type: string
+          description: Customer reputation (e.g. VIP client)
+        customer_individual_score:
+          type: string
+          description: The customer's individual risk score provided by the merchant. Accepts a number from -10000 to 10000 (can be encased in quotation marks or not), or a single case-insensitive letter from 'a' to 'z'.
+        customer_since:
+          type: string
+          description: Date the Customer first used the Merchant. 10 characters, ISO-8601 (YYYY-MM-DD)
+        existing_customer:
+          type: string
+          description: Is customer an existing customer for merchant
+          enum:
+          - 'true'
+          - 'false'
+        has_customer_card:
+          type: string
+          description: Shows if customer has loyalty card
+          enum:
+          - 'true'
+          - 'false'
+        marketing_opt_in:
+          type: string
+          description: Shows if merchant is allowed to send marketing information to customer
+          enum:
+          - 'true'
+          - 'false'
+        number_of_transactions:
+          type: integer
+          format: int32
+          description: Total number of successful purchases that have been made by the specific consumer
+        profile_tracking_id:
+          type: string
+          description: Unique Id of the device for profile tracking
+        verified_customer_identification:
+          type: string
+          description: Is identification verified
+          enum:
+          - 'true'
+          - 'false'
+    Customer_:
+      type: object
+      properties:
+        customer_identification_number:
+          type: string
+          description: Identification number associated to the identification type specified
+        identification_type:
+          type: string
+          description: Identification type referenced above.
+          enum:
+          - SSN
+          - passport
+          - driverslicense
+          - idcard
+        email:
+          type: string
+          description: "Email address of the customer \n \n Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(‘)"
+        phone:
+          type: string
+          description: "Numbers only, no dash or any other separator.\n \n Note: Length - min(3) & max(20)"
+        salutation:
+          type: string
+          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr" etc
+        type:
+          type: string
+          description: Type of customer. Customer category
+          enum:
+          - company
+          - person
+        date_of_birth:
+          type: string
+          description: The date of birth of a customer, 10 characters, ISO-8601 (YYYY-MM-DD).
+        customer_number:
+          type: string
+          description: This is the customer's account number.
+        gender:
+          type: string
+          description: The gender of the customer
+          enum:
+          - male
+          - female
+          - other
+          - prefer not to say
+        employment_type:
+          type: string
+          description: The employment type of the customer
+          enum:
+          - fulltime
+          - parttime
+          - contractor
+          - student
+          - retired
+          - unemployed
+          - other
+        residential_status:
+          type: string
+          description: Customer residential satus
+          enum:
+          - homeowner
+          - tenant
+          - livingwithparents
+    PaymentTypeData:
+      type: object
+      properties:
+        key_name:
+          type: string
+          description: The name of the key for the key value pair
+        value:
+          type: string
+          description: The value for the key value pair
+      description: provider specific key values pairs, should be an array of the 'key_name' value and the 'value' value - Please speak to your Implementation manager for details on usage.
+    BNPL_Customer:
+      type: object
+      required:
+      - email
+      - phone
+      properties:
+        customer_identification_number:
+          type: string
+          description: Identification number associated to the identification type specified
+        identification_type:
+          type: string
+          description: Identification type referenced above.
+          enum:
+          - SSN
+          - passport
+          - driverslicense
+          - idcard
+        email:
+          type: string
+          description: "Email address of the customer \n \n Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(‘)"
+        phone:
+          type: string
+          description: "Numbers and plus (+) only, no dash or any other separator.\n \n Note: Length - min(3) & max(20)"
+        salutation:
+          type: string
+          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr" etc
+        type:
+          type: string
+          description: Type of customer. Customer category
+          enum:
+          - company
+          - person
+        date_of_birth:
+          type: string
+          description: The date of birth of a customer, 10 characters, ISO-8601 (YYYY-MM-DD).
+        customer_number:
+          type: string
+          description: This is the customer's account number.
+        gender:
+          type: string
+          description: The gender of the customer
+          enum:
+          - male
+          - female
+          - other
+          - prefer not to say
+        employment_type:
+          type: string
+          description: The employment type of the customer
+          enum:
+          - fulltime
+          - parttime
+          - contractor
+          - student
+          - retired
+          - unemployed
+          - other
+        residential_status:
+          type: string
+          description: Customer residential satus
+          enum:
+          - homeowner
+          - tenant
+          - livingwithparents
+    BNPL_Items:
+      type: object
+      required:
+      - gross_unit_price
+      - item_description
+      - net_unit_price
+      - product_id
+      - quantity
+      properties:
+        item_type:
+          type: string
+          description: This field is specifying from a pre-defined subset of values
+          enum:
+          - Product
+          - Discount
+          - Tax
+          - Shipping
+        product_id:
+          type: string
+          description: Merchant Product identification number
+        group_id:
+          type: string
+          description: Item group ID. The group this item belongs to. Provided by the merchant
+        item_description:
+          type: string
+          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
+        net_unit_price:
+          type: integer
+          format: int32
+          description: "Net unit price.\n \n <b>Note:</b> net_unit_price is only required if the vat_percent is not provided."
+        gross_unit_price:
+          type: integer
+          format: int32
+          description: Gross price per item
+        quantity:
+          type: integer
+          format: int32
+          description: Quantity
+        vat_percent:
+          type: number
+          format: float
+          description: Tax percent
+        vat_amount:
+          type: integer
+          format: int32
+          description: Tax amount per item
+        discount:
+          type: integer
+          format: int32
+          description: Discount amount per item.
+        product_image_url:
+          type: string
+          description: URL for the image of this product.
+        product_url:
+          type: string
+          description: URL to the product
+        additional_information:
+          type: string
+          description: Extended description of the order item
+        delivery:
+          type: string
+          description: The way the item is being delivered
+          enum:
+          - email
+          - delivery
+          - collection
+    BNPL_:
+      type: object
+      properties:
+        payment_method:
+          type: string
+          description: 'Name of the BNPL provider.
+
+            '
+        payment_type:
+          type: string
+          description: Specifies the repayment plan type for providers which offer multiple options.
+          enum:
+          - installment
+          - invoice
+          - Direct Debit
+        payment_type_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentTypeData'
+    BNPLOrderResponse:
+      type: object
+      properties:
+        payment_flow:
+          type: string
+          description: The type of integration with the BNPL provider, i.e. server to server or URL redirect to provider login page
+          enum:
+          - direct
+          - redirect
+        reason_code:
+          type: string
+          description: An authorisation code assigned by the processing platform.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        organisation:
+          type: string
+          description: The ID of the Organisation. Must be submitted along with currency.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed.  A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        amount:
+          type: integer
+          format: int32
+          description: Total gross amount of order charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.. Must match the total of all order items
+        net_amount:
+          type: integer
+          format: int32
+          description: Total net amount of order charged without a decimal place.
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show against the customers order
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        locale:
+          type: string
+          description: Language UTF-8 locale code. e.g. en_GB and en_US
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        user_agent:
+          type: string
+          description: The full user agent string of the device the customer used to submit the transaction
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        shopper_interaction:
+          type: string
+          description: Determines the point of sale of a customer.
+          enum:
+          - ecommerce
+          - pos
+          - unknown
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - AUTHORISED
+          - CAPTURED
+          - DECLINED
+        bnpl:
+          description: Buy Now Pay Later provider details
+          $ref: '#/components/schemas/BNPL_'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Items_'
+        customer:
+          description: Customer Details
+          $ref: '#/components/schemas/Customer_'
+        billing_address:
+          description: Billing address details for the customer
+          $ref: '#/components/schemas/Billing_Address'
+        delivery_address:
+          description: Delivery address for the order
+          $ref: '#/components/schemas/BNPL_DeliveryAddress'
+        risk_data:
+          description: Risk Data
+          $ref: '#/components/schemas/Risk_Data'
+        travel_data:
+          description: Travel data - data relating to hotel bookings, cruise/trip details/car rental/accomodation rental
+          $ref: '#/components/schemas/BNPL_TravelData'
+        errors:
+          type: array
+          description: Gateway Errors
+          items:
+            $ref: '#/components/schemas/PspErrorDTO'
+        duplicate_check:
+          type: string
+          description: ' This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already '
+          enum:
+          - 'true'
+          - 'false'
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        last_status_update:
+          type: string
+          description: The last time when the status of the transaction was updated
+        trace_id:
+          type: string
+          description: Transaction log ID
+    Point:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type or category of points
+        scheme:
+          type: string
+          description: Name of points scheme provider
+        used:
+          type: integer
+          format: int32
+          description: Points used this transaction
+        balance:
+          type: integer
+          format: int32
+          description: Remaining points balance
+    BNPLOrderRequest:
+      type: object
+      required:
+      - amount
+      - billing_address
+      - bnpl
+      - currency
+      - customer
+      - items
+      - merchant_reference
+      - net_amount
+      - organisation
+      - redirect_urls
+      properties:
+        organisation:
+          type: string
+          description: The ID of the Organisation. Must be submitted along with currency.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed.  A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        amount:
+          type: integer
+          format: int32
+          description: Total gross amount of order charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.. Must match the total of all order items"
+        net_amount:
+          type: integer
+          format: int32
+          description: Total net amount of order charged without a decimal place.
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show against the customers order
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        locale:
+          type: string
+          description: Language UTF-8 locale code. e.g. en_GB and en_US
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        user_agent:
+          type: string
+          description: The full user agent string of the device the customer used to submit the transaction
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        shopper_interaction:
+          type: string
+          description: Determines the point of sale of a customer.
+          enum:
+          - ecommerce
+          - pos
+          - unknown
+        bnpl:
+          description: Buy Now Pay Later provider details
+          $ref: '#/components/schemas/BNPL'
+        redirect_urls:
+          description: Redirection URL details
+          $ref: '#/components/schemas/BNPL_RedirectUrls'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BNPL_Items'
+        customer:
+          description: Customer details
+          $ref: '#/components/schemas/BNPL_Customer'
+        billing_address:
+          description: Billing address details of customer.
+          $ref: '#/components/schemas/BNPL_BillingAddress'
+        delivery_address:
+          description: Delivery address for the order
+          $ref: '#/components/schemas/BNPL_DeliveryAddress'
+        risk_data:
+          description: Risk Data
+          $ref: '#/components/schemas/BNPL_RiskData'
+        travel_data:
+          description: Travel data - data relating to hotel bookings, cruise/trip details/car rental/accomodation rental
+          $ref: '#/components/schemas/BNPL_TravelData'
+        subscriptions:
+          description: Subscription details
+          $ref: '#/components/schemas/Subscription'
+        duplicate_check:
+          type: string
+          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
+          enum:
+          - 'true'
+          - 'false'
+        capture_now:
+          type: string
+          description: True will auto-capture the transaction. False will only authorise the transaction. (Where supported by payment provider - Klarna Direct , Affirm)
+          enum:
+          - 'true'
+          - 'false'
+    Billing_Address:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the customer.
+        last_name:
+          type: string
+          description: Last name of the customer.
+        address:
+          type: string
+          description: Street address of the customer.
+        address2:
+          type: string
+          description: Address details of customer
+        city:
+          type: string
+          description: City of the customer.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
+    customer_historic_orders:
+      type: object
+      properties:
+        purchased_date:
+          type: string
+          description: Date of order. 10 characters, ISO-8601 (YYYY-MM-DD)
+        amount:
+          type: integer
+          format: int32
+          description: Total gross amount of historic order
+        payment_method:
+          type: string
+          enum:
+          - Card
+          - Cash
+          - Voucher
+          - Other
+        status:
+          type: string
+          description: Current status of the order.
+          enum:
+          - Complete
+          - Pending
+          - Refunded
+          - Cancelled
+          - Unknown
+        delivery_address:
+          description: Order Delivery Data
+          $ref: '#/components/schemas/OrderDeliveryData'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItems'
+      description: customer historic orders
+    Agency:
+      type: object
+      properties:
+        agency_code:
+          type: string
+          description: Travel agency code
+        agency_name:
+          type: string
+          description: Travel agency name
+        agency_address:
+          type: string
+          description: "Street address of the card holder. \n\nNote:  All characters support "
+        agency_city:
+          type: string
+          description: 'City of the card holder.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_state:
+          type: string
+          description: 'A region / state / province for the address.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_postal_code:
+          type: string
+          description: 'A postal code for the address.
+
+
+            Note: Only alpha-numeric characters'
+        agency_country:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address
+
+
+            . Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+    Insurance:
+      type: object
+      properties:
+        agency_name:
+          type: string
+          description: Name of insurer
+        type:
+          type: string
+          description: Type of insurance
+          enum:
+          - cancellation
+          - travel
+          - cancellation_travel
+          - car
+          - bankruptcy
+        amount:
+          type: integer
+          format: int32
+          description: Amount of order charged without a decimal place e.g. $1.50 = 150
+    data:
+      type: object
+      properties:
+        key_name:
+          type: string
+          description: The name of the key for the key value pair. e.g. "meal type", "Extra Towels"
+        value:
+          type: string
+          description: The value for the key value pair. e.g. "vegitarian"
+    Subscription:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Name and/or description of subscription
+        start_date:
+          type: string
+          description: The starting date of the subscription, 10 characters, ISO-8601 (YYYY-MM-DD)
+        end_date:
+          type: string
+          description: The end date of the subscription, 10 characters, ISO-8601 (YYYY-MM-DD)
+        auto_renew:
+          type: string
+          description: 'Valid values: "true", "false"'
+        interval:
+          type: string
+          description: 'Valid values: "DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "ANNUALLY"'
+        count:
+          type: string
+          description: No of payments in subscription duration
+    RouteStops:
+      type: object
+      properties:
+        stop:
+          type: string
+          description: Location of stop off
+    BNPL_BillingAddress:
+      type: object
+      required:
+      - address
+      - city
+      - country
+      - first_name
+      - last_name
+      - postal_code
+      - state
+      properties:
+        first_name:
+          type: string
+          description: First name of the customer.
+        last_name:
+          type: string
+          description: Last name of the customer.
+        address:
+          type: string
+          description: Street address of the customer.
+        address2:
+          type: string
+          description: Address details of customer
+        city:
+          type: string
+          description: City of the customer.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+    BNPL_DeliveryAddress:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the recipient.
+        last_name:
+          type: string
+          description: Last name of the recipient.
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+        salutation:
+          type: string
+          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr" etc.
+        type:
+          type: string
+          description: Type of the customer. Customer category.
+          enum:
+          - company
+          - person
+        care_of:
+          type: string
+          description: Care of. Intermediary who is responsible for transferring a piece of mail between the postal system and the final addressee. For example Jane c/o John (“Jane at John's address”). This field has to be used for company, authority and organization names as well - e. g. "Sportverein Blau-Weiß e.V.
+        address:
+          type: string
+          description: Street address of the delivery.
+        address2:
+          type: string
+          description: Address details of the delivery.
+        city:
+          type: string
+          description: City of the delivery customer.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        method:
+          type: string
+          description: The way the order is being delivered
+          enum:
+          - delivery
+          - collection
+          - email
+    PspErrorDTO:
+      type: object
+      properties:
+        apexx_return_code:
+          type: string
+          description: A return code assigned by the APEXX payment platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        apexx_return_message:
+          type: string
+          description: A return message assigned by the APEXX payment platform. Reason message will return if reason_code is not 0
+        field_reference:
+          type: string
+          description: Reference to field that caused an error.
+        psp_return_code:
+          type: string
+          description: A return code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        psp_return_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+    BNPL_RiskData:
+      type: object
+      properties:
+        acquisition_channel:
+          type: string
+          description: Specify the channel which consumer has used for accessing merchant page.
+          enum:
+          - NotSet
+          - Advertisment
+          - SocialNetwork
+          - Direct
+          - SearchEngine
+          - Other
+        customer_card_classification:
+          type: string
+          description: Specifies the level of the loyalty card (e.g Gold member)
+        customer_card_since:
+          type: string
+          description: The date when the loyalty card was issued to the customer, 10 characters, ISO-8601 (YYYY-MM-DD)
+        customer_classification:
+          type: string
+          description: Customer reputation (e.g. VIP client)
+        customer_individual_score:
+          type: string
+          description: The customer's individual risk score provided by the merchant. Accepts a number from -10000 to 10000 (can be encased in quotation marks or not), or a single case-insensitive letter from 'a' to 'z'.
+        customer_since:
+          type: string
+          description: Date the Customer first used the Merchant. 10 characters, ISO-8601 (YYYY-MM-DD)
+        existing_customer:
+          type: string
+          description: Is customer an existing customer for merchant
+          enum:
+          - 'true'
+          - 'false'
+        has_customer_card:
+          type: string
+          description: Shows if customer has loyalty card
+          enum:
+          - 'true'
+          - 'false'
+        marketing_opt_in:
+          type: string
+          description: Shows if merchant is allowed to send marketing information to customer
+          enum:
+          - 'true'
+          - 'false'
+        number_of_transactions:
+          type: integer
+          format: int32
+          description: Total number of successful purchases that have been made by the specific consumer
+        profile_tracking_id:
+          type: string
+          description: Unique Id of the device for profile tracking
+        verified_customer_identification:
+          type: string
+          description: Is identification verified
+          enum:
+          - 'true'
+          - 'false'
+        order_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/customer_historic_orders'
+    OrderDeliveryData:
+      type: object
+      properties:
+        address:
+          type: string
+          description: Street address of the delivery
+        city:
+          type: string
+          description: City of the delivery customer
+        postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+    OrderItems:
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: Merchant Product identification number
+        group_id:
+          type: string
+          description: Item group ID. The group this item belongs to. Provided by the merchant
+        item_description:
+          type: string
+          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
+        net_unit_price:
+          type: integer
+          format: int32
+          description: "Net unit price.\n \n <b>Note:</b> net_unit_price is only required if the vat_percent is not provided."
+        gross_unit_price:
+          type: integer
+          format: int32
+          description: Gross price per item
+        quantity:
+          type: integer
+          format: int32
+          description: Quantity
+        vat_percent:
+          type: number
+          format: float
+          description: Tax percent
+        vat_amount:
+          type: integer
+          format: int32
+          description: Tax amount per item
+        discount:
+          type: integer
+          format: int32
+          description: Discount amount per item.
+        product_image_url:
+          type: string
+          description: URL for the image of this product.
+        product_url:
+          type: string
+          description: URL to the product
+        additional_information:
+          type: string
+          description: Extended description of the order item

@@ -1,0 +1,29 @@
+{
+  "provider": "apexxfintech",
+  "sources": [
+    "_original/apexxfintech-openapi.json"
+  ],
+  "outputs": [
+    "apexxfintech-alternative-payment-methods-api-openapi.yml",
+    "apexxfintech-buy-now-pay-later-api-openapi.yml",
+    "apexxfintech-create-and-manage-card-token-api-openapi.yml",
+    "apexxfintech-credit-transaction-api-openapi.yml",
+    "apexxfintech-get-transactions-api-openapi.yml",
+    "apexxfintech-hosted-token-api-openapi.yml",
+    "apexxfintech-sdk-api-openapi.yml",
+    "apexxfintech-server-side-encryption-api-openapi.yml",
+    "apexxfintech-standalone-services-api-openapi.yml",
+    "apexxfintech-transaction-hosted-payment-api-openapi.yml",
+    "apexxfintech-transaction-payment-api-openapi.yml",
+    "apexxfintech-transaction-update-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "apexxfintech-openapi.json: upgraded swagger 2.0 -> OpenAPI 3.2.0; renamed 20 component key(s) illegal in 3.x (e.g. BNPL:BillingAddress)",
+    "apis.yml register: written (+12 apis, 13 total)"
+  ],
+  "skipped": []
+}

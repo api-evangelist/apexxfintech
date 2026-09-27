@@ -1,0 +1,2800 @@
+openapi: 3.2.0
+info:
+  description: '# Using the API
+
+
+    ## Authentication
+
+    Authentication is managed using an API key, which is provided to you.'
+  version: '2.0'
+  title: APEXX FINTECH Transaction Hosted Payment API
+  license:
+    name: Apexx Fintech Ltd
+    url: https://www.apexxfintech.com/legal-documentation/
+servers:
+- url: https://sandbox.apexx.global/atomic/v1/
+tags:
+- name: Transaction Hosted Payment
+paths:
+  '/api/payment/hosted ':
+    post:
+      tags:
+      - Transaction Hosted Payment
+      summary: Hosted Payment Request
+      description: Create a new transaction using hosted payment page.
+      operationId: hostedPayUsingPOST
+      parameters:
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPayResponseRedocDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPreTxnErrorResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPreTxnErrorResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPreTxnErrorResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostedPayRequestRedocDTO'
+        description: ' '
+  '/api/payment/hosted  ':
+    post:
+      tags:
+      - Transaction Hosted Payment
+      summary: Hosted DirectDebit Request
+      description: This is a Hosted Payment Request. This provides a single interface for Hosted APM and Card Payment. In both card and APM scenario a check out URL gets generated. In case of Direct Debit, bank page gets displayed on redirection where user has to select Bank details and on click of continue button to create mandate.
+      operationId: hostedPayDirectDebitUsingPOST
+      parameters:
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommonResponseDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateMandateFailureResponse'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateMandateResponse'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMandateRequest'
+        description: ' '
+  '/api/payment/hosted      ':
+    post:
+      tags:
+      - Transaction Hosted Payment
+      summary: Hosted Open Banking Request
+      description: This is an Open Banking Hosted Payment Request. The response will include a checkout URL. The customer will be able to complete the payment after being sent to the checkout URL.
+      operationId: hostedPayOpenBankingUsingPOST
+      parameters:
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OpenBankingCommonResponseDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OpenBankingFailureResponse'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailedResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailedResponseDTO'
+        '412':
+          description: Processing Errors
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OpenBankingDepositResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailedResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenBankingDepositRequest'
+        description: ' '
+  /api/payment/hosted/select:
+    post:
+      tags:
+      - Transaction Hosted Payment
+      summary: Payment Selector Request
+      description: Create a new transaction using payment selector to provide multiple options of payments to your customer.
+      operationId: hostedPaymentSelectUsingPOST
+      parameters:
+      - name: X-APIKEY
+        in: header
+        description: X-APIKEY
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON representation of the related transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPayResponseRedocDTO'
+        '400':
+          description: "Bad / Invalid request\t"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPreTxnErrorResponseDTO'
+        '401':
+          description: Unauthenticated user / missing API Key
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPreTxnErrorResponseDTO'
+        '403':
+          description: Forbidden error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+        '500':
+          description: Internal Server Error / Unexpected Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HostedPreTxnErrorResponseDTO'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FailureResponseDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentSelectorRequestRedocDTO'
+        description: ' '
+components:
+  schemas:
+    BillingAddress:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the card holder.
+        last_name:
+          type: string
+          description: Last name of the card holder.
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        address:
+          type: string
+          description: Street address of the card holder.
+        city:
+          type: string
+          description: City of the card holder.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal code for the address.
+
+
+            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+    OpenBankingFailureResponse:
+      type: object
+      required:
+      - _id
+      - code
+      - details
+      - merchant_reference
+      - message
+      - timestamp
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        message:
+          type: string
+          description: A description of the error.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+    HostedPayResponseRedocDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        errors:
+          type: array
+          description: Errors
+          items:
+            $ref: '#/components/schemas/Errors'
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        url:
+          type: string
+          description: Checkout URL for hosted payment page.
+    FailureResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+        message:
+          type: string
+          description: A description of the response.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        errors:
+          type: array
+          description: Details of each error occured.
+          items:
+            $ref: '#/components/schemas/Errors'
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+    PS_Agency:
+      type: object
+      properties:
+        agency_code:
+          type: string
+          description: Travel agency code
+        agency_name:
+          type: string
+          description: Travel agency name
+        agency_address:
+          type: string
+          description: 'Street address of the card holder. Note: All characters support'
+        agency_city:
+          type: string
+          description: 'City of the card holder Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_state:
+          type: string
+          description: 'A region / state / province for the address. Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_postal_code:
+          type: string
+          description: 'A postal code for the address. Note: Only alpha-numeric characters'
+        agency_country:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+    PaymentSelectorCard:
+      type: object
+      properties:
+        create_token:
+          type: string
+          description: Whether to create a token or not for the card. Defaults to 'false'. Setting it to 'true' will create the token for the card.
+        three_ds:
+          $ref: '#/components/schemas/PaymentSelectorThreeDs'
+    MerchantData:
+      type: object
+      properties:
+        brand_name:
+          type: string
+          description: Merchant Brand name
+        custom_data:
+          type: object
+        website_url:
+          type: string
+          description: Merchant website.
+    ExternalRiskData:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: Session ID of the transaction. This session id can be used to obtain device fingerprint information. You can use any id that you are already generating, such as an order number or web session ID.
+        provider:
+          type: string
+          description: Third party provider for the risk check.
+          enum:
+          - CYBERSOURCE
+        cs_dm:
+          description: CybersourceDecisionManagerRequest
+          $ref: '#/components/schemas/CybersourceDecisionManagerRequest'
+    PaypalSTC:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key for the pair
+        value:
+          type: string
+          description: The value for the pair
+    PaymentSelectorOrder:
+      type: object
+      properties:
+        invoice_number:
+          type: string
+          description: Invoice id of the order
+        total_tax_amount:
+          type: string
+          description: The total tax for all items. Required if the request includes purchase_units.items.tax. Must equal the sum of (order.items[].tax_amount * order.items[].quantity) for all items.
+        description:
+          type: string
+          description: The purchase description.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentSelectorItemDetails'
+    HostedPreTxnErrorResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique id generated by Apexx.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        duplicate:
+          type: string
+          description: Property helps determine whether response is duplicate or not
+        errors:
+          type: array
+          description: Errors
+          items:
+            $ref: '#/components/schemas/Errors'
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        message:
+          type: string
+          description: A description of the response.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+          enum:
+          - FAILED
+        stc_used:
+          type: string
+          description: Property helps determine the transaction risk api if paypal was used or not
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+    ProfileDataDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the active profile chosen by the profile selector. If no profile selector exists, the default active profile is chosen.
+    DD_Address:
+      type: object
+      required:
+      - country
+      properties:
+        address:
+          type: string
+          description: Street address of the customer.
+        city:
+          type: string
+          description: City of the customer.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+    DD_PaymentSchedule:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Scheduled payment date.
+        order:
+          type: integer
+          format: int32
+          description: The ordinal position of the scheduled payment.
+        schedule_amount:
+          type: integer
+          format: int32
+          description: The expected amount to be debited.
+    OpenBankingDepositRequest:
+      type: object
+      required:
+      - amount
+      - billing_address
+      - currency
+      - customer
+      - locale
+      - merchant_reference
+      - open_banking
+      - organisation
+      - redirect_urls
+      properties:
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        billing_address:
+          description: Billing address details for the customer
+          $ref: '#/components/schemas/openBankingBillingAddress'
+        locale:
+          type: string
+          description: 'Locale Code. Valid Values: en_GB and en_US'
+        open_banking:
+          description: Open Banking specific Object
+          $ref: '#/components/schemas/OpenBanking'
+        redirect_urls:
+          description: Redirection URL Details
+          $ref: '#/components/schemas/redirect_urls'
+        customer:
+          description: openBankingCustomerDetails
+          $ref: '#/components/schemas/openBankingCustomerDetails'
+        delivery_address:
+          description: Some fields may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information.
+          $ref: '#/components/schemas/openBankingDeliveryAddress'
+    CreateMandateFailureResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        payment_flow:
+          type: string
+          description: Payment flow details.
+        organisation:
+          type: string
+          description: The ID of the Organisation. Must be submitted along with currency.
+        url:
+          type: string
+          description: Redirection URL details.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        status:
+          type: string
+          description: Status of the transaction.
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        reason_code:
+          type: string
+          description: Reason code for failure.
+        reason_message:
+          type: string
+          description: Reason message for failure.
+    BuyerHistoryDTO:
+      type: object
+      properties:
+        customer_account:
+          description: CustomerAccount
+          $ref: '#/components/schemas/CustomerAccountDTO'
+        account_history:
+          description: AccountHistory
+          $ref: '#/components/schemas/AccountHistoryDTO'
+        account_purchases:
+          type: string
+          description: Number of purchases with this cardholder account during the previous six months. Recommended for Discover ProtectBuy.
+        add_card_attempts:
+          type: string
+          description: Number of add card attempts in the last 24 hours. Recommended for Discover ProtectBuy.
+        prior_suspicious_activity:
+          type: string
+          description: Indicates whether the merchant experienced suspicious activity (including previous fraud) on the account. Recommended for Discover ProtectBuy.
+        payment_account_history:
+          type: string
+          description: 'This only applies for NEW_ACCOUNT and EXISTING_ACCOUNT in creationHistory. Possible values are: PAYMENT_ACCOUNT_EXISTS PAYMENT_ACCOUNT_ADDED_NOW'
+        payment_account_date:
+          type: string
+          description: Date applicable only for PAYMENT_ACCOUNT_EXISTS in paymentAccountHistory
+        transaction_count_day:
+          type: string
+          description: Number of transaction (successful or abandoned) for this cardholder account within the last 24 hours. Recommended for Discover ProtectBuy.
+        transaction_count_year:
+          type: string
+          description: Number of transaction (successful or abandoned) for this cardholder account within the last year. Recommended for Discover ProtectBuy.
+    PspErrorDTO:
+      type: object
+      properties:
+        apexx_return_code:
+          type: string
+          description: A return code assigned by the APEXX payment platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        apexx_return_message:
+          type: string
+          description: A return message assigned by the APEXX payment platform. Reason message will return if reason_code is not 0
+        field_reference:
+          type: string
+          description: Reference to field that caused an error.
+        psp_return_code:
+          type: string
+          description: A return code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        psp_return_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+    openBankingBillingAddress:
+      type: object
+      required:
+      - country
+      - first_name
+      - last_name
+      properties:
+        first_name:
+          type: string
+          description: First name of the card holder.
+        last_name:
+          type: string
+          description: Last name of the card holder.
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        address:
+          type: string
+          description: Street address of the card holder.
+        city:
+          type: string
+          description: City of the card holder.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal code for the address.
+
+
+            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+    PaymentSelectorPaypal:
+      type: object
+      properties:
+        stc:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaypalSTC'
+    PaymentSchedule:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Scheduled payment date.
+        order:
+          type: integer
+          format: int32
+          description: The ordinal position of the scheduled payment.
+        schedule_amount:
+          type: integer
+          format: int32
+          description: The expected amount to be debited.
+    AuthorisePaymentCustomer:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: This is the recipient's account number.
+        customer_id:
+          type: string
+          description: The customer_id of recipient's.
+        date_of_birth:
+          type: string
+          description: The date of birth of a customer, 10 characters, ISO-8601 (YYYY-MM-DD).
+        last_name:
+          type: string
+          description: Last name of the customer.
+        postal_code:
+          type: string
+          description: 'This is the recipient''s postcode/zip.
+
+
+            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and single space'
+    OpenBankingCommonResponseDTO:
+      type: object
+      required:
+      - _id
+      - amount
+      - merchant_reference
+      - reason_code
+      - status
+      - url
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        url:
+          type: string
+          description: The checkout URL generated by Apexx against the checkout URL of Trustly.
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of Success, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0.
+        status:
+          type: string
+          description: 'Valid Values: PENDING,DECLINED,FAILED'
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        amount:
+          type: number
+          description: Amount received in the request.
+        psp_transaction_reference:
+          type: string
+          description: This is the unique reference provided by Trustly.
+        mandate_id:
+          type: number
+          description: This is the unique mandate id generated by Apexx which is used for all downstream operations.
+    deliveryAddress:
+      type: object
+      properties:
+        address:
+          type: string
+          description: Street address of the delivery customer.
+        city:
+          type: string
+          description: City of the delivery customer
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+        postal_code:
+          type: string
+          description: A postal code for the address.
+        state:
+          type: string
+          description: A region / state / province for the address.
+    OpenBankingDepositResponseDTO:
+      type: object
+      required:
+      - _id
+      - amount
+      - merchant_reference
+      - reason_code
+      - status
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        reason_code:
+          type: string
+          description: A reason code assigned by the acquiring platform; '0' in case of Success, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        reason_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0.
+        status:
+          type: string
+          description: FAILED
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        amount:
+          type: number
+          description: Amount received in the request.
+        psp_transaction_reference:
+          type: string
+          description: This is the unique reference provided by Trustly.
+        mandate_id:
+          type: number
+          description: This is the unique mandate id generated by Apexx which is used for all downstream operations.
+    BillingAddressDetails:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the card holder
+        last_name:
+          type: string
+          description: Last name of the card holder
+        email:
+          type: string
+          description: Email address of the card holder
+        address:
+          type: string
+          description: Street address of the card holder
+        city:
+          type: string
+          description: City of the card holder
+        state:
+          type: string
+          description: A region / state / province for the address
+        postal_code:
+          type: string
+          description: A postal code for the address
+        country:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. Country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+        phone:
+          type: string
+          description: Numbers only, no dash or any other separator
+    HostedPayRequestRedocDTO:
+      type: object
+      required:
+      - amount
+      - capture_now
+      - locale
+      - merchant_reference
+      - return_url
+      properties:
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        capture_now:
+          type: string
+          description: True will auto-capture the transaction. False will only authorise the transaction.
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        return_url:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is processed.
+        Items:
+          type: array
+          description: Items
+          items:
+            $ref: '#/components/schemas/Items'
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        template_name:
+          type: string
+          description: CSS Template to be used on hosted page to match the hosted page with your website. This field would be ignored if the template is not found in our system and default template will be picked up
+        shopper_interaction:
+          type: string
+          description: Determines the point of sale of a customer.
+          enum:
+          - ecommerce
+          - pos
+          - moto
+          - unknown
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        billing_address:
+          description: Billing address details for the customer
+          $ref: '#/components/schemas/BillingAddress'
+        locale:
+          type: string
+          description: Locale code
+          enum:
+          - en_GB
+          - en_US
+        show_order_summary:
+          type: string
+          description: "\n\n This field allows you to customise the order summary block in the HPP iframe. True will load the order summary in the page and false will hide it."
+          enum:
+          - 'true'
+          - 'false'
+        customer:
+          description: customer
+          $ref: '#/components/schemas/AuthorisePaymentCustomer'
+        three_ds:
+          description: Enroll a given transaction for 3D-secure to verify whether authentication is supported for the card being used.
+          $ref: '#/components/schemas/hpp_threeds'
+        card:
+          description: The new card number, also known as PAN.
+          $ref: '#/components/schemas/HPPCard'
+        card_brand:
+          type: string
+          description: 'Card brand for the card used for processing '
+          enum:
+          - amex
+          - diners
+          - discover
+          - elo
+          - jcb
+          - maestro
+          - mastercard
+          - visa
+          - visa electron
+          - carte bancaire
+        show_custom_fields:
+          description: This field describes the custom fields for HPP.
+          $ref: '#/components/schemas/ShowCustomFields'
+        show_custom_labels:
+          description: This field describes the custom label fields for HPP. It will display only in the vertical alignment
+          $ref: '#/components/schemas/ShowCustomLabels'
+        delivery_address:
+          description: Some fields may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information.
+          $ref: '#/components/schemas/deliveryAddress'
+        transaction_css_template:
+          type: string
+          description: CSS data to be used on hosted page to match the hosted page with your website. This field would be ignored if organisation is not configured to use css_template.
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        external_risk_data:
+          $ref: '#/components/schemas/ExternalRiskData'
+        recurring_type:
+          type: string
+          description: This field is to be used only when a transaction is part of a series of recurring transactions. If it's the initial transaction, set the value to 'first', and if it's not, set it to 'recurring'. This field must not be included in transactions that will not be part of a series of repeated transactions. (All values are written in lowercase letters).
+          enum:
+          - first
+          - recurring
+          - mit
+          - cit
+          - oneclick
+        timeout_duration:
+          type: string
+          description: This field allows you to set the expiry time for the Hosted Payment Page.
+        timeout_units:
+          type: string
+          description: This fields allows you to set the unit of the expiry time for Hosted Payment Page.
+        expiry_return_url:
+          type: string
+          description: The return url to which the customer is redirected after an Hosted Payment Page is expired.
+        pay_fac_sub_merchant_id:
+          type: string
+          description: Payment Facilitator submerchant account Identifier in the marketplace.
+        merchant_data:
+          description: Merchant Data
+          $ref: '#/components/schemas/MerchantData'
+    RedirectionParameters:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is processed.
+        fail:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is failed. This field is only required for certain alternate payment methods.
+        cancel:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is failed. This field is only required for certain alternate payment methods.
+    PaymentSelectorDirectDebit:
+      type: object
+      required:
+      - landing_page
+      properties:
+        payment_schedule:
+          type: array
+          description: List of payment schedule
+          items:
+            $ref: '#/components/schemas/PaymentSchedule'
+        landing_page:
+          type: string
+          description: This value will determine where the user will land when they are redirected to the mandate creation page. 'Bank' directs the users to a list of banks. 'manual' directs the customer to select to enter details manually.
+          enum:
+          - bank
+          - manual
+    PS_Data:
+      type: object
+      properties:
+        key_name:
+          type: string
+          description: The name of the key for the key value pair. e.g. "meal type", "Extra Towels"
+        value:
+          type: string
+          description: The value for the key value pair. e.g. "vegitarian"
+    Agency:
+      type: object
+      properties:
+        agency_code:
+          type: string
+          description: Travel agency code
+        agency_name:
+          type: string
+          description: Travel agency name
+        agency_address:
+          type: string
+          description: "Street address of the card holder. \n\nNote:  All characters support "
+        agency_city:
+          type: string
+          description: 'City of the card holder.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_state:
+          type: string
+          description: 'A region / state / province for the address.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_postal_code:
+          type: string
+          description: 'A postal code for the address.
+
+
+            Note: Only alpha-numeric characters'
+        agency_country:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address
+
+
+            . Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+    redirect_urls:
+      type: object
+      required:
+      - failed
+      - success
+      properties:
+        success:
+          type: string
+          description: This URL is used to redirect the customer back to merchant URL
+        failed:
+          type: string
+          description: This URL is used to redirect the customer back to merchant URL
+    AddressPlaceHolderRedocDTO:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block first name field
+        last_name:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block last name field
+        email:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block email field
+        address:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block address field
+        city:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block city field
+        state:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block state field
+        postal_Code:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block postal code field
+        country:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block country field
+        phone:
+          type: string
+          description: This fields allows to provide a customized placeholder name for address block phone field
+    PaymentSelectorCustomer:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: This is the recipient's account number.
+        date_of_birth:
+          type: string
+          description: The date of birth of a customer, 10 characters, ISO-8601 (YYYY-MM-DD).
+        customer_id:
+          type: string
+          description: The customer_id of recipient's.
+        tax_id:
+          type: string
+          description: The customer's tax ID.
+        tax_id_type:
+          type: string
+          description: The customer's tax ID type.
+        billing:
+          description: Some fields may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information.
+          $ref: '#/components/schemas/BillingAddressDetails'
+        delivery:
+          description: Some fields may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information.
+          $ref: '#/components/schemas/Address'
+    HPPCard:
+      type: object
+      properties:
+        tokenise_status:
+          type: string
+          description: Status of the transactions when cards should be tokenised.
+          enum:
+          - AUTHORISED
+          - CAPTURED
+          - FAILED
+          - DECLINED
+        create_token:
+          type: string
+          description: Whether to create a token or not for the card. Defaults to 'false'. Setting it to 'true' will create the token for the card.
+    SubscriptionPaymentScheduleDTO:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date on which customer would be charge against the mandate.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. This is a 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        schedule_amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+    CommonResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        payment_flow:
+          type: string
+          description: Payment flow details.
+        organisation:
+          type: string
+          description: The ID of the Organisation. Must be submitted along with currency.
+        url:
+          type: string
+          description: Redirection URL details.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        status:
+          type: string
+          description: Status of the transaction.
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+    RiskInformationDTO:
+      type: object
+      properties:
+        profile:
+          description: Identifies a risk profile.
+          $ref: '#/components/schemas/ProfileDataDTO'
+        event_type:
+          type: string
+          description: 'Specifies one of the following types of events:
+
+
+            1. login
+
+
+            2. account_creation
+
+
+            3. account_update For regular payment transactions, do not send this field.'
+        buyer_history:
+          description: buyerHistory
+          $ref: '#/components/schemas/BuyerHistoryDTO'
+    PS__Passengers:
+      type: object
+      properties:
+        passenger_index:
+          type: integer
+          format: int32
+          description: Index number to identify passenger
+        salutation:
+          type: string
+          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr", etc.
+        first_name:
+          type: string
+          description: First name of the passenger
+        last_name:
+          type: string
+          description: Last name of the passenger
+        date_of_birth:
+          type: string
+          description: 'D.O.B. of passenger. Format: YYYY-MM-DD'
+    PlaceHolderRedocDTO:
+      type: object
+      properties:
+        card_number:
+          type: string
+          description: This fields allows to provide a customized placeholder name for card number field
+        cvv:
+          type: string
+          description: This fields allows to provide a customized placeholder name for cvv field
+        expiry_month:
+          type: string
+          description: This fields allows to provide a customized placeholder name for expiry month field
+        expiry_year:
+          type: string
+          description: This fields allows to provide a customized placeholder name for expiry year field
+        expiry_date:
+          type: string
+          description: This fields allows to provide a customized placeholder name for expiry date field
+        card_holder_name:
+          type: string
+          description: This fields allows to provide a customized placeholder name for car holder name field
+        address:
+          description: This fields allows to provide a customized placeholder name for address block address field
+          $ref: '#/components/schemas/AddressPlaceHolderRedocDTO'
+    PS_RouteStops:
+      type: object
+      properties:
+        stop:
+          type: string
+          description: Location of stop off
+    CreateMandateRequest:
+      type: object
+      required:
+      - amount
+      - currency
+      - customer
+      - direct_debit
+      - merchant_reference
+      - organisation
+      properties:
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        organisation:
+          type: string
+          description: The ID of the Organisation. Must be submitted along with currency.
+        capture_now:
+          type: string
+          description: This value is not used for direct debit and will always be defaulted to 'false'.
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        amount:
+          type: integer
+          format: int32
+          description: Total gross amount of order charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.. Must match the total of all order items"
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed.  A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        locale:
+          type: string
+          description: 'Locale Code. Valid Values: en_GB and en_US'
+        user_agent:
+          type: string
+          description: The full user agent string of the device the customer used to submit the transaction
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show against the customers order
+        merchant_reference:
+          type: string
+          description: 'A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction and  is limited to 10 alphanumeric characters. '
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        shopper_interaction:
+          type: string
+          description: Determines the point of sale of a customer.
+          enum:
+          - ecommerce
+          - pos
+          - moto
+          - unknown
+        direct_debit:
+          description: Direct Debit payment schedule details
+          $ref: '#/components/schemas/DD_DirectDebit'
+        customer:
+          description: Customer details
+          $ref: '#/components/schemas/DD_Customer'
+        duplicate_check:
+          type: string
+          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
+    openBankingCustomerDetails:
+      type: object
+      required:
+      - account_number
+      properties:
+        account_number:
+          type: string
+          description: This is the recipient's account number.
+        customer_id:
+          type: string
+          description: Customer ID of the customer.
+    Items:
+      type: object
+      required:
+      - gross_unit_price
+      - item_description
+      - net_unit_price
+      - product_id
+      - quantity
+      properties:
+        distributor_sku:
+          type: string
+        item_name:
+          type: string
+        merchant_sku:
+          type: string
+        product_id:
+          type: string
+          description: Merchant Product identification number
+        group_id:
+          type: string
+          description: Item group ID. The group this item belongs to. Provided by the merchant
+        item_description:
+          type: string
+          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
+        net_unit_price:
+          type: integer
+          format: int64
+          description: 'Net unit price.
+
+
+            Note: net_unit_price is only required if the vat_percent is not provided.'
+        gross_unit_price:
+          type: integer
+          format: int64
+          description: Gross price per item
+        quantity:
+          type: integer
+          format: int64
+          description: Quantity
+        vat_percent:
+          type: number
+          format: double
+          description: Tax percent
+        vat_amount:
+          type: integer
+          format: int64
+          description: Tax amount per item
+        product_image_url:
+          type: string
+          description: URL for the image of this product. It will be turned into a thumbnail and displayed in MyAfterPay, on the invoice line next to the order item. The linked image must be a rectangle or square, width between 100 pixels and 1280 pixels.
+        product_url:
+          type: string
+          description: URL to the product
+        additional_information:
+          type: string
+          description: Extended description of the order item
+    LabelsRedocDTO:
+      type: object
+      properties:
+        card_number:
+          type: string
+          description: This fields allows to provide a customized label name for card number field
+        cvv:
+          type: string
+          description: This fields allows to provide a customized label name for cvv field
+        expiry_month:
+          type: string
+          description: This fields allows to provide a customized label name for expiry month field
+        expiry_year:
+          type: string
+          description: This fields allows to provide a customized label name for expiry year field
+        expiry_date:
+          type: string
+          description: This fields allows to provide a customized label name for expiry date field
+        card_holder_name:
+          type: string
+          description: This fields allows to provide a customized label name for car holder name field
+        address:
+          description: This fields allows to provide a customized label name for address block fields
+          $ref: '#/components/schemas/AddressLabelRedocDTO'
+    airlineData:
+      type: object
+      properties:
+        pnr:
+          type: string
+          description: Reference number for the airline booking. Required if ticket numbers are not issued.
+        airline_name:
+          type: string
+          description: Name of the airline.
+        agency:
+          description: Agency
+          $ref: '#/components/schemas/Agency'
+        airline_numeric_code:
+          type: integer
+          format: int32
+          description: Airline numeric code
+        ticket_number:
+          type: string
+          description: Ticket/document number, or PNR locator code.
+        check_digit:
+          type: integer
+          format: int32
+          description: 'Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:
+
+
+            1. The value is numeric.
+
+            2. The first three digits are a valid IATA2 license plate carrier code.
+
+            3. The last digit is a check digit or zero (0).
+
+            4. All remaining digits are nonzero.'
+        is_restricted:
+          type: string
+          description: " Flag that indicates whether or not the ticket is restricted (nonrefundable). \ntrue - Restricted (nonrefundable). false - No restriction (refundable)."
+          enum:
+          - 'true'
+          - 'false'
+        transaction_type:
+          type: string
+          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
+          enum:
+          - '01'
+          - '02'
+        extended_payment_code:
+          type: string
+          description: 'Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+
+            '
+        passenger_title:
+          type: string
+          description: Title of the passenger.
+        passenger_name:
+          type: string
+          description: 'Name of passenger.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘)).'
+        passenger_age_group:
+          type: string
+          description: Travelling passenger's age group.
+        is_lead:
+          type: string
+          description: Indicates whether the passenger is a lead passenger within the group.
+          enum:
+          - 'true'
+          - 'false'
+        customer_code:
+          type: string
+          description: '1. Reference number or code that identifies the cardholder.
+
+            2. Code provided by the cardholder.
+
+            3. Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.
+
+            4. Customer reference..'
+        document_type:
+          type: integer
+          format: int32
+          description: Airline document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
+        document_number:
+          type: string
+          description: Ticket number or a value that might be a booking reference number.
+        travel_legs_count:
+          type: integer
+          format: int32
+          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        invoice_date:
+          type: string
+          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
+        additional_charge_description:
+          type: string
+          description: Description of the charge.
+        total_fee_amount:
+          type: integer
+          format: int32
+          description: Total fee for the ticket.
+        clearing_sequence:
+          type: integer
+          format: int32
+          description: Total number of captures when requesting multiple partial captures for one authorization.
+        clearing_count:
+          type: integer
+          format: int32
+          description: Total number of clearing count associated with the authorization request.
+        total_clearing_count:
+          type: integer
+          format: int32
+        passenger_count:
+          type: integer
+          format: int32
+          description: Number of passengers for whom the ticket was issued.
+        reservation_system_code:
+          type: string
+          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
+        process_identifier:
+          type: string
+          description: Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+        issue_date:
+          type: string
+          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
+        is_eticket:
+          type: string
+          description: Indicates whether the issued ticket was electronic or not.
+          enum:
+          - 'true'
+          - 'false'
+        original_ticket_number:
+          type: string
+          description: Original ticket number when the transaction is for a replacement ticket.
+        purchase_type:
+          type: string
+          description: 'Type of purchase
+
+            EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket'
+          enum:
+          - EXC
+          - MSC
+          - REF
+          - TKT
+        credit_reason:
+          type: string
+          description: 'Reason for the credit.A: Cancellation of the ancillary passenger transport purchase,
+
+            B: Cancellation of the airline ticket and the passenger transport ancillary purchase,
+
+            C: Cancellation of the airline ticket,
+
+            O: Other,
+
+            P: Partial refund of the airline ticket.'
+          enum:
+          - A
+          - B
+          - C
+          - O
+          - P
+        ticket_change_indicator:
+          type: string
+          description: 'Type of update.C: Change to the existing ticket., N: New ticket.'
+          enum:
+          - C
+          - N
+        plan_number:
+          type: string
+          description: Plan number based on the fare. This value is provided by the airline.
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        restricted_ticket_description:
+          type: string
+          description: Text that describes the ticket limitations, such as nonrefundable.
+        exchange_ticket_amount:
+          type: integer
+          format: int32
+          description: Amount of the exchanged ticket.
+        exchange_ticket_fee_amount:
+          type: integer
+          format: int32
+          description: Fee for exchanging the ticket.
+        reservation_type:
+          type: string
+          description: Type of journey such as one way or round trip.
+        boarding_fee_amount:
+          type: string
+          description: Boarding fee.
+        issuer_city:
+          type: string
+          description: City of the issuer
+        legs:
+          type: array
+          description: Leg
+          items:
+            $ref: '#/components/schemas/FlightDetails'
+    subscription:
+      type: object
+      properties:
+        payment_schedule:
+          type: array
+          description: List of payment schedule
+          items:
+            $ref: '#/components/schemas/SubscriptionPaymentScheduleDTO'
+        payment_settlement_date:
+          type: string
+          description: Future date by which settlement request should be done. If this is too early in time, it will be postponed to the earliest payment Date.
+    Address:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+        address:
+          type: string
+          description: Street address of the delivery customer.
+        city:
+          type: string
+          description: City of the delivery customer
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'This is the recipient''s postcode/zip.
+
+
+            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and single space'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+    DD_RedirectUrls:
+      type: object
+      required:
+      - cancelled
+      - failed
+      - success
+      properties:
+        success:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is processed.
+        failed:
+          type: string
+          description: The return url to which the customer is redirected after an transaction is unsuccessful.
+        cancelled:
+          type: string
+          description: The return url to which the customer is redirected after failing to complete provider registration and payment confirmation steps.
+    hpp_threeds:
+      type: object
+      properties:
+        three_ds_required:
+          type: string
+          description: "Valid values: \"true\"\t\"false\"\t\n\ntrue if 3DS required for this transaction, false otherwise."
+        three_ds_version:
+          type: string
+          description: "Valid values: \"1.0\"\t\"2.0\"\t\n\nThe 3-D Secure version used for the authentication"
+    ShowCustomLabels:
+      type: object
+      properties:
+        expiry_date:
+          type: string
+          description: 'Information which we will display for an expiry month and expiry year.
+
+
+            Max-Length: 50 chars'
+        cvv:
+          type: string
+          description: 'Information which we will display for the cvv.
+
+
+            Max-Length: 50 chars'
+    CybersourceDecisionManagerRequest:
+      type: object
+      properties:
+        device_information:
+          description: deviceInformation
+          $ref: '#/components/schemas/DeviceInformationDTO'
+        risk_information:
+          $ref: '#/components/schemas/RiskInformationDTO'
+        merchant_defined_information:
+          type: array
+          items:
+            $ref: '#/components/schemas/MerchantDefinedInformationDTO'
+    PaymentSelectorRequestRedocDTO:
+      type: object
+      required:
+      - amount
+      - currency
+      - merchant_reference
+      - organisation
+      - redirection_parameters
+      properties:
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        duplicate_check:
+          type: string
+          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
+        capture_now:
+          type: string
+          description: True will auto-capture the transaction. False will only authorise the transaction.
+          enum:
+          - 'true'
+          - 'false'
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        shopper_interaction:
+          type: string
+          description: Determines the point of sale of a customer.
+          enum:
+          - ecommerce
+          - pos
+          - moto
+          - unknown
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        locale:
+          type: string
+          description: 'Locale Code. Valid Values: en_GB and en_US'
+        customer:
+          $ref: '#/components/schemas/PaymentSelectorCustomer'
+        order:
+          $ref: '#/components/schemas/PaymentSelectorOrder'
+        card:
+          $ref: '#/components/schemas/PaymentSelectorCard'
+        paypal:
+          $ref: '#/components/schemas/PaymentSelectorPaypal'
+        bnpl:
+          $ref: '#/components/schemas/BNPL'
+        merchant_data:
+          $ref: '#/components/schemas/MerchantData'
+        template_name:
+          type: string
+          description: CSS Template to be used on hosted page to match the hosted page with your website. This field would be ignored if the template is not found in our system and default template will be picked up
+        external_risk_data:
+          $ref: '#/components/schemas/ExternalRiskData'
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        travel_data:
+          description: Travel data - data relating to hotel bookings, cruise/trip details/car rental/accomodation rental
+          $ref: '#/components/schemas/PS_TravelData'
+        redirection_parameters:
+          $ref: '#/components/schemas/RedirectionParameters'
+        open_banking:
+          description: Open Banking specific Object
+          $ref: '#/components/schemas/PaymentSelectorOpenBanking'
+        direct_debit:
+          description: Direct Debit payment schedule details
+          $ref: '#/components/schemas/PaymentSelectorDirectDebit'
+    PaymentSelectorOpenBanking:
+      type: object
+      required:
+      - payment_method
+      properties:
+        payment_method:
+          type: string
+          description: Payment processor to process the payment
+          enum:
+          - trustly
+          - volt
+          - trustly_subscription
+        volt:
+          description: Type of the transaction
+          $ref: '#/components/schemas/volt'
+        subscription:
+          description: Payment schedule
+          $ref: '#/components/schemas/subscription'
+    DD_Customer:
+      type: object
+      required:
+      - address
+      - first_name
+      - last_name
+      properties:
+        first_name:
+          type: string
+          description: First name of the customer.
+        last_name:
+          type: string
+          description: Last name of the customer.
+        email:
+          type: string
+          description: "Email address of the customer. This would be required for all Direct Debit requests. \n \n Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(‘)"
+        phone:
+          type: string
+          description: "Numbers only, no dash or any other separator.\n \n Note: Length - min(3) & max(20)"
+        date_of_birth:
+          type: string
+          description: The date of birth of a customer, 10 characters, ISO-8601 (YYYY-MM-DD).
+        address:
+          description: Billing address details of customer.
+          $ref: '#/components/schemas/DD_Address'
+    BNPL:
+      type: object
+      properties:
+        net_amount:
+          type: integer
+          format: int32
+          description: Total net amount of order charged without a decimal place.
+        payment_type:
+          type: string
+          description: Specifies the repayment plan type for providers which offer multiple options.
+          enum:
+          - installment
+          - invoice
+          - Direct Debit
+        payment_type_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentTypeData'
+    AccountHistoryDTO:
+      type: object
+      properties:
+        first_use_of_shipping_address:
+          type: string
+          description: Applicable when this is not a guest account.
+        shipping_address_usage_date:
+          type: string
+          description: Date when the shipping address for this transaction was first used. Recommended for Discover ProtectBuy. If firstUseOfShippingAddress is false and not a guest account, then this date is entered.
+    openBankingDeliveryAddress:
+      type: object
+      properties:
+        address:
+          type: string
+          description: Street address of the card holder.
+        city:
+          type: string
+          description: City of the card holder.
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+        postal_code:
+          type: string
+          description: A postal code for the address.
+        state:
+          type: string
+          description: A region / state / province for the address.
+    OpenBanking:
+      type: object
+      required:
+      - payment_method
+      properties:
+        payment_method:
+          type: string
+          description: Payment processor to process the payment
+          enum:
+          - trustly
+          - volt
+          - trustly_subscription
+        volt:
+          description: Type of the transaction
+          $ref: '#/components/schemas/volt'
+        subscription:
+          description: Payment schedule
+          $ref: '#/components/schemas/subscription'
+    PaymentSelectorItemDetails:
+      type: object
+      properties:
+        distributor_sku:
+          type: string
+          description: The distributor stock keeping unit (SKU) for the item.
+        merchant_sku:
+          type: string
+          description: The merchant stock keeping unit (SKU) for the item.
+        product_id:
+          type: string
+          description: Merchant Product identification number
+        group_id:
+          type: string
+          description: Item group ID. The group this item belongs to. Provided by the merchant
+        item_description:
+          type: string
+          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
+        net_unit_price:
+          type: integer
+          format: int64
+          description: 'Net unit price.
+
+
+            Note: net_unit_price is only required if the vat_percent is not provided.'
+        gross_unit_price:
+          type: integer
+          format: int64
+          description: Gross price per item
+        quantity:
+          type: integer
+          format: int64
+          description: Quantity
+        vat_percent:
+          type: string
+          description: Tax percent
+        vat_amount:
+          type: string
+          description: Tax amount per item
+        product_image_url:
+          type: string
+          description: URL for the image of this product. It will be turned into a thumbnail and displayed in MyAfterPay, on the invoice line next to the order item. The linked image must be a rectangle or square, width between 100 pixels and 1280 pixels.
+        product_url:
+          type: string
+          description: URL to the product
+        additional_information:
+          type: string
+          description: Extended description of the order item
+    PaymentTypeData:
+      type: object
+      properties:
+        key_name:
+          type: string
+          description: The name of the key for the key value pair
+        value:
+          type: string
+          description: The value for the key value pair
+      description: provider specific key values pairs, should be an array of the 'key_name' value and the 'value' value - Please speak to your Implementation manager for details on usage.
+    DeviceInformationDTO:
+      type: object
+      properties:
+        cookies_accepted:
+          type: string
+          description: Whether the customer’s browser accepts cookies.
+          enum:
+          - 'True'
+          - 'False'
+        host_name:
+          type: string
+          description: DNS resolved hostname from ipAddress.
+        http_browser_email:
+          type: string
+          description: Email address set in the customer’s browser, which may differ from customer email
+        http_accept_browser_value:
+          type: string
+          description: Value of the Accept header sent by the customer’s web browser. Note If the customer’s browser provides a value, you must include it in your request.
+        http_accept_content:
+          type: string
+          description: The exact content of the HTTP accept header.
+        http_accept_language:
+          type: string
+          description: Value represents the browser language as defined in IETF BCP47. Example:en-US
+        http_java_enabled:
+          type: string
+          description: A Boolean value that represents the ability of the cardholder browser to execute Java. Value is returned from the navigator.javaEnabled property.
+          enum:
+          - 'True'
+          - 'False'
+        http_java_script_enabled:
+          type: string
+          description: 'A Boolean value that represents the ability of the cardholder browser to execute JavaScript. Note: Merchants should be able to know the values from fingerprint details of cardholder''s browser.'
+          enum:
+          - 'True'
+          - 'False'
+        http_color_depth:
+          type: string
+          description: 'Value represents the bit depth of the color palette for displaying images, in bits per pixel. Example : 24'
+        http_screen_height:
+          type: string
+          description: 'Total height of the Cardholder''s scree in pixels. Example: 864.'
+        http_screen_width:
+          type: string
+          description: 'Total width of the cardholder''s screen in pixels. Example: 1536.'
+        http_time_difference:
+          type: string
+          description: Time difference between UTC time and the cardholder browser local time, in minutes. Example:300
+        user_agent_browser_value:
+          type: string
+          description: Value of the User-Agent header sent by the customer’s web browser. Note If the customer’s browser provides a value, you must include it in your request.
+    PS_Legs:
+      type: object
+      properties:
+        insurance:
+          type: array
+          items:
+            $ref: '#/components/schemas/PS_Insurance'
+        amount:
+          type: integer
+          format: int32
+          description: Amount of leg of booking
+        passenger_index:
+          type: array
+          description: Array of passenger index values of passengers present for this leg of booking.
+          items:
+            type: number
+        check_in_date:
+          type: string
+          description: 'Start date of reservation. Format: YYYY-MM-DD HH:mm:ss'
+        check_out_date:
+          type: string
+          description: 'End date of reservation. Format: YYYY-MM-DD HH:mm:ss'
+        provider_group:
+          type: string
+          description: Name of hotel parent group
+        provider_name:
+          type: string
+          description: Name of hotel chain
+        room_count:
+          type: integer
+          format: int32
+          description: Number of rooms under booking
+        traveller_count:
+          type: integer
+          format: int32
+          description: Number of travellers under booking
+        origin_address:
+          type: string
+          description: "Street address of origin point.\n \n  Note: Supports only ISO-8859-1 characters."
+        origin_city:
+          type: string
+          description: City Journey begins
+        origin_postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        origin_country_code:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+        origin_state:
+          type: string
+          description: State Journey begins
+        origin_location_id:
+          type: string
+          description: The agency code, address, phone number, etc., used to identify the location of origin
+        origin_location:
+          type: string
+          description: The location where a taxi passenger was picked up or where an auto rental vehicle was picked up.
+        route_stops:
+          type: array
+          description: Array of stopping points on trip
+          items:
+            $ref: '#/components/schemas/PS_RouteStops'
+        destination_address:
+          type: string
+          description: "Address of accomodation.\n \n  Note: Supports only ISO-8859-1 characters."
+        destination_city:
+          type: string
+          description: Final destination City
+        destination_postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        destination_country_code:
+          type: string
+          description: 'Destination country. A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU, etc.)'
+        destination_state:
+          type: string
+          description: Final destination State.
+        destination_location_id:
+          type: string
+          description: The agency code, address, phone number, etc., used to identify the location of destination.
+        destination_location:
+          type: string
+          description: The location where a taxi passenger was dropped or where an auto rental vehicle was returned.
+        booking_type:
+          type: string
+          description: The type of booking being made.
+          enum:
+          - hotel
+          - rental
+          - car
+          - cruise
+          - flight
+          - train
+          - coach
+        adults_count:
+          type: integer
+          format: int32
+          description: Number of adults under booking
+        child_count:
+          type: integer
+          format: int32
+          description: Number of children under booking
+        beds_count:
+          type: integer
+          format: int32
+          description: Number of rooms under booking
+        vehicle_type:
+          type: string
+          description: Name of vehicle being rented
+        class:
+          type: string
+          description: Class of travel or stay. e.g. "first", "premium", "luxury suite" - free text field, not enum
+        data:
+          type: array
+          description: Array of provider specific key values pairs, should be an array of the 'key_name' value and the 'value' value - Please speak to your Implementation manager for details on usage.
+          items:
+            $ref: '#/components/schemas/PS_Data'
+        carrier_code:
+          type: string
+          description: Travel carrier code
+        travel_mode_reference:
+          type: integer
+          format: int32
+          description: Flight/Travel mode number excluding carrier code
+        origin_port:
+          type: string
+          description: Origin airport/port/city IATA code
+        service_class:
+          type: string
+          description: Service Class
+          enum:
+          - first class
+          - Second class
+          - business
+          - Economic
+          - 0 Ticket category/class ("0" if no class)
+        stop_over_code:
+          type: string
+          description: 'Stop over code -
+
+
+            O (capital letter "O") or 0 (zero) : Stopover allowed
+
+
+            X (capital letter "X") or 1 : Stopover not allowed'
+          enum:
+          - X
+          - O
+          - '1'
+          - '0'
+        departure_date:
+          type: string
+          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        destination_port:
+          type: string
+          description: Destination airport/port/city IATA code
+        fare_basis_code:
+          type: string
+          description: Fare basis code
+        departure_tax_amount:
+          type: integer
+          format: int32
+          description: Amount of departure tax for this leg of the trip
+        conjunction_ticket:
+          type: string
+          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments
+        exchange_ticket_number:
+          type: string
+          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
+        coupon_number:
+          type: string
+          description: Coupon number for the leg
+        endorsements_restrictions:
+          type: string
+          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
+        total_fare_amount:
+          type: integer
+          format: int32
+          description: Total fare for this leg of the trip.
+        fee_amount:
+          type: integer
+          format: int32
+          description: Fee for this leg of the trip, such as an airport/port fee or country/city fee
+        tax_amount:
+          type: integer
+          format: int32
+          description: Tax for this leg of the trip
+        delivery:
+          type: string
+          description: 'Valid values: "delivery", "collection", "email". The way the item is being delivered'
+    ShowCustomFields:
+      type: object
+      properties:
+        card_holder_name:
+          type: string
+          description: This field allows you to customise the card block in the HPP. True will load the card holder name in the page and false will hide it.
+          enum:
+          - 'false'
+          - 'true'
+        address:
+          type: string
+          description: This field allows you to customise the billing_address in the HPP. True will load the billing_address fields in the page and false will hide it.
+          enum:
+          - 'false'
+          - 'true'
+        address_required:
+          type: string
+          description: This field allows you to customise the billing_address fileds validation in the HPP. True will make all billing_address fields mandatory in the page and false will make it optional.
+          enum:
+          - 'false'
+          - 'true'
+        delivery_address:
+          type: string
+          description: This field allows you to customise the delivery_address in the HPP. True will load the delivery_address fields in the page and false will hide it.
+          enum:
+          - 'false'
+          - 'true'
+        delivery_address_required:
+          type: string
+          description: This field allows you to customise the delivery_address fileds validation in the HPP. True will make all delivery_address fields mandatory in the page and false will make it optional.
+          enum:
+          - 'false'
+          - 'true'
+        display_horizontal:
+          type: string
+          description: This field allows you to customise the alignment of the HPP. True will align in the horizontal and false will align in the vertical. And true is the default value.
+          enum:
+          - 'false'
+          - 'true'
+        show_phone:
+          type: string
+          description: This field allows you to customise the phone in the HPP. True will load the phone field in the page and false will hide it.
+          enum:
+          - 'true'
+          - 'false'
+        display_cvv_logo:
+          type: string
+          description: This field allows you to enable cvv logo on the HPP. True will show the cvv logo on the page and false will hide it.
+          enum:
+          - 'false'
+          - 'true'
+        labels:
+          description: This block is used to provide customized field name
+          $ref: '#/components/schemas/LabelsRedocDTO'
+        placeholder:
+          description: This block is used to provide customized placeholder name
+          $ref: '#/components/schemas/PlaceHolderRedocDTO'
+    PS_Insurance:
+      type: object
+      properties:
+        agency_name:
+          type: string
+          description: Name of insurer
+        type:
+          type: string
+          description: Type of insurance
+          enum:
+          - cancellation
+          - travel
+          - cancellation_travel
+          - car
+          - bankruptcy
+        amount:
+          type: integer
+          format: int32
+          description: Amount of order charged without a decimal place e.g. $1.50 = 150
+    FlightDetails:
+      type: object
+      properties:
+        carrier_code:
+          type: string
+          description: Travel carrier code
+        flight_number:
+          type: integer
+          format: int32
+          description: Flight number excluding carrier code.
+        origin_airport:
+          type: string
+          description: Origin airport/city IATA code.
+        origin_city:
+          type: string
+          description: Origin city name.
+        service_class:
+          type: string
+          description: Ticket category/class (“0” if no class).
+          enum:
+          - economy
+          - premium economy
+          - business class
+          - first class
+          - '0'
+        stop_over_code:
+          type: string
+          description: 'Stop over code -
+
+
+            O (capital letter "O") or 0 (zero) : Stopover allowed
+
+
+            X (capital letter "X") or 1 : Stopover not allowed'
+          enum:
+          - X
+          - O
+          - '1'
+          - '0'
+        departure_date:
+          type: string
+          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
+        destination_airport:
+          type: string
+          description: Destination airport/city IATA code.
+        destination_city:
+          type: string
+          description: Destination city name
+        fare_basis_code:
+          type: string
+          description: Fare basis code
+        departure_tax_amount:
+          type: integer
+          format: int32
+          description: Amount of departure tax for this leg of the trip.
+        conjunction_ticket:
+          type: string
+          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments.
+        exchange_ticket_number:
+          type: string
+          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
+        coupon_number:
+          type: string
+          description: Coupon number for the leg
+        endorsements_restrictions:
+          type: string
+          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
+        total_fare_amount:
+          type: integer
+          format: int32
+          description: Total fare for this leg of the trip.
+        fee_amount:
+          type: integer
+          format: int32
+          description: Fee for this leg of the trip, such as an airport fee or country fee.
+        tax_amount:
+          type: integer
+          format: int32
+          description: Tax for this leg of the trip.
+    Point:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type or category of points
+        scheme:
+          type: string
+          description: Name of points scheme provider
+        used:
+          type: integer
+          format: int32
+          description: Points used this transaction
+        balance:
+          type: integer
+          format: int32
+          description: Remaining points balance
+    PS_TravelData:
+      type: object
+      properties:
+        pnr:
+          type: string
+          description: Reference number for the booking.
+        booking_amount:
+          type: number
+          description: Total amount of booking.
+        booking_type:
+          type: string
+          description: The type of booking being made.
+          enum:
+          - hotel
+          - rental
+          - car
+          - cruise
+          - flight
+          - train
+          - coach
+        passengers:
+          type: array
+          description: Array of passenger names
+          items:
+            $ref: '#/components/schemas/PS__Passengers'
+        legs:
+          type: array
+          description: Array of legs of booking.
+          items:
+            $ref: '#/components/schemas/PS_Legs'
+        discount_percentage:
+          type: number
+          description: Percentage dicount to be applied to booking
+        loyalty_number:
+          type: string
+          description: Customer loyalty scheme number
+        points:
+          type: array
+          description: Loyalty points/scheme details
+          items:
+            $ref: '#/components/schemas/Point'
+        travel_mode_name:
+          type: string
+          description: Name of your mode of travel such as Airline, Ferry, Rail etc.
+        travel_mode_numeric_code:
+          type: integer
+          format: int32
+          description: Mode of Travel (Airline, Ferry, Rail etc.) numeric code
+        agency:
+          description: Agency
+          $ref: '#/components/schemas/PS_Agency'
+        ticket_number:
+          type: string
+          description: Ticket/document number, or PNR locator code.
+        check_digit:
+          type: integer
+          format: int32
+          description: Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:<ul><li>The value is numeric.</li><li>The first three digits are a valid IATA2 license plate carrier code.</li><li>The last digit is a check digit or zero (0).</li><li>All remaining digits are nonzero.</li></ul>
+        is_restricted:
+          type: string
+          description: True will auto-capture the transaction. False will only authorise the transaction
+          enum:
+          - 'true'
+          - 'false'
+        transaction_type:
+          type: integer
+          format: int32
+          description: Type of charge.
+        extended_payment_code:
+          type: string
+          description: Airline/Travel Mode process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets
+        passenger_title:
+          type: string
+          description: Title of the passenger
+        passenger_name:
+          type: string
+          description: "Name of passenger.\n <b>Note:</b> Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘))."
+        passenger_age_group:
+          type: string
+          description: Travelling passenger's age group.
+          enum:
+          - 16-24
+          - 25-34
+          - 35-44
+          - 45-54
+          - 55-64
+          - 65 and up
+          - Unknown
+        is_lead:
+          type: string
+          description: Indicates whether the passenger is a lead passenger within the group.
+          enum:
+          - 'true'
+          - 'false'
+        customer_code:
+          type: string
+          description: <ol><li>Reference number or code that identifies the cardholder.</li><li>Code provided by the cardholder.</li><li>Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.</li><li>Customer reference..</li></ol>
+        document_type:
+          type: integer
+          format: int32
+          description: Airline/Travel mode document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
+        document_number:
+          type: string
+          description: Ticket number or a value that might be a booking reference number.
+        travel_legs_count:
+          type: integer
+          format: int32
+          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        invoice_date:
+          type: string
+          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
+        additional_charge_description:
+          type: string
+          description: Description of the charge.
+        total_fee_amount:
+          type: integer
+          format: int32
+          description: Total fee for the ticket.
+        clearing_sequence:
+          type: integer
+          format: int32
+          description: Total number of captures when requesting multiple partial captures for one authorisation.
+        clearing_count:
+          type: integer
+          format: int32
+          description: Total number of clearing count associated with the authorisation request.
+        total_clearing_amount:
+          type: integer
+          format: int32
+          description: Total clearing amount for all transactions in the clearing count set.
+        passenger_count:
+          type: integer
+          format: int32
+          description: Number of passengers for whom the ticket was issued.
+        reservation_system_code:
+          type: string
+          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
+        process_identifier:
+          type: string
+          description: Airline/Travel mode process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+        issue_date:
+          type: string
+          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
+        is_eticket:
+          type: string
+          description: Indicates whether the issued ticket was electronic or not.
+          enum:
+          - 'true'
+          - 'false'
+        original_ticket_number:
+          type: string
+          description: Original ticket number when the transaction is for a replacement ticket.
+        purchase_type:
+          type: string
+          description: "EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket. \n\n Type of purchase"
+          enum:
+          - EXC
+          - MSC
+          - REF
+          - TKT
+        credit_reason:
+          type: string
+          description: 'valid values :"A""B""C""O""P"
+
+            A: Cancellation of the ancillary passenger transport purchase, B: Cancellation of the airline ticket and the passenger transport ancillary purchase, C: Cancellation of the airline ticket, O: Other, P: Partial refund of the airline ticket.
+
+            Reason for the credit.'
+          enum:
+          - A
+          - B
+          - C
+          - O
+          - P
+        ticket_change_indicator:
+          type: string
+          description: "C: Change to the existing ticket., \n N: New ticket.\n \n Type of update."
+          enum:
+          - C
+          - N
+        plan_number:
+          type: string
+          description: Plan number based on the fare. This value is provided by the airline/travel mode provider
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        restricted_ticket_description:
+          type: string
+          description: Text that describes the ticket limitations, such as nonrefundable.
+        exchange_ticket_amount:
+          type: integer
+          format: int32
+          description: Amount of the exchanged ticket.
+        exchange_ticket_fee_amount:
+          type: integer
+          format: int32
+          description: Fee for exchanging the ticket.
+        reservation_type:
+          type: string
+          description: Type of journey such as one way or round trip.
+        boarding_fee_amount:
+          type: number
+          description: Boarding fee.
+        affiliate_name:
+          type: string
+          description: Unique affiliate name identifier. This will help us support our merchant by attaching more details with the transaction.
+    PaymentSelectorThreeDs:
+      type: object
+      properties:
+        three_ds_required:
+          type: string
+          description: true if 3DS required for this transaction, false otherwise.
+          enum:
+          - 'true'
+          - 'false'
+        three_ds_version:
+          type: string
+          description: The 3-D Secure version used for the authentication.
+          enum:
+          - '1.0'
+          - '2.0'
+    AddressLabelRedocDTO:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: This fields allows to provide a customized label name for address block first name field
+        last_name:
+          type: string
+          description: This fields allows to provide a customized label name for address block last name field
+        email:
+          type: string
+          description: This fields allows to provide a customized label name for address block email field
+        address:
+          type: string
+          description: This fields allows to provide a customized label name for address block address field
+        city:
+          type: string
+          description: This fields allows to provide a customized label name for address block city field
+        state:
+          type: string
+          description: This fields allows to provide a customized label name for address block state field
+        postal_code:
+          type: string
+          description: This fields allows to provide a customized label name for address block postal code field
+        country:
+          type: string
+          description: This fields allows to provide a customized label name for address block country field
+        phone:
+          type: string
+          description: This fields allows to provide a customized label name for address block phone field
+    MerchantDefinedInformationDTO:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Fields that you can use to store information. The value appears in the Case Management Details window in the Business Center. The first four fields are the same fields that are used by the Secure Data services. See request code examples. Warning Merchant-defined data fields are not intended to and must not be used to capture personally identifying information. Accordingly, merchants are prohibited from capturing, obtaining, and/or transmitting any personally identifying information in or via the merchant-defined data fields.Personally identifying information includes, but is not limited to, address, credit card number, social security number, driver's license number, state-issued identification number, passport number, and card verification numbers (CVV, CVC2, CVV2, CID, CVN). In the event CyberSource discovers that a merchant is capturing and/or transmitting personally identifying information via the merchant-defined data fields, whether or not intentionally, CyberSource will immediately suspend the merchant's account, which will result in a rejection of any and all transaction requests submitted by the merchant after the point of suspension.
+        value:
+          type: string
+          description: String value for the key
+    CustomerAccountDTO:
+      type: object
+      properties:
+        last_change_date:
+          type: string
+          description: Date the cardholder’s account was last changed. This includes changes to the billing or shipping address, new payment accounts or new users added. Recommended for Discover ProtectBuy.
+        creation_history:
+          type: string
+          description: 'The values from the enum can be: GUEST NEW_ACCOUNT EXISTING_ACCOUNT'
+        modification_history:
+          type: string
+          description: 'This field is applicable only in case of EXISTING_ACCOUNT in creationHistory. Possible values: ACCOUNT_UPDATED_NOW ACCOUNT_UPDATED_PAST'
+        password_history:
+          type: string
+          description: 'This only applies for EXISTING_ACCOUNT in creationHistory. The values from the enum can be: PASSWORD_CHANGED_NOW PASSWORD_CHANGED_PAST PASSWORD_NEVER_CHANGED'
+        create_date:
+          type: string
+          description: Date the cardholder opened the account. Recommended for Discover ProtectBuy. This only applies for EXISTING_ACCOUNT in creationHistory.
+        password_change_date:
+          type: string
+          description: Date the cardholder last changed or reset password on account. Recommended for Discover ProtectBuy. This only applies for PASSWORD_CHANGED_PAST in passwordHistory.
+    volt:
+      type: object
+      properties:
+        type:
+          type: string
+          description: If volt object is sent then this field is mandatory otherwise optional
+          enum:
+          - BILL
+          - GOODS
+          - PERSON_TO_PERSON
+          - OTHER
+          - SERVICES
+    CreateMandateResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          description: Details of each error occured.
+          items:
+            $ref: '#/components/schemas/PspErrorDTO'
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        payment_flow:
+          type: string
+          description: Payment flow details.
+        organisation:
+          type: string
+          description: The ID of the Organisation. Must be submitted along with currency.
+        url:
+          type: string
+          description: Redirection URL details.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        created_at:
+          type: string
+          description: The time at which the transaction was created
+        status:
+          type: string
+          description: Status of the transaction.
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        reason_code:
+          type: string
+          description: Reason code for failure.
+        reason_message:
+          type: string
+          description: Reason message for failure.
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
+    DD_DirectDebit:
+      type: object
+      required:
+      - landing_page
+      - redirect_urls
+      properties:
+        payment_schedule:
+          type: array
+          description: List of payment schedule
+          items:
+            $ref: '#/components/schemas/DD_PaymentSchedule'
+        landing_page:
+          type: string
+          description: This value will determine where the user will land when they are redirected to the mandate creation page. 'Bank' directs the users to a list of banks. 'manual' directs the customer to select to enter details manually.
+          enum:
+          - bank
+          - manual
+        redirect_urls:
+          description: Redirection URL details
+          $ref: '#/components/schemas/DD_RedirectUrls'
+    FailedResponseDTO:
+      type: object
+      required:
+      - _id
+      - code
+      - details
+      - merchant_reference
+      - message
+      - organisation_id
+      - timestamp
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        message:
+          type: string
+          description: A description of the error.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        errors:
+          type: array
+          description: Details of each error occured.
+          items:
+            $ref: '#/components/schemas/Errors'
