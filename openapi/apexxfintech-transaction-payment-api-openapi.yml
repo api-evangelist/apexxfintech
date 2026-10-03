@@ -213,45 +213,89 @@ paths:
         description: ' '
 components:
   schemas:
-    BillingAddress:
+    FraudCheckResponse:
       type: object
       properties:
-        first_name:
+        provider:
           type: string
-          description: First name of the card holder.
-        last_name:
+          description: Third party provider for the risk check.
+        score:
+          type: number
+          format: double
+          description: Total score calculated for this order. The value cannot be negative.
+        status:
           type: string
-          description: Last name of the card holder.
-        email:
+          description: Status of the risk check.
+        created_at:
           type: string
-          description: 'Email address of the card holder.
-
-
-            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
-        address:
+          format: date-time
+          description: The time at which the transaction was created
+        cs_dm:
+          $ref: '#/components/schemas/CybersourceDecisionManagerResponse'
+        code:
           type: string
-          description: Street address of the card holder.
-        city:
+          description: An alphanumeric code which uniquely identify an error.
+        details:
           type: string
-          description: City of the card holder.
-        state:
+          description: Optional details concerning the error.
+        message:
           type: string
-          description: A region / state / province for the address.
-        postal_code:
+          description: A description of the error.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp
+    WebhookResponse:
+      type: object
+      properties:
+        immediate:
+          type: boolean
+        webhook_transaction_update:
           type: string
-          description: 'A postal code for the address.
-
-
-            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
-        country:
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+    BuyerHistoryDTO:
+      type: object
+      properties:
+        customer_account:
+          description: CustomerAccount
+          $ref: '#/components/schemas/CustomerAccountDTO'
+        account_history:
+          description: AccountHistory
+          $ref: '#/components/schemas/AccountHistoryDTO'
+        account_purchases:
           type: string
-          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
-        phone:
+          description: Number of purchases with this cardholder account during the previous six months. Recommended for Discover ProtectBuy.
+        add_card_attempts:
           type: string
-          description: 'Numbers only, no dash or any other separator.
-
-
-            Note: Length - min(3) & max(20)'
+          description: Number of add card attempts in the last 24 hours. Recommended for Discover ProtectBuy.
+        prior_suspicious_activity:
+          type: string
+          description: Indicates whether the merchant experienced suspicious activity (including previous fraud) on the account. Recommended for Discover ProtectBuy.
+        payment_account_history:
+          type: string
+          description: 'This only applies for NEW_ACCOUNT and EXISTING_ACCOUNT in creationHistory. Possible values are: PAYMENT_ACCOUNT_EXISTS PAYMENT_ACCOUNT_ADDED_NOW'
+        payment_account_date:
+          type: string
+          description: Date applicable only for PAYMENT_ACCOUNT_EXISTS in paymentAccountHistory
+        transaction_count_day:
+          type: string
+          description: Number of transaction (successful or abandoned) for this cardholder account within the last 24 hours. Recommended for Discover ProtectBuy.
+        transaction_count_year:
+          type: string
+          description: Number of transaction (successful or abandoned) for this cardholder account within the last year. Recommended for Discover ProtectBuy.
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
     VehicleInformation:
       type: object
       properties:
@@ -296,6 +340,111 @@ components:
           - LARGE_SUV
           - EXOTIC_SUV
           - MISCELLANEOUS
+    Charge:
+      type: object
+      properties:
+        food_and_beverage:
+          type: string
+          description: Cost for all food and beverages.
+        phone_cost:
+          type: string
+          description: Cost of telephone services.
+        restaurant_cost:
+          type: string
+          description: Cost of restaurant purchases
+        room_service:
+          type: string
+          description: Cost of room service
+        mini_bar_counter:
+          type: string
+          description: Cost of mini-bar purchases.
+        laundary_cost:
+          type: string
+          description: Cost of laundry services.
+        miscellaneous_cost:
+          type: string
+          description: Miscellaneous costs.
+        gift_shop_cost:
+          type: string
+          description: Cost of gift shop purchases.
+        movie_cost:
+          type: string
+          description: Cost of movies.
+        health_club_cost:
+          type: string
+          description: Cost of health club services.
+        valet_parking_cost:
+          type: string
+          description: Cost of valet parking services.
+        cash_disbursement_cost:
+          type: string
+          description: Cost of the cash that was disbursed plus any associated service fees
+        non_room_cost:
+          type: string
+          description: Cost of non-room purchases, such as meals and gifts.
+        business_centre_cost:
+          type: string
+          description: Cost of business center services.
+        lounge_bar_cost:
+          type: string
+          description: Cost of lounge and bar purchases.
+        transportation_cost:
+          type: string
+          description: Cost of transportation services.
+        gratuity_cost:
+          type: string
+          description: Gratuity.
+        conference_room_cost:
+          type: string
+          description: Cost of conference room services.
+        audio_visual_cost:
+          type: string
+          description: Cost of audio visual services.
+        banquet_cost:
+          type: string
+          description: Cost of banquet services.
+        non_room_tax_amount:
+          type: string
+          description: Tax on non-room purchases.
+        early_check_out_cost:
+          type: string
+          description: Service fee for early departure.
+        internet_access_cost:
+          type: string
+          description: Cost of Internet access.
+    Hotel:
+      type: object
+      properties:
+        room:
+          description: The object containing the number of nights and the daily rate that applies for that number of nights.
+          $ref: '#/components/schemas/Room'
+        charge:
+          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
+          $ref: '#/components/schemas/Charge'
+        tax_detail:
+          type: array
+          description: Hotel tax details
+          items:
+            $ref: '#/components/schemas/TaxDetail'
+        additional_discount_amount:
+          type: string
+          description: Amount of an additional coupon or discount.
+        adjusted_amount:
+          type: string
+          description: Adjusted amount charged in addition to the reservation amount after the stay is complete.
+    PaymentInformationResponseDTO:
+      type: object
+      properties:
+        accountType:
+          type: string
+        bin:
+          type: string
+        binCountry:
+          type: string
+        issuer:
+          type: string
+        scheme:
+          type: string
     RuleDTO:
       type: object
       properties:
@@ -303,22 +452,1327 @@ components:
           type: string
         name:
           type: string
-    PspgwRouteInformation:
+    Details:
+      type: object
+    PspErrorDTO:
       type: object
       properties:
-        apexx_name:
+        apexx_return_code:
           type: string
-          description: Name of the psp as setup within the APEXX payment gateway.
-        merchant_code:
+          description: A return code assigned by the APEXX payment platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        apexx_return_message:
           type: string
-        name:
+          description: A return message assigned by the APEXX payment platform. Reason message will return if reason_code is not 0
+        field_reference:
           type: string
-        psp_id:
+          description: Reference to field that caused an error.
+        psp_return_code:
           type: string
-          description: The ID of the payment service provider.
-        sequence:
+          description: A return code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        psp_return_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+    ScoreDTO:
+      type: object
+      properties:
+        factorCodes:
+          type: array
+          items:
+            type: string
+        modelUsed:
+          type: string
+        result:
+          type: string
+    PaymentRequest:
+      type: object
+      required:
+      - amount
+      - capture_now
+      - card
+      - merchant_reference
+      properties:
+        account:
+          type: string
+          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
+        organisation:
+          type: string
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
+          type: string
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        amount:
+          type: number
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        capture_now:
+          type: string
+          description: True will auto-capture the transaction. False will only authorise the transaction.
+        dynamic_descriptor:
+          type: string
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        card:
+          description: The new card number, also known as PAN.
+          $ref: '#/components/schemas/CardDetailsWithApm'
+        items:
+          type: array
+          description: Items
+          items:
+            $ref: '#/components/schemas/Items'
+        customer:
+          description: customer
+          $ref: '#/components/schemas/AuthorisePaymentCustomer'
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        browser_screen_height:
           type: integer
           format: int32
+          description: The height of the customer’s browser at point of submission
+        browser_screen_width:
+          type: integer
+          format: int32
+          description: The width of the customer’s browser at point of submission
+        recurring_type:
+          type: string
+          description: This field is to be used only when a transaction is part of a series of recurring transactions. If it's the initial transaction, set the value to 'first', and if it's not, set it to 'recurring'. This field must not be included in transactions that will not be part of a series of repeated transactions. (All values are written in lowercase letters).
+          enum:
+          - first
+          - recurring
+          - mit
+          - cit
+          - oneclick
+          - install
+        user_agent:
+          type: string
+          description: The full user agent string of the device the customer used to submit the transaction
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        billing_address:
+          description: Billing address details for the customer
+          $ref: '#/components/schemas/BillingAddress'
+        shopper_interaction:
+          type: string
+          description: Determines the point of sale of a customer.
+          enum:
+          - ecommerce
+          - pos
+          - moto
+          - unknown
+        three_ds:
+          description: Enroll a given transaction for 3D-secure to verify whether authentication is supported for the card being used.
+          $ref: '#/components/schemas/ThreeDs'
+        fraud_predictions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FraudPredictions'
+        card_brand:
+          type: string
+          description: Card brand for the card used for processing
+          enum:
+          - amex
+          - diners
+          - discover
+          - elo
+          - jcb
+          - maestro
+          - mastercard
+          - visa
+          - visa electron
+          - carte bancaire
+        delivery_address:
+          description: Some fields may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information.
+          $ref: '#/components/schemas/deliveryAddress'
+        duplicate_check:
+          type: string
+          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
+        external_risk_data:
+          description: ExternalRiskData
+          $ref: '#/components/schemas/ExternalRiskData'
+        airline_data:
+          description: airlineData
+          $ref: '#/components/schemas/airlineData'
+        external_authentication:
+          description: ExternalAuthentication
+          $ref: '#/components/schemas/ExternalAuthentication'
+        tra_exemption:
+          type: string
+          description: "\"This indicates that exemption from SCA is requested for the transaction. Valid values as mentioned below:\n\n \"\"external\"\" - Transaction risk analysis conducted by approved external source\n\n \"\"acquirer\"\" - Transaction risk analysis conducted by the acquirer\n\n \"\"scp\"\" - scp stands for Secure Corporate Payment\n\n \"\"lvp\"\" - lvp stands for Low-Value Payment\n\n \"\"delegated\"\" - Exemption indicator for delegated authentication.\n\n This flag specifies whether the transaction is exempt from strong customer authentication (SCA) requirements in Europe because the authentication was delegated to a different provider, such as an acquirer or payment technology provider (PTP).\""
+        merchant_data:
+          description: Merchant Data
+          $ref: '#/components/schemas/MerchantData'
+        installment_information:
+          description: Please note that the specific request here will override any general configuration that is set against your MID. by the acquirer. This does not apply to AMEX where the config at the MID takes priority
+          $ref: '#/components/schemas/InstallmentInformation'
+        travel_data:
+          description: travelData
+          $ref: '#/components/schemas/travelData'
+        pay_fac_sub_merchant_id:
+          type: string
+          description: Payment Facilitator submerchant account Identifier in the marketplace.
+        device_information:
+          description: deviceInformation
+          $ref: '#/components/schemas/deviceInformation'
+        aft_type:
+          type: string
+          description: 'Type of Account Funding transaction.
+
+
+            SVWF - Stored value wallet funding
+
+
+            SDWT - Staged digital wallet pre-funding
+
+
+            A2A - Account-to-account (me-to-me) money transfer
+
+
+            P2P - Person-to-Person (P2P) money transfer
+
+
+            CLA - Cryptocurrency and liquid assets
+
+
+            BIT - Financial Institution offe red Bank-Initiated P2P Money Transfer
+
+
+            FD - Funds Disbursement
+
+
+            FT - Funds Transfer
+
+
+            PD - Payroll Disbursement
+
+
+            PL - Prepaid load / reload2
+
+
+            B2B - Business to Business
+
+
+            CBP - Card Bill Payment
+
+
+            GP - Gambling Payouts
+
+
+            GFD - General funds disbursement
+
+
+            GD - Government Disbursement
+
+
+            LP - Loyalty Payments
+
+
+            MD - Funding small business disbursements
+
+
+            MP - Merchant Payment
+
+
+            NCBP - Non card bill payment
+
+
+            OGP - Online gaming payout
+
+
+            ZDA - Zero dollar authorisation
+
+
+            TO - Top off'
+          enum:
+          - SVWF
+          - SDWT
+          - A2A
+          - P2P
+          - CLA
+          - BIT
+          - FD
+          - FT
+          - PD
+          - TPL
+          - B2BCBP
+          - GP
+          - GFD
+          - GD
+          - LP
+          - MD
+          - MP
+          - NCBP
+          - OGP
+          - ZDA
+          - TO
+    AccountHistoryDTO:
+      type: object
+      properties:
+        first_use_of_shipping_address:
+          type: string
+          description: Applicable when this is not a guest account.
+        shipping_address_usage_date:
+          type: string
+          description: Date when the shipping address for this transaction was first used. Recommended for Discover ProtectBuy. If firstUseOfShippingAddress is false and not a guest account, then this date is entered.
+    ExternalAuthentication:
+      type: object
+      required:
+      - 3ds_status
+      - 3ds_version
+      - cavv
+      - eci
+      properties:
+        cavv:
+          type: string
+          description: 3-D Secure "Cardholder Authentication Verification Value".
+        xid:
+          type: string
+          description: 3-D Secure Xid.
+        cavv_algorithm:
+          type: string
+          description: 3-D Secure "Cardholder Authentication Verification Value" algorithm(0-9).
+        3ds_status:
+          type: string
+          description: "3-D Secure status:\n\n y = authentication successful\n\n n = not authenticated\n\n u = authentication unavailable\n\n a = authentication attempted\n\n r = authentication rejected"
+        eci:
+          type: string
+          description: The Electronic Commerce Indicator (ECI).
+        3ds_enrolled:
+          type: string
+          description: "Card's enrollment status. \n\n **Note:** This field may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information."
+        directory_server_transaction_id:
+          type: string
+          description: 'The 3-D Secure Directory Server transaction ID that is used for the 3D Authentication.
+
+
+            **Note:** This field is required when 3ds 2.0 is used.'
+        3ds_transaction_status_reason:
+          type: string
+          description: "3-D Secure out of scope reason. Shall be used if the transaction type is out of scope of Strong Customer Authentication (SCA). The following transaction types are out of scope of SCA:\n\n mit Merchant Initiated Transactions\n\n moto Mail Order/Telephone Order\n\n one_leg_out\n\n anonymous_prepaid_card"
+        3ds_score:
+          type: string
+          description: CB scoring. Mandatory for CB transactions.
+        3ds_preference:
+          type: string
+          description: "3DS Requestor Challenge Indicator. Mandatory for CB.\n\n Acccepted values:\n\n  sca ask for a strong authentication;\n\n frictionless ask for a frictionless authentication;\n\n nopref or absent, the decision will be made by Dalenys;\n\n scamandate strong authentication required by regulation"
+        3ds_mode:
+          type: string
+          description: "Applied authentification mode:\n sca Strong authentication;\n frictionless Frictionless authentication;"
+        3ds_version:
+          type: string
+          description: The 3-D Secure version used for the authentication.
+        3ds_result:
+          type: string
+          description: 6 character value composed of 3DSECURESTATUS converted to hexadecimal concatenated with the result VRes converted to hexadecimal
+        3ds_server_transaction_id:
+          type: string
+          description: The 3-D Secure Server transaction ID that is used for the 3-D Secure version 2 Authentication.
+        3ds_acs_transaction_id:
+          type: string
+          description: Unique transaction identifier assigned by the ACS to identify the transaction.
+        authentication_outage:
+          type: boolean
+          example: false
+          description: Authentication outage used for 3ds transactions if there is an authentication outage. Set the value as true for these type of scenarios. The field is applicable only for acquirers.
+    data:
+      type: object
+      properties:
+        key_name:
+          type: string
+          description: The name of the key for the key value pair. e.g. "meal type", "Extra Towels"
+        value:
+          type: string
+          description: The value for the key value pair. e.g. "vegitarian"
+    BillingAddress:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the card holder.
+        last_name:
+          type: string
+          description: Last name of the card holder.
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        address:
+          type: string
+          description: Street address of the card holder.
+        city:
+          type: string
+          description: City of the card holder.
+        state:
+          type: string
+          description: A region / state / province for the address.
+        postal_code:
+          type: string
+          description: 'A postal code for the address.
+
+
+            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+    Insurance:
+      type: object
+      properties:
+        agency_name:
+          type: string
+          description: Name of insurer
+        type:
+          type: string
+          description: Type of insurance
+          enum:
+          - cancellation
+          - travel
+          - cancellation_travel
+          - car
+          - bankruptcy
+        amount:
+          type: integer
+          format: int32
+          description: Amount of order charged without a decimal place e.g. $1.50 = 150
+    airlineData:
+      type: object
+      properties:
+        pnr:
+          type: string
+          description: Reference number for the airline booking. Required if ticket numbers are not issued.
+        airline_name:
+          type: string
+          description: Name of the airline.
+        agency:
+          description: Agency
+          $ref: '#/components/schemas/Agency'
+        airline_numeric_code:
+          type: integer
+          format: int32
+          description: Airline numeric code
+        ticket_number:
+          type: string
+          description: Ticket/document number, or PNR locator code.
+        check_digit:
+          type: integer
+          format: int32
+          description: 'Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:
+
+
+            1. The value is numeric.
+
+            2. The first three digits are a valid IATA2 license plate carrier code.
+
+            3. The last digit is a check digit or zero (0).
+
+            4. All remaining digits are nonzero.'
+        is_restricted:
+          type: string
+          description: " Flag that indicates whether or not the ticket is restricted (nonrefundable). \ntrue - Restricted (nonrefundable). false - No restriction (refundable)."
+          enum:
+          - 'true'
+          - 'false'
+        transaction_type:
+          type: string
+          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
+          enum:
+          - '01'
+          - '02'
+        extended_payment_code:
+          type: string
+          description: 'Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+
+            '
+        passenger_title:
+          type: string
+          description: Title of the passenger.
+        passenger_name:
+          type: string
+          description: 'Name of passenger.
+
+
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘)).'
+        passenger_age_group:
+          type: string
+          description: Travelling passenger's age group.
+        is_lead:
+          type: string
+          description: Indicates whether the passenger is a lead passenger within the group.
+          enum:
+          - 'true'
+          - 'false'
+        customer_code:
+          type: string
+          description: '1. Reference number or code that identifies the cardholder.
+
+            2. Code provided by the cardholder.
+
+            3. Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.
+
+            4. Customer reference..'
+        document_type:
+          type: integer
+          format: int32
+          description: Airline document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
+        document_number:
+          type: string
+          description: Ticket number or a value that might be a booking reference number.
+        travel_legs_count:
+          type: integer
+          format: int32
+          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        invoice_date:
+          type: string
+          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
+        additional_charge_description:
+          type: string
+          description: Description of the charge.
+        total_fee_amount:
+          type: integer
+          format: int32
+          description: Total fee for the ticket.
+        clearing_sequence:
+          type: integer
+          format: int32
+          description: Total number of captures when requesting multiple partial captures for one authorization.
+        clearing_count:
+          type: integer
+          format: int32
+          description: Total number of clearing count associated with the authorization request.
+        total_clearing_count:
+          type: integer
+          format: int32
+        passenger_count:
+          type: integer
+          format: int32
+          description: Number of passengers for whom the ticket was issued.
+        reservation_system_code:
+          type: string
+          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
+        process_identifier:
+          type: string
+          description: Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+        issue_date:
+          type: string
+          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
+        is_eticket:
+          type: string
+          description: Indicates whether the issued ticket was electronic or not.
+          enum:
+          - 'true'
+          - 'false'
+        original_ticket_number:
+          type: string
+          description: Original ticket number when the transaction is for a replacement ticket.
+        purchase_type:
+          type: string
+          description: 'Type of purchase
+
+            EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket'
+          enum:
+          - EXC
+          - MSC
+          - REF
+          - TKT
+        credit_reason:
+          type: string
+          description: 'Reason for the credit.A: Cancellation of the ancillary passenger transport purchase,
+
+            B: Cancellation of the airline ticket and the passenger transport ancillary purchase,
+
+            C: Cancellation of the airline ticket,
+
+            O: Other,
+
+            P: Partial refund of the airline ticket.'
+          enum:
+          - A
+          - B
+          - C
+          - O
+          - P
+        ticket_change_indicator:
+          type: string
+          description: 'Type of update.C: Change to the existing ticket., N: New ticket.'
+          enum:
+          - C
+          - N
+        plan_number:
+          type: string
+          description: Plan number based on the fare. This value is provided by the airline.
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        restricted_ticket_description:
+          type: string
+          description: Text that describes the ticket limitations, such as nonrefundable.
+        exchange_ticket_amount:
+          type: integer
+          format: int32
+          description: Amount of the exchanged ticket.
+        exchange_ticket_fee_amount:
+          type: integer
+          format: int32
+          description: Fee for exchanging the ticket.
+        reservation_type:
+          type: string
+          description: Type of journey such as one way or round trip.
+        boarding_fee_amount:
+          type: string
+          description: Boarding fee.
+        issuer_city:
+          type: string
+          description: City of the issuer
+        legs:
+          type: array
+          description: Leg
+          items:
+            $ref: '#/components/schemas/FlightDetails'
+    deliveryAddress:
+      type: object
+      properties:
+        address:
+          type: string
+          description: Street address of the delivery customer.
+        city:
+          type: string
+          description: City of the delivery customer
+        country:
+          type: string
+          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
+        email:
+          type: string
+          description: 'Email address of the card holder.
+
+
+            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
+        phone:
+          type: string
+          description: 'Numbers only, no dash or any other separator.
+
+
+            Note: Length - min(3) & max(20)'
+        postal_code:
+          type: string
+          description: A postal code for the address.
+        state:
+          type: string
+          description: A region / state / province for the address.
+    passengers:
+      type: object
+      properties:
+        passenger_index:
+          type: integer
+          format: int32
+          description: Index number to identify passenger
+        salutation:
+          type: string
+          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr", etc.
+        first_name:
+          type: string
+          description: First name of the passenger
+        last_name:
+          type: string
+          description: Last name of the passenger
+        date_of_birth:
+          type: string
+          description: 'D.O.B. of passenger. Format: YYYY-MM-DD'
+    AuthorisePaymentCustomer:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: This is the recipient's account number.
+        customer_id:
+          type: string
+          description: The customer_id of recipient's.
+        date_of_birth:
+          type: string
+          description: The date of birth of a customer, 10 characters, ISO-8601 (YYYY-MM-DD).
+        last_name:
+          type: string
+          description: Last name of the customer.
+        postal_code:
+          type: string
+          description: 'This is the recipient''s postcode/zip.
+
+
+            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and single space'
+    TransactionChargeback:
+      type: object
+      properties:
+        transaction_chargeback_id:
+          type: string
+          description: Identifier of the chargeback
+        case_id:
+          type: string
+          description: Case ID of the chargeback
+        original_transaction_date:
+          type: string
+          description: Original date and time of the transaction
+        terminal_id:
+          type: string
+          description: Terminal ID of the chargeback
+        reference_number:
+          type: string
+          description: Case identifier for the chargeback
+        merchant_service_fee:
+          type: boolean
+          example: false
+          description: Merchant service fee applied on the transaction
+        settlement_currency:
+          type: string
+          description: Settlement currency of the transaction
+        arn:
+          type: string
+          description: Acquirer reference number, Unique card scheme identifier of sales transaction
+    CybersourceDecisionManagerResponse:
+      type: object
+      properties:
+        clientReferenceInformation:
+          $ref: '#/components/schemas/ClientReferenceInformationDTO'
+        consumerAuthenticationInformation:
+          $ref: '#/components/schemas/ConsumerAuthenticationInformationDTO'
+        id:
+          type: string
+        paymentInformation:
+          $ref: '#/components/schemas/PaymentInformationResponseDTO'
+        riskInformation:
+          $ref: '#/components/schemas/RiskInformationResponseDTO'
+        status:
+          type: string
+        submitTimeUtc:
+          type: string
+    ProvidersDTO:
+      type: object
+      properties:
+        provider_name:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderNameDTO'
+    ProfileDataDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the active profile chosen by the profile selector. If no profile selector exists, the default active profile is chosen.
+    ConsumerAuthenticationInformationDTO:
+      type: object
+      properties:
+        token:
+          type: string
+    Car:
+      type: object
+      properties:
+        program_code:
+          type: string
+          description: 'Used to identify special circumstances applicable to the Card Transaction or Cardholder, such as "renter” or ”show”
+
+            This code is 2 digit value agreed by Merchant and processor.'
+        rental_information:
+          description: Auto rental information
+          $ref: '#/components/schemas/RentalInformation'
+        driver_age:
+          type: integer
+          format: int32
+          description: Age of the driver renting the vehicle.
+        number_of_additional_drivers:
+          type: integer
+          format: int32
+          description: The number of additional drivers included on the rental agreement not including the individual who signed the rental agreement.
+        vehicle_information:
+          description: Rented vehicle information
+          $ref: '#/components/schemas/VehicleInformation'
+        max_free_distance:
+          type: string
+          description: Maximum number of free miles or kilometers allowed to a customer for the duration of the auto rental agreement.
+        insurance_indicator:
+          type: boolean
+          example: false
+          description: 'Insurance purchased
+
+            true - Yes (insurance was purchased)
+
+            false - No (insurance was not purchased)'
+        distance:
+          description: Details on the distance of the auto rental
+          $ref: '#/components/schemas/Distance'
+        odometer_reading:
+          type: string
+          description: Odometer reading at time of vehicle rental.
+        tax_details:
+          type: array
+          description: Tax details of the auto rental
+          items:
+            $ref: '#/components/schemas/CarTaxDetail'
+        rental_charges:
+          description: Rental charges information
+          $ref: '#/components/schemas/RentalCharges'
+        company_name:
+          type: string
+          description: Merchant to send their auto rental company name
+        affiliate_name:
+          type: string
+          description: When merchant wants to send the affiliate name.
+    Distance:
+      type: object
+      properties:
+        travelled:
+          type: string
+          description: Total number of miles driven by the customer
+        unit:
+          type: string
+          description: Miles/Kilometers Indicator shows whether the “miles” fields are expressed in miles or kilometers.
+          enum:
+          - K
+          - M
+        time_period:
+          type: string
+          description: Indicates the time period for which the vehicle rental rate applies (e.g., daily, weekly or monthly).
+          enum:
+          - Daily
+          - Weekly
+          - Monthly
+    FlightDetails:
+      type: object
+      properties:
+        carrier_code:
+          type: string
+          description: Travel carrier code
+        flight_number:
+          type: integer
+          format: int32
+          description: Flight number excluding carrier code.
+        origin_airport:
+          type: string
+          description: Origin airport/city IATA code.
+        origin_city:
+          type: string
+          description: Origin city name.
+        service_class:
+          type: string
+          description: Ticket category/class (“0” if no class).
+          enum:
+          - economy
+          - premium economy
+          - business class
+          - first class
+          - '0'
+        stop_over_code:
+          type: string
+          description: 'Stop over code -
+
+
+            O (capital letter "O") or 0 (zero) : Stopover allowed
+
+
+            X (capital letter "X") or 1 : Stopover not allowed'
+          enum:
+          - X
+          - O
+          - '1'
+          - '0'
+        departure_date:
+          type: string
+          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
+        destination_airport:
+          type: string
+          description: Destination airport/city IATA code.
+        destination_city:
+          type: string
+          description: Destination city name
+        fare_basis_code:
+          type: string
+          description: Fare basis code
+        departure_tax_amount:
+          type: integer
+          format: int32
+          description: Amount of departure tax for this leg of the trip.
+        conjunction_ticket:
+          type: string
+          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments.
+        exchange_ticket_number:
+          type: string
+          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
+        coupon_number:
+          type: string
+          description: Coupon number for the leg
+        endorsements_restrictions:
+          type: string
+          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
+        total_fare_amount:
+          type: integer
+          format: int32
+          description: Total fare for this leg of the trip.
+        fee_amount:
+          type: integer
+          format: int32
+          description: Fee for this leg of the trip, such as an airport fee or country fee.
+        tax_amount:
+          type: integer
+          format: int32
+          description: Tax for this leg of the trip.
+    RentalCharges:
+      type: object
+      properties:
+        one_waydrop_off_amount:
+          type: string
+          description: Extra charges incurred for a one-way rental agreement for the auto.
+        adjusted_amount:
+          description: Adjusted amount details
+          $ref: '#/components/schemas/AdjustedAmount'
+        fuel_charges:
+          type: string
+          description: Extra gasoline charges that extend beyond the basic rental agreement
+        weekly_rental_rate:
+          type: string
+          description: 'Weekly Rental Amount provides the amount charged for a seven-day rental period.
+
+            Time Period needs to be populated with Weekly if this field is present'
+        daily_rental_rate:
+          type: string
+          description: 'Daily auto rental rate charged.
+
+            Time Period needs to be populated with Daily if this field is present'
+        rate_per_mile:
+          type: string
+          description: Rate charged for each mile.
+        mileage_charge:
+          type: string
+          description: Regular Mileage Charge provides the amount charged for regular miles travelled during vehicle rental. Two decimal places
+        extra_mileage_charge:
+          type: string
+          description: Extra mileage charges that extend beyond the basic rental agreement.
+        late_fee_amount:
+          type: string
+          description: Extra charges related to a late return of the rented auto
+        towing_charge:
+          type: string
+          description: Towing Charges provides the amount charged to tow the rental vehicle.
+        extra_charge:
+          type: string
+          description: Extra Charges provides the extra charges associated with the vehicle rental.
+        gps_charge:
+          type: string
+          description: Amount charged for renting a Global Positioning Service (GPS).
+        phone_charge:
+          type: string
+          description: Additional charges incurred for phone usage included on the total bill.
+        parking_violation_charge:
+          type: string
+          description: Extra charges incurred due to a parking violation for the auto.
+        other_charges:
+          type: string
+          description: Total amount charged for all other miscellaneous charges not previously defined.
+    travelData:
+      type: object
+      required:
+      - booking_type
+      properties:
+        pnr:
+          type: string
+          description: Reference number for the booking.
+        booking_amount:
+          type: integer
+          format: int32
+          description: Prepaid amount, such as a deposit.
+        booking_type:
+          type: string
+          description: The type of booking being made.
+          enum:
+          - hotel
+          - rental
+          - car
+          - cruise
+          - flight
+          - train
+          - coach
+        passengers:
+          type: array
+          description: Array of passenger names
+          items:
+            $ref: '#/components/schemas/passengers'
+        legs:
+          type: array
+          description: Array of legs of booking.
+          items:
+            $ref: '#/components/schemas/Legs'
+        discount_percentage:
+          type: integer
+          format: int32
+          description: Percentage dicount to be applied to booking
+        loyalty_number:
+          type: string
+          description: Customer loyalty scheme number
+        points:
+          type: array
+          description: Loyalty points/scheme details
+          items:
+            $ref: '#/components/schemas/Point'
+        travel_mode_name:
+          type: string
+          description: Name of your mode of travel such as Airline, Ferry, Rail etc.
+        travel_mode_numeric_code:
+          type: integer
+          format: int32
+          description: Mode of Travel (Airline, Ferry, Rail etc.) numeric code
+        agency:
+          description: Agency
+          $ref: '#/components/schemas/Agency'
+        ticket_number:
+          type: string
+          description: Ticket/document number, or PNR locator code.
+        check_digit:
+          type: integer
+          format: int32
+          description: 'Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:
+
+            The value is numeric.
+
+            The first three digits are a valid IATA2 license plate carrier code.
+
+            The last digit is a check digit or zero (0).
+
+            All remaining digits are nonzero.'
+        is_restricted:
+          type: string
+          description: True will auto-capture the transaction. False will only authorise the transaction
+          enum:
+          - 'true'
+          - 'false'
+        transaction_type:
+          type: integer
+          format: int32
+          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
+        extended_payment_code:
+          type: string
+          description: 'Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+
+            '
+        passenger_title:
+          type: string
+          description: Title of the passenger.
+        passenger_name:
+          type: string
+          description: 'Name of passenger. Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘)).'
+        passenger_age_group:
+          type: string
+          description: Travelling passenger's age group.
+          enum:
+          - 16-24
+          - 25-34
+          - 35-44
+          - 45-54
+          - 55-64
+          - 65 and up
+          - Unknown
+        is_lead:
+          type: string
+          description: Indicates whether the passenger is a lead passenger within the group.
+          enum:
+          - 'true'
+          - 'false'
+        customer_code:
+          type: string
+          description: 'Reference number or code that identifies the cardholder.
+
+            Code provided by the cardholder.
+
+            Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.
+
+            Customer reference.'
+        document_type:
+          type: integer
+          format: int32
+          description: Airline/Travel mode document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
+        document_number:
+          type: string
+          description: Ticket number or a value that might be a booking reference number.
+        travel_legs_count:
+          type: integer
+          format: int32
+          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
+        invoice_number:
+          type: string
+          description: Invoice number of the ticket.
+        invoice_date:
+          type: string
+          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
+        additional_charge_description:
+          type: string
+          description: Description of the charge.
+        total_fee_amount:
+          type: integer
+          format: int32
+          description: Total fee for the ticket.
+        clearing_sequence:
+          type: integer
+          format: int32
+          description: Total number of captures when requesting multiple partial captures for one authorization.
+        clearing_count:
+          type: integer
+          format: int32
+          description: Total number of clearing count associated with the authorization request.
+        total_clearing_amount:
+          type: integer
+          format: int32
+          description: Total clearing amount for all transactions in the clearing count set.
+        passenger_count:
+          type: integer
+          format: int32
+          description: Number of passengers for whom the ticket was issued.
+        reservation_system_code:
+          type: string
+          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
+        process_identifier:
+          type: string
+          description: Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
+        issue_date:
+          type: string
+          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
+        is_eticket:
+          type: string
+          description: Indicates whether the issued ticket was electronic or not.
+          enum:
+          - 'true'
+          - 'false'
+        original_ticket_number:
+          type: string
+          description: Original ticket number when the transaction is for a replacement ticket.
+        purchase_type:
+          type: string
+          description: 'Type of purchase
+
+            EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket'
+          enum:
+          - EXC
+          - MSC
+          - REF
+          - TKT
+        credit_reason:
+          type: string
+          description: 'Reason for the credit.A: Cancellation of the ancillary passenger transport purchase,
+
+            B: Cancellation of the airline ticket and the passenger transport ancillary purchase,
+
+            C: Cancellation of the airline ticket,
+
+            O: Other,
+
+            P: Partial refund of the airline ticket.'
+          enum:
+          - A
+          - B
+          - C
+          - O
+          - P
+        ticket_change_indicator:
+          type: string
+          description: 'Type of update.C: Change to the existing ticket., N: New ticket.'
+          enum:
+          - C
+          - N
+        plan_number:
+          type: string
+          description: Plan number based on the fare. This value is provided by the airline.
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        restricted_ticket_description:
+          type: string
+          description: Text that describes the ticket limitations, such as nonrefundable.
+        exchange_ticket_amount:
+          type: integer
+          format: int32
+          description: Amount of the exchanged ticket.
+        exchange_ticket_fee_amount:
+          type: integer
+          format: int32
+          description: Fee for exchanging the ticket.
+        reservation_type:
+          type: string
+          description: Type of journey such as one way or round trip.
+        boarding_fee_amount:
+          type: integer
+          format: int32
+          description: Boarding fee.
+        special_program_code:
+          type: string
+          description: "**Valid values for hotel** :\n\n \"\"Lodging\"\"(default)\n\n \"\"No-Show Reservation\"\"\n\n \"\"Advanced Deposit\"\"\n\n**Valid values for car** :\n\n \"\"Not applicable\"\"(default)\n\n \"\"Frequent renter\"\"\n\n \"\"No show\"\""
+        promo_code:
+          type: string
+          description: Code assigned to a business. You can use this code to identify corporate rates and discounts for guests.
+        customer_service_details:
+          description: Details of customer service
+          $ref: '#/components/schemas/CustomerServiceDetails'
+        duration:
+          type: string
+          description: "Duration of the car or hotel rental.  \n\n **Note:** Required when booking_type= “car”"
+        hotel:
+          description: Object containing hotel details
+          $ref: '#/components/schemas/Hotel'
+        car:
+          description: Car rental object
+          $ref: '#/components/schemas/Car'
+    ApplePay:
+      type: object
+      required:
+      - cryptogram
+      - dpan
+      - expiry_month
+      - expiry_year
+      properties:
+        cryptogram:
+          type: string
+          description: Applepay online payment cryptogram for 3d secure which maps to the paymentData.onlinePaymentCryptogram property in the encrypted payment data.
+        expiry_month:
+          type: string
+          description: Card expiry month - A string representing the month, valid values are 01 to 12. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Month from the received data.
+        expiry_year:
+          type: string
+          description: Card expiry year - A string representing the last two digits of the year, e.g. 19 for 2019. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Year from the received data.
+        dpan:
+          type: string
+          description: Device specific PAN - Maps to the applicationPrimaryAccountNumber property in the encrypted payment data.
+        eci:
+          type: string
+          description: Electronic Commerce Indicator - Maps to the paymentData.eciIndicator property in the encrypted payment data.
+        applepay_transaction_id:
+          type: string
+          description: Applepay Transaction id received from applepay.
+    RiskInformationDTO:
+      type: object
+      properties:
+        profile:
+          description: Identifies a risk profile.
+          $ref: '#/components/schemas/ProfileDataDTO'
+        event_type:
+          type: string
+          description: 'Specifies one of the following types of events:
+
+
+            1. login
+
+
+            2. account_creation
+
+
+            3. account_update For regular payment transactions, do not send this field.'
+        buyer_history:
+          description: buyerHistory
+          $ref: '#/components/schemas/BuyerHistoryDTO'
+    RentalInformation:
+      type: object
+      properties:
+        company_id:
+          type: string
+          description: Corporate Identifier provides the unique identifier of the corporation or entity renting the vehicle
+        no_show_indicator:
+          type: boolean
+          example: false
+          description: No Show Indicator provides an indicator noting that the individual did not show up after making a reservation for a vehicle.
+        commodity_code:
+          type: string
+          description: Commodity code or International description code used to classify the item. Contact your acquirer for a list of codes.
+    RuleTraceDTO:
+      type: object
+      properties:
+        bindValue:
+          type: string
+        category:
+          type: string
+        result:
+          type: boolean
+        ruleExpression:
+          type: string
+        ruleId:
+          type: string
+        ruleOrgId:
+          type: string
+        ruleType:
+          type: string
+    CustomerServiceDetails:
+      type: object
+      properties:
+        phone_number:
+          type: string
+          description: Toll-free customer service phone number.
+    RiskInformationResponseDTO:
+      type: object
+      properties:
+        case_priority:
+          type: string
+        info_codes:
+          $ref: '#/components/schemas/InfoCodesDTO'
+        local_time:
+          type: string
+        profile_response:
+          $ref: '#/components/schemas/ProfileDTO'
+        providers:
+          $ref: '#/components/schemas/ProvidersDTO'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleDTO'
+        score:
+          $ref: '#/components/schemas/ScoreDTO'
+    ThreeDsVerifyAuthRequestDTO:
+      type: object
+      required:
+      - _id
+      properties:
+        _id:
+          type: string
+          description: The ID of the transaction
+        paRes:
+          type: string
+          description: "The unmodified PaRes value as received after the customer was redirected back from 3DS Authentication. \n\n **Note:** This field may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information."
+        three_ds_authentication:
+          description: '
+
+
+            **Note:** This field is required when 3ds 2.0 is used.'
+          $ref: '#/components/schemas/ExternalAuthentication'
+        specification_version:
+          type: string
+          description: "Valid values: \"1.0\", \"2.0\", \"1.0.2\", \"2.1.0\", \"2.2.0\" \n Version of the 3DS which is received from the authentication server. \n\n **Note:** This field is required when 3DS 2.0 falls back to 1.0."
+    GooglePay:
+      type: object
+      required:
+      - cryptogram
+      - dpan
+      - expiry_month
+      - expiry_year
+      properties:
+        cryptogram:
+          type: string
+          description: "Required only if using the PSP decryption method. This value should be base64 encoded if the intermediary PSP is Cybersource or ACI\n\n Google pay online payment cryptogram for 3d secure which maps to the paymentData.onlinePaymentCryptogram property in the encrypted payment data."
+        expiry_month:
+          type: string
+          description: "Required only if using the merchant decryption method\n\n Card expiry month - A string representing the month, valid values are 01 to 12. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Month from the received data."
+        expiry_year:
+          type: string
+          description: "Required only if using the merchant decryption method\n\n Card expiry year - A string representing the last two digits of the year, e.g. 19 for 2019. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Year from the received data."
+        dpan:
+          type: string
+          description: "Required only if using the merchant decryption method\n\n Device specific PAN - Maps to the applicationPrimaryAccountNumber property in the encrypted payment data."
+        eci:
+          type: string
+          description: "Required only if using the merchant decryption method\n\n Electronic Commerce Indicator - Maps to the paymentData.eciIndicator property in the encrypted payment data."
+        googlepay_transaction_id:
+          type: string
+          description: Googlepay Transaction id received from googlepay.
     CardDetailsWithApm:
       type: object
       properties:
@@ -366,6 +1820,318 @@ components:
         network_token:
           description: Network token.
           $ref: '#/components/schemas/NetworkToken'
+    AdjustedAmount:
+      type: object
+      properties:
+        indicator:
+          type: string
+          description: Adjusted amount indicator code that indicates any miscellaneous charges incurred after the auto was returned or Audit indicator code that indicates any adjustment for mileage, fuel, auto damage, etc. made to a rental agreement and whether the cardholder was notified.
+          enum:
+          - Drop-off charges
+          - Delivery charges
+          - Parking expenses
+          - Extra hours
+          - Violations
+          - Multiple adjustments
+        value:
+          type: string
+          description: Adjusted Amount indicates whether any miscellaneous charges were incurred after the vehicle was returned.
+    Legs:
+      type: object
+      properties:
+        insurance:
+          type: array
+          items:
+            $ref: '#/components/schemas/Insurance'
+        amount:
+          type: integer
+          format: int32
+          description: Amount of leg of booking
+        passenger_index:
+          type: array
+          description: Array of passenger index values of passengers present for this leg of booking.
+          items:
+            type: number
+        check_in_date:
+          type: string
+          description: 'For booking_type= “hotel”
+
+            Start date of reservation.
+
+            For booking_type= “car”
+
+            Date-time the auto was picked up from the rental agency. Format: YYYY-MM-DD HH:mm:ss'
+        check_out_date:
+          type: string
+          description: "For booking_type= “hotel”\nEnd date of reservation. \nFor booking_type= “car”\nDate-time the auto was returned to the rental agency. Format: YYYY-MM-DD HH:mm:ss"
+        provider_group:
+          type: string
+          description: Name of hotel parent group
+        provider_name:
+          type: string
+          description: Name of hotel chain
+        room_count:
+          type: integer
+          format: int32
+          description: Number of rooms under booking
+        traveller_count:
+          type: integer
+          format: int32
+          description: Number of travellers under booking
+        origin_address:
+          type: string
+          description: "Street address of origin point.\n \n  Note: Supports only ISO-8859-1 characters."
+        origin_city:
+          type: string
+          description: City Journey begins
+        origin_postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        origin_country_code:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+        origin_state:
+          type: string
+          description: State Journey begins
+        origin_location_id:
+          type: string
+          description: The agency code, address, phone number, etc., used to identify the location of origin
+        origin_location:
+          type: string
+          description: The location where a taxi passenger was picked up or where an auto rental vehicle was picked up.
+        route_stops:
+          type: array
+          description: Array of stopping points on trip
+          items:
+            $ref: '#/components/schemas/RouteStops'
+        destination_address:
+          type: string
+          description: "Address of accomodation.\n \n  Note: Supports only ISO-8859-1 characters."
+        destination_city:
+          type: string
+          description: Final destination City
+        destination_postal_code:
+          type: string
+          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
+        destination_country_code:
+          type: string
+          description: 'Destination country. A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU, etc.)'
+        destination_state:
+          type: string
+          description: Final destination State.
+        destination_location_id:
+          type: string
+          description: The agency code, address, phone number, etc., used to identify the location of destination.
+        destination_location:
+          type: string
+          description: The location where a taxi passenger was dropped or where an auto rental vehicle was returned.
+        adults_count:
+          type: integer
+          format: int32
+          description: Number of adults under booking
+        booking_type:
+          type: string
+          description: The type of booking being made.
+          enum:
+          - hotel
+          - rental
+          - car
+          - cruise
+          - flight
+          - train
+          - coach
+        data:
+          type: array
+          description: Array of provider specific key values pairs, should be an array of the 'key_name' value and the 'value' value - Please speak to your Implementation manager for details on usage.
+          items:
+            $ref: '#/components/schemas/data'
+        child_count:
+          type: integer
+          format: int32
+          description: Number of children under booking
+        beds_count:
+          type: integer
+          format: int32
+          description: Number of rooms under booking
+        vehicle_type:
+          type: string
+          description: Name of vehicle being rented
+        class:
+          type: string
+          description: Class of travel or stay. e.g. "first", "premium", "luxury suite" - free text field, not enum
+        carrier_code:
+          type: string
+          description: Travel carrier code
+        travel_mode_reference:
+          type: integer
+          format: int32
+          description: Flight/Travel mode number excluding carrier code
+        origin_port:
+          type: string
+          description: Origin airport/port/city IATA code
+        service_class:
+          type: string
+          description: Service Class. Send "0" if Ticket category/class or if no class.
+          enum:
+          - first class
+          - Second class
+          - business
+          - Economic
+          - '0'
+        stop_over_code:
+          type: string
+          description: 'Stop over code -
+
+
+            O (capital letter "O") or 0 (zero) : Stopover allowed
+
+
+            X (capital letter "X") or 1 : Stopover not allowed'
+          enum:
+          - X
+          - O
+          - '1'
+          - '0'
+        departure_date:
+          type: string
+          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
+        arrival_date:
+          type: string
+          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
+        destination_port:
+          type: string
+          description: Destination airport/port/city IATA code
+        fare_basis_code:
+          type: string
+          description: Fare basis code
+        departure_tax_amount:
+          type: integer
+          format: int32
+          description: Amount of departure tax for this leg of the trip
+        conjunction_ticket:
+          type: string
+          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments
+        exchange_ticket_number:
+          type: string
+          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
+        coupon_number:
+          type: string
+          description: Coupon number for the leg
+        endorsements_restrictions:
+          type: string
+          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
+        total_fare_amount:
+          type: integer
+          format: int32
+          description: Total fare for this leg of the trip.
+        fee_amount:
+          type: integer
+          format: int32
+          description: Fee for this leg of the trip, such as an airport/port fee or country/city fee
+        tax_amount:
+          type: integer
+          format: int32
+          description: Tax for this leg of the trip
+        delivery:
+          type: string
+          description: The way the item is being delivered
+          enum:
+          - delivery
+          - collection
+          - email
+    ThreeDSCardEnrolRequest:
+      type: object
+      properties:
+        three_ds_enrollment:
+          type: boolean
+          example: false
+          description: 'Card’s enrollment status.
+
+
+            **Note:** This field is required by certain acquirers, please ask your implementation manager for details.'
+        three_ds_required:
+          type: string
+          description: Enroll a given transaction for 3D-secure to verify whether authentication is supported for the card being used.
+        three_ds_version:
+          type: string
+          description: The 3-D Secure version used for the authentication.
+          enum:
+          - '1.0'
+          - '2.0'
+          - 1.0.2
+          - 2.1.0
+          - 2.2.0
+        term_url:
+          type: string
+          description: The return url to which the customer is redirected after a transaction is processed.
+        eci:
+          type: string
+          description: The Electronic Commerce Indicator (ECI).
+        xid:
+          type: string
+          description: 3-D Secure X id.
+        cavv:
+          type: string
+          description: 3-D Secure "Cardholder Authentication Verification Value"
+        pares:
+          type: string
+          description: 'Result of the authentication check. This field can contain one of these values:
+
+
+            A: Proof of authentication attempt was generated.
+
+
+            N: Customer failed or canceled authentication. Transaction denied.
+
+
+            U: Authentication not completed regardless of the reason.
+
+
+            Y: Customer was successfully authenticated.'
+        veres:
+          type: string
+          description: 'Result of the enrollment check. This field can contain one of these values:
+
+
+            Y: Card enrolled or can be enrolled; you must authenticate. Liability shift.
+
+
+            N: Card not enrolled; proceed with authorization. Liability shift.
+
+
+            U: Unable to authenticate regardless of the reason. No liability shift.
+
+
+            B: Indicates that authentication was bypassed.'
+        authentication_result:
+          type: string
+          description: 'Raw authentication data that comes from the cardissuing bank. Primary authentication field that indicates if authentication was successful and if liability shift occurred. You should examine first the result of this field. This field contains one of these values:
+
+
+            -1: Invalid PARes.
+
+
+            0: Successful validation.
+
+
+            1: Cardholder is not participating, but the attempt to authenticate was recorded.
+
+
+            6: Issuer unable to perform authentication.
+
+
+            9: Cardholder did not complete authentication.'
+    MerchantData:
+      type: object
+      properties:
+        brand_name:
+          type: string
+          description: Merchant Brand name
+        custom_data:
+          type: object
+        website_url:
+          type: string
+          description: Merchant website.
     ThreeDsAuthenticationFailResponse:
       type: object
       required:
@@ -702,180 +2468,49 @@ components:
         installment_information:
           description: Please note that the specific request here will override any general configuration that is set against your MID. by the acquirer. This does not apply to AMEX where the config at the MID takes priority
           $ref: '#/components/schemas/InstallmentInformation'
-    Car:
+    FailureResponseDTO:
       type: object
       properties:
-        program_code:
+        _id:
           type: string
-          description: 'Used to identify special circumstances applicable to the Card Transaction or Cardholder, such as "renter” or ”show”
-
-            This code is 2 digit value agreed by Merchant and processor.'
-        rental_information:
-          description: Auto rental information
-          $ref: '#/components/schemas/RentalInformation'
-        driver_age:
+          description: This is the unique transaction id generated by Apexx.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+        message:
+          type: string
+          description: A description of the response.
+        timestamp:
           type: integer
-          format: int32
-          description: Age of the driver renting the vehicle.
-        number_of_additional_drivers:
-          type: integer
-          format: int32
-          description: The number of additional drivers included on the rental agreement not including the individual who signed the rental agreement.
-        vehicle_information:
-          description: Rented vehicle information
-          $ref: '#/components/schemas/VehicleInformation'
-        max_free_distance:
+          format: int64
+          description: Current timestamp.
+        details:
           type: string
-          description: Maximum number of free miles or kilometers allowed to a customer for the duration of the auto rental agreement.
-        insurance_indicator:
-          type: boolean
-          example: false
-          description: 'Insurance purchased
-
-            true - Yes (insurance was purchased)
-
-            false - No (insurance was not purchased)'
-        distance:
-          description: Details on the distance of the auto rental
-          $ref: '#/components/schemas/Distance'
-        odometer_reading:
-          type: string
-          description: Odometer reading at time of vehicle rental.
-        tax_details:
+          description: Optional details concerning the error.
+        errors:
           type: array
-          description: Tax details of the auto rental
+          description: Details of each error occured.
           items:
-            $ref: '#/components/schemas/CarTaxDetail'
-        rental_charges:
-          description: Rental charges information
-          $ref: '#/components/schemas/RentalCharges'
-        company_name:
+            $ref: '#/components/schemas/Errors'
+        trace_id:
           type: string
-          description: Merchant to send their auto rental company name
-        affiliate_name:
+          description: Unique trace id created by APEXX platform to trace this request.
+        merchant_reference:
           type: string
-          description: When merchant wants to send the affiliate name.
-    RentalCharges:
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+    ProviderNameDTO:
       type: object
       properties:
-        one_waydrop_off_amount:
+        field_name:
           type: string
-          description: Extra charges incurred for a one-way rental agreement for the auto.
-        adjusted_amount:
-          description: Adjusted amount details
-          $ref: '#/components/schemas/AdjustedAmount'
-        fuel_charges:
+        field_value:
           type: string
-          description: Extra gasoline charges that extend beyond the basic rental agreement
-        weekly_rental_rate:
-          type: string
-          description: 'Weekly Rental Amount provides the amount charged for a seven-day rental period.
-
-            Time Period needs to be populated with Weekly if this field is present'
-        daily_rental_rate:
-          type: string
-          description: 'Daily auto rental rate charged.
-
-            Time Period needs to be populated with Daily if this field is present'
-        rate_per_mile:
-          type: string
-          description: Rate charged for each mile.
-        mileage_charge:
-          type: string
-          description: Regular Mileage Charge provides the amount charged for regular miles travelled during vehicle rental. Two decimal places
-        extra_mileage_charge:
-          type: string
-          description: Extra mileage charges that extend beyond the basic rental agreement.
-        late_fee_amount:
-          type: string
-          description: Extra charges related to a late return of the rented auto
-        towing_charge:
-          type: string
-          description: Towing Charges provides the amount charged to tow the rental vehicle.
-        extra_charge:
-          type: string
-          description: Extra Charges provides the extra charges associated with the vehicle rental.
-        gps_charge:
-          type: string
-          description: Amount charged for renting a Global Positioning Service (GPS).
-        phone_charge:
-          type: string
-          description: Additional charges incurred for phone usage included on the total bill.
-        parking_violation_charge:
-          type: string
-          description: Extra charges incurred due to a parking violation for the auto.
-        other_charges:
-          type: string
-          description: Total amount charged for all other miscellaneous charges not previously defined.
-    InstallmentInformation:
-      type: object
-      properties:
-        plan_type:
-          type: string
-          description: "Flag that indicates the type of funding for the installment plan associated with the payment. \n\n This is an optional field for most processors; however, it is mandatory if your processor is PROSA. Please speak to your Implementation Manager for further information."
-          enum:
-          - merchant funded
-          - issuer funded
-          - non promotion
-          - skip payment
-        total_count:
-          type: integer
-          format: int32
-          description: Total number of installments when making payments in installments.
-        sequence:
-          type: string
-          description: Sequence of installment transaction.
-        amount:
-          type: string
-          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
-        frequency:
-          type: string
-          description: Frequency of installment transaction.
-          enum:
-          - 'B : Biweekly'
-          - 'M : Monthly'
-          - 'W : Weekly'
-    Hotel:
-      type: object
-      properties:
-        room:
-          description: The object containing the number of nights and the daily rate that applies for that number of nights.
-          $ref: '#/components/schemas/Room'
-        charge:
-          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
-          $ref: '#/components/schemas/Charge'
-        tax_detail:
-          type: array
-          description: Hotel tax details
-          items:
-            $ref: '#/components/schemas/TaxDetail'
-        additional_discount_amount:
-          type: string
-          description: Amount of an additional coupon or discount.
-        adjusted_amount:
-          type: string
-          description: Adjusted amount charged in addition to the reservation amount after the stay is complete.
-    AuthorisePaymentCustomer:
-      type: object
-      properties:
-        account_number:
-          type: string
-          description: This is the recipient's account number.
-        customer_id:
-          type: string
-          description: The customer_id of recipient's.
-        date_of_birth:
-          type: string
-          description: The date of birth of a customer, 10 characters, ISO-8601 (YYYY-MM-DD).
-        last_name:
-          type: string
-          description: Last name of the customer.
-        postal_code:
-          type: string
-          description: 'This is the recipient''s postcode/zip.
-
-
-            Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and single space'
     PspInformation:
       type: object
       properties:
@@ -939,43 +2574,449 @@ components:
         reconciliation_id:
           type: string
           description: Reference number for the transaction generated by the PSP or Acquirer to provide end to end traceability for reconciliation purposes. Only supported by some PSP or Acquirers. Please speak to your implementation number to understand more.
-    CybersourceDecisionManagerResponse:
+    ExternalRiskData:
       type: object
       properties:
-        clientReferenceInformation:
-          $ref: '#/components/schemas/ClientReferenceInformationDTO'
-        consumerAuthenticationInformation:
-          $ref: '#/components/schemas/ConsumerAuthenticationInformationDTO'
-        id:
+        session_id:
           type: string
-        paymentInformation:
-          $ref: '#/components/schemas/PaymentInformationResponseDTO'
-        riskInformation:
-          $ref: '#/components/schemas/RiskInformationResponseDTO'
-        status:
+          description: Session ID of the transaction. This session id can be used to obtain device fingerprint information. You can use any id that you are already generating, such as an order number or web session ID.
+        provider:
           type: string
-        submitTimeUtc:
-          type: string
-    ThreeDsVerifyAuthRequestDTO:
+          description: Third party provider for the risk check.
+          enum:
+          - CYBERSOURCE
+        cs_dm:
+          description: CybersourceDecisionManagerRequest
+          $ref: '#/components/schemas/CybersourceDecisionManagerRequest'
+    NetworkToken:
       type: object
       required:
-      - _id
+      - network_token
       properties:
-        _id:
+        network_token:
           type: string
-          description: The ID of the transaction
-        paRes:
+          description: The network token cryptogram representing the payment card.
+        create_network_token:
+          type: boolean
+          example: false
+          description: Whether to create a network token or not for the card. Defaults to 'false'. Setting it to 'true' will create the network token for the card.
+    Room:
+      type: object
+      properties:
+        number_of_nights:
+          type: integer
+          format: int32
+          description: Number of nights billed at the rate specified in daily_rate.
+        room_bed_type:
           type: string
-          description: "The unmodified PaRes value as received after the customer was redirected back from 3DS Authentication. \n\n **Note:** This field may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information."
-        three_ds_authentication:
-          description: '
+          description: Type of room, such as queen, king, or two doubles.
+          enum:
+          - Single bed
+          - Double bed
+          - Queen bed
+          - King bed
+          - Twin bed
+          - Sofa bed
+          - Bunk bed
+          - Murphy bed
+          - Trundle bed
+          - Day bed
+          - Other
+        room_location:
+          type: string
+          description: Location of room, such as lake view or ocean view.
+        smoking_preference:
+          type: string
+          description: "Smoking preference of the guest. Y: smoking room \nN: non-smoking room"
+          enum:
+          - Y
+          - N
+        room_rate_type:
+          type: string
+          description: Type of rate, such as corporate or senior citizen.
+        daily_rate:
+          type: string
+          description: Daily cost of the room.
+    TaxDetail:
+      type: object
+      properties:
+        room_tax_type:
+          type: string
+          description: Type of tax.
+          enum:
+          - Sales Tax
+          - Value Added Tax (VAT)
+          - Transient Occupancy Tax (TOT)
+          - Occupancy Tax
+          - Resort Tax
+          - Tourism Tax
+          - City Tax
+          - County Tax
+          - Municipal Tax
+          - State Tax
+          - Bed Tax
+          - Resort Fee
+          - Hospitality Tax
+          - Other
+        room_tax_amount:
+          type: string
+          description: Total tax for the room.
+        total_tax_amount:
+          type: string
+          description: Total tax amount
+    ProfileDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        selectorRule:
+          type: string
+    CustomerAccountDTO:
+      type: object
+      properties:
+        last_change_date:
+          type: string
+          description: Date the cardholder’s account was last changed. This includes changes to the billing or shipping address, new payment accounts or new users added. Recommended for Discover ProtectBuy.
+        creation_history:
+          type: string
+          description: 'The values from the enum can be: GUEST NEW_ACCOUNT EXISTING_ACCOUNT'
+        modification_history:
+          type: string
+          description: 'This field is applicable only in case of EXISTING_ACCOUNT in creationHistory. Possible values: ACCOUNT_UPDATED_NOW ACCOUNT_UPDATED_PAST'
+        password_history:
+          type: string
+          description: 'This only applies for EXISTING_ACCOUNT in creationHistory. The values from the enum can be: PASSWORD_CHANGED_NOW PASSWORD_CHANGED_PAST PASSWORD_NEVER_CHANGED'
+        create_date:
+          type: string
+          description: Date the cardholder opened the account. Recommended for Discover ProtectBuy. This only applies for EXISTING_ACCOUNT in creationHistory.
+        password_change_date:
+          type: string
+          description: Date the cardholder last changed or reset password on account. Recommended for Discover ProtectBuy. This only applies for PASSWORD_CHANGED_PAST in passwordHistory.
+    CybersourceDecisionManagerRequest:
+      type: object
+      properties:
+        device_information:
+          description: deviceInformation
+          $ref: '#/components/schemas/DeviceInformationDTO'
+        risk_information:
+          $ref: '#/components/schemas/RiskInformationDTO'
+        merchant_defined_information:
+          type: array
+          items:
+            $ref: '#/components/schemas/MerchantDefinedInformationDTO'
+    PspgwRouteInformation:
+      type: object
+      properties:
+        apexx_name:
+          type: string
+          description: Name of the psp as setup within the APEXX payment gateway.
+        merchant_code:
+          type: string
+        name:
+          type: string
+        psp_id:
+          type: string
+          description: The ID of the payment service provider.
+        sequence:
+          type: integer
+          format: int32
+    Items:
+      type: object
+      required:
+      - gross_unit_price
+      - item_description
+      - net_unit_price
+      - product_id
+      - quantity
+      properties:
+        distributor_sku:
+          type: string
+        item_name:
+          type: string
+        merchant_sku:
+          type: string
+        product_id:
+          type: string
+          description: Merchant Product identification number
+        group_id:
+          type: string
+          description: Item group ID. The group this item belongs to. Provided by the merchant
+        item_description:
+          type: string
+          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
+        net_unit_price:
+          type: integer
+          format: int64
+          description: 'Net unit price.
 
 
-            **Note:** This field is required when 3ds 2.0 is used.'
-          $ref: '#/components/schemas/ExternalAuthentication'
-        specification_version:
+            Note: net_unit_price is only required if the vat_percent is not provided.'
+        gross_unit_price:
+          type: integer
+          format: int64
+          description: Gross price per item
+        quantity:
+          type: integer
+          format: int64
+          description: Quantity
+        vat_percent:
+          type: number
+          format: double
+          description: Tax percent
+        vat_amount:
+          type: integer
+          format: int64
+          description: Tax amount per item
+        product_image_url:
           type: string
-          description: "Valid values: \"1.0\", \"2.0\", \"1.0.2\", \"2.1.0\", \"2.2.0\" \n Version of the 3DS which is received from the authentication server. \n\n **Note:** This field is required when 3DS 2.0 falls back to 1.0."
+          description: URL for the image of this product. It will be turned into a thumbnail and displayed in MyAfterPay, on the invoice line next to the order item. The linked image must be a rectangle or square, width between 100 pixels and 1280 pixels.
+        product_url:
+          type: string
+          description: URL to the product
+        additional_information:
+          type: string
+          description: Extended description of the order item
+    EncryptedCardDTO:
+      type: object
+      required:
+      - encryptedPayload
+      properties:
+        encryptedPayload:
+          type: string
+          description: Encrypted request body with encrypted key passed in header. This field will contain the encryption data of all the fields from the cardPayRequest above and will be processed only when encrypted key is passed in header.
+    InfoCodesDTO:
+      type: object
+      properties:
+        address:
+          type: array
+          items:
+            type: string
+        customer_list:
+          type: array
+          items:
+            type: string
+        global_velocity:
+          type: array
+          items:
+            type: string
+        identity_change:
+          type: array
+          items:
+            type: string
+        internet:
+          type: array
+          items:
+            type: string
+        phone:
+          type: array
+          items:
+            type: string
+        suspicious:
+          type: array
+          items:
+            type: string
+        velocity:
+          type: array
+          items:
+            type: string
+    MerchantDefinedInformationDTO:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Fields that you can use to store information. The value appears in the Case Management Details window in the Business Center. The first four fields are the same fields that are used by the Secure Data services. See request code examples. Warning Merchant-defined data fields are not intended to and must not be used to capture personally identifying information. Accordingly, merchants are prohibited from capturing, obtaining, and/or transmitting any personally identifying information in or via the merchant-defined data fields.Personally identifying information includes, but is not limited to, address, credit card number, social security number, driver's license number, state-issued identification number, passport number, and card verification numbers (CVV, CVC2, CVV2, CID, CVN). In the event CyberSource discovers that a merchant is capturing and/or transmitting personally identifying information via the merchant-defined data fields, whether or not intentionally, CyberSource will immediately suspend the merchant's account, which will result in a rejection of any and all transaction requests submitted by the merchant after the point of suspension.
+        value:
+          type: string
+          description: String value for the key
+    ThreeDs:
+      type: object
+      properties:
+        three_ds_required:
+          type: string
+          description: "Valid values: \"true\"\t\"false\"\t\n\ntrue if 3DS required for this transaction, false otherwise."
+        three_ds_version:
+          type: string
+          description: "Valid values: \"1.0\"\t\"2.0\"\t\n\nThe 3-D Secure version used for the authentication"
+        term_url:
+          type: string
+          description: The return url to which the customer is redirected after a transaction is processed.
+        reference_id:
+          type: string
+          description: Cardinal Session ID sent in the response after initialization of JWT with Cardinal. This is mandatory when three_ds_version is 2.0.
+    DeviceInformationDTO:
+      type: object
+      properties:
+        cookies_accepted:
+          type: string
+          description: Whether the customer’s browser accepts cookies.
+          enum:
+          - 'True'
+          - 'False'
+        host_name:
+          type: string
+          description: DNS resolved hostname from ipAddress.
+        http_browser_email:
+          type: string
+          description: Email address set in the customer’s browser, which may differ from customer email
+        http_accept_browser_value:
+          type: string
+          description: Value of the Accept header sent by the customer’s web browser. Note If the customer’s browser provides a value, you must include it in your request.
+        http_accept_content:
+          type: string
+          description: The exact content of the HTTP accept header.
+        http_accept_language:
+          type: string
+          description: Value represents the browser language as defined in IETF BCP47. Example:en-US
+        http_java_enabled:
+          type: string
+          description: A Boolean value that represents the ability of the cardholder browser to execute Java. Value is returned from the navigator.javaEnabled property.
+          enum:
+          - 'True'
+          - 'False'
+        http_java_script_enabled:
+          type: string
+          description: 'A Boolean value that represents the ability of the cardholder browser to execute JavaScript. Note: Merchants should be able to know the values from fingerprint details of cardholder''s browser.'
+          enum:
+          - 'True'
+          - 'False'
+        http_color_depth:
+          type: string
+          description: 'Value represents the bit depth of the color palette for displaying images, in bits per pixel. Example : 24'
+        http_screen_height:
+          type: string
+          description: 'Total height of the Cardholder''s scree in pixels. Example: 864.'
+        http_screen_width:
+          type: string
+          description: 'Total width of the cardholder''s screen in pixels. Example: 1536.'
+        http_time_difference:
+          type: string
+          description: Time difference between UTC time and the cardholder browser local time, in minutes. Example:300
+        user_agent_browser_value:
+          type: string
+          description: Value of the User-Agent header sent by the customer’s web browser. Note If the customer’s browser provides a value, you must include it in your request.
+    InstallmentInformation:
+      type: object
+      properties:
+        plan_type:
+          type: string
+          description: "Flag that indicates the type of funding for the installment plan associated with the payment. \n\n This is an optional field for most processors; however, it is mandatory if your processor is PROSA. Please speak to your Implementation Manager for further information."
+          enum:
+          - merchant funded
+          - issuer funded
+          - non promotion
+          - skip payment
+        total_count:
+          type: integer
+          format: int32
+          description: Total number of installments when making payments in installments.
+        sequence:
+          type: string
+          description: Sequence of installment transaction.
+        amount:
+          type: string
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        frequency:
+          type: string
+          description: Frequency of installment transaction.
+          enum:
+          - 'B : Biweekly'
+          - 'M : Monthly'
+          - 'W : Weekly'
+    Point:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type or category of points
+        scheme:
+          type: string
+          description: Name of points scheme provider
+        used:
+          type: integer
+          format: int32
+          description: Points used this transaction
+        balance:
+          type: integer
+          format: int32
+          description: Remaining points balance
+    PreauthCheck:
+      type: object
+      properties:
+        provider:
+          type: string
+          description: Third party provider for the risk check.
+        score:
+          type: number
+          format: double
+          description: Total score calculated for this order. The value cannot be negative.
+        status:
+          type: string
+          description: Status of the risk check.
+        created_at:
+          type: string
+          format: date-time
+          description: The time at which the transaction was created
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp
+        rules_triggered:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleTraceDTO'
+        is_fraud:
+          type: boolean
+          example: false
+    RouteStops:
+      type: object
+      properties:
+        stop:
+          type: string
+          description: Location of stop off
+    RiskCheckCardDetails:
+      type: object
+      properties:
+        card_holder_name:
+          type: string
+          description: Name of the card holder as printed on the card.
+        card_number:
+          type: string
+          description: The new card number, also known as PAN.
+        expiry_month:
+          type: string
+          description: Card expiry month. A string representing the month, valid values are 01 to 12.
+        expiry_year:
+          type: string
+          description: Card expiry year. A string representing the last two digits of the year, e.g. 19 for 2019.
+        token:
+          type: string
+          description: The token representing the payment card.
+        encrypted_data:
+          type: string
+          description: This field will contain the encryption data of card_number, expiry_month, expiry_year and cvv fields. Encryption data generated by client-side-encryption SDK.
+        initial_scheme_transaction_id:
+          type: string
+          description: The unique scheme transaction Id returned during customer initiated transaction. This value will be required when recurring_type is "mit"
+        network_token:
+          description: Network token.
+          $ref: '#/components/schemas/NetworkToken'
+    FraudPredictions:
+      type: object
+      properties:
+        error_message:
+          type: string
+          description: A description of the error.
+        rec:
+          type: string
+        rules_triggered:
+          type: array
+          description: The rules triggered for the fraud predictions
+          items:
+            type: string
+        score:
+          type: integer
+          format: int32
+          description: Total score calculated for this order. The value cannot be negative
     ThreeDsAuthenticationResponse:
       type: object
       required:
@@ -1314,277 +3355,64 @@ components:
         installment_information:
           description: Please note that the specific request here will override any general configuration that is set against your MID. by the acquirer. This does not apply to AMEX where the config at the MID takes priority
           $ref: '#/components/schemas/InstallmentInformation'
-    travelData:
-      type: object
-      required:
-      - booking_type
-      properties:
-        pnr:
-          type: string
-          description: Reference number for the booking.
-        booking_amount:
-          type: integer
-          format: int32
-          description: Prepaid amount, such as a deposit.
-        booking_type:
-          type: string
-          description: The type of booking being made.
-          enum:
-          - hotel
-          - rental
-          - car
-          - cruise
-          - flight
-          - train
-          - coach
-        passengers:
-          type: array
-          description: Array of passenger names
-          items:
-            $ref: '#/components/schemas/passengers'
-        legs:
-          type: array
-          description: Array of legs of booking.
-          items:
-            $ref: '#/components/schemas/Legs'
-        discount_percentage:
-          type: integer
-          format: int32
-          description: Percentage dicount to be applied to booking
-        loyalty_number:
-          type: string
-          description: Customer loyalty scheme number
-        points:
-          type: array
-          description: Loyalty points/scheme details
-          items:
-            $ref: '#/components/schemas/Point'
-        travel_mode_name:
-          type: string
-          description: Name of your mode of travel such as Airline, Ferry, Rail etc.
-        travel_mode_numeric_code:
-          type: integer
-          format: int32
-          description: Mode of Travel (Airline, Ferry, Rail etc.) numeric code
-        agency:
-          description: Agency
-          $ref: '#/components/schemas/Agency'
-        ticket_number:
-          type: string
-          description: Ticket/document number, or PNR locator code.
-        check_digit:
-          type: integer
-          format: int32
-          description: 'Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:
-
-            The value is numeric.
-
-            The first three digits are a valid IATA2 license plate carrier code.
-
-            The last digit is a check digit or zero (0).
-
-            All remaining digits are nonzero.'
-        is_restricted:
-          type: string
-          description: True will auto-capture the transaction. False will only authorise the transaction
-          enum:
-          - 'true'
-          - 'false'
-        transaction_type:
-          type: integer
-          format: int32
-          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
-        extended_payment_code:
-          type: string
-          description: 'Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
-
-            '
-        passenger_title:
-          type: string
-          description: Title of the passenger.
-        passenger_name:
-          type: string
-          description: 'Name of passenger. Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘)).'
-        passenger_age_group:
-          type: string
-          description: Travelling passenger's age group.
-          enum:
-          - 16-24
-          - 25-34
-          - 35-44
-          - 45-54
-          - 55-64
-          - 65 and up
-          - Unknown
-        is_lead:
-          type: string
-          description: Indicates whether the passenger is a lead passenger within the group.
-          enum:
-          - 'true'
-          - 'false'
-        customer_code:
-          type: string
-          description: 'Reference number or code that identifies the cardholder.
-
-            Code provided by the cardholder.
-
-            Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.
-
-            Customer reference.'
-        document_type:
-          type: integer
-          format: int32
-          description: Airline/Travel mode document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
-        document_number:
-          type: string
-          description: Ticket number or a value that might be a booking reference number.
-        travel_legs_count:
-          type: integer
-          format: int32
-          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
-        invoice_number:
-          type: string
-          description: Invoice number of the ticket.
-        invoice_date:
-          type: string
-          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
-        additional_charge_description:
-          type: string
-          description: Description of the charge.
-        total_fee_amount:
-          type: integer
-          format: int32
-          description: Total fee for the ticket.
-        clearing_sequence:
-          type: integer
-          format: int32
-          description: Total number of captures when requesting multiple partial captures for one authorization.
-        clearing_count:
-          type: integer
-          format: int32
-          description: Total number of clearing count associated with the authorization request.
-        total_clearing_amount:
-          type: integer
-          format: int32
-          description: Total clearing amount for all transactions in the clearing count set.
-        passenger_count:
-          type: integer
-          format: int32
-          description: Number of passengers for whom the ticket was issued.
-        reservation_system_code:
-          type: string
-          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
-        process_identifier:
-          type: string
-          description: Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
-        issue_date:
-          type: string
-          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
-        is_eticket:
-          type: string
-          description: Indicates whether the issued ticket was electronic or not.
-          enum:
-          - 'true'
-          - 'false'
-        original_ticket_number:
-          type: string
-          description: Original ticket number when the transaction is for a replacement ticket.
-        purchase_type:
-          type: string
-          description: 'Type of purchase
-
-            EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket'
-          enum:
-          - EXC
-          - MSC
-          - REF
-          - TKT
-        credit_reason:
-          type: string
-          description: 'Reason for the credit.A: Cancellation of the ancillary passenger transport purchase,
-
-            B: Cancellation of the airline ticket and the passenger transport ancillary purchase,
-
-            C: Cancellation of the airline ticket,
-
-            O: Other,
-
-            P: Partial refund of the airline ticket.'
-          enum:
-          - A
-          - B
-          - C
-          - O
-          - P
-        ticket_change_indicator:
-          type: string
-          description: 'Type of update.C: Change to the existing ticket., N: New ticket.'
-          enum:
-          - C
-          - N
-        plan_number:
-          type: string
-          description: Plan number based on the fare. This value is provided by the airline.
-        arrival_date:
-          type: string
-          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
-        restricted_ticket_description:
-          type: string
-          description: Text that describes the ticket limitations, such as nonrefundable.
-        exchange_ticket_amount:
-          type: integer
-          format: int32
-          description: Amount of the exchanged ticket.
-        exchange_ticket_fee_amount:
-          type: integer
-          format: int32
-          description: Fee for exchanging the ticket.
-        reservation_type:
-          type: string
-          description: Type of journey such as one way or round trip.
-        boarding_fee_amount:
-          type: integer
-          format: int32
-          description: Boarding fee.
-        special_program_code:
-          type: string
-          description: "**Valid values for hotel** :\n\n \"\"Lodging\"\"(default)\n\n \"\"No-Show Reservation\"\"\n\n \"\"Advanced Deposit\"\"\n\n**Valid values for car** :\n\n \"\"Not applicable\"\"(default)\n\n \"\"Frequent renter\"\"\n\n \"\"No show\"\""
-        promo_code:
-          type: string
-          description: Code assigned to a business. You can use this code to identify corporate rates and discounts for guests.
-        customer_service_details:
-          description: Details of customer service
-          $ref: '#/components/schemas/CustomerServiceDetails'
-        duration:
-          type: string
-          description: "Duration of the car or hotel rental.  \n\n **Note:** Required when booking_type= “car”"
-        hotel:
-          description: Object containing hotel details
-          $ref: '#/components/schemas/Hotel'
-        car:
-          description: Car rental object
-          $ref: '#/components/schemas/Car'
-    RiskInformationDTO:
+    CarTaxDetail:
       type: object
       properties:
-        profile:
-          description: Identifies a risk profile.
-          $ref: '#/components/schemas/ProfileDataDTO'
-        event_type:
+        tax_type:
           type: string
-          description: 'Specifies one of the following types of events:
+          description: Different taxes the rental agency applies to the rental agreement such as tourist tax, airport tax, or rental tax.
+        rate:
+          type: string
+          description: "Rate of VAT or other tax for the order.Example 0.040 (=4%) \nValid range: 0.01 to 0.99 (1% to 99%, with only whole percentage values accepted; values with additional \ndecimal places will be truncated)"
+        amount:
+          type: string
+          description: Indicates the amount of tax based on the type field as described in fields above
+        applied:
+          type: boolean
+          example: false
+          description: "Flag that indicates whether the tax amount (travel_data.car.tax_details.amount) is \nincluded in the request.\"true\": tax amount is included in the request.\n\"false\": tax amount is not included in the request."
+        exemption_code:
+          type: string
+          description: Status code for exemption from sales and use tax. This field is a pass-through.
+        tax_summary:
+          type: string
+          description: Summary of all tax types
+    Agency:
+      type: object
+      properties:
+        agency_code:
+          type: string
+          description: Travel agency code
+        agency_name:
+          type: string
+          description: Travel agency name
+        agency_address:
+          type: string
+          description: "Street address of the card holder. \n\nNote:  All characters support "
+        agency_city:
+          type: string
+          description: 'City of the card holder.
 
 
-            1. login
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_state:
+          type: string
+          description: 'A region / state / province for the address.
 
 
-            2. account_creation
+            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
+        agency_postal_code:
+          type: string
+          description: 'A postal code for the address.
 
 
-            3. account_update For regular payment transactions, do not send this field.'
-        buyer_history:
-          description: buyerHistory
-          $ref: '#/components/schemas/BuyerHistoryDTO'
+            Note: Only alpha-numeric characters'
+        agency_country:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. country code for the address
+
+
+            . Note: Alphabets upto two characters (e.g. GB, RU etc..)'
     deviceInformation:
       type: object
       properties:
@@ -1627,1836 +3455,8 @@ components:
         device_channel:
           type: string
           description: Specifies the channel through which the transaction is initiated (e.g., "BROWSER", "APP", "POS").<br>Helps in categorizing the origin of the request.For HPP and for javascript based transactions value should be BROWSER.
-    RuleTraceDTO:
-      type: object
-      properties:
-        bindValue:
-          type: string
-        category:
-          type: string
-        result:
-          type: boolean
-        ruleExpression:
-          type: string
-        ruleId:
-          type: string
-        ruleOrgId:
-          type: string
-        ruleType:
-          type: string
-    RiskCheckCardDetails:
-      type: object
-      properties:
-        card_holder_name:
-          type: string
-          description: Name of the card holder as printed on the card.
-        card_number:
-          type: string
-          description: The new card number, also known as PAN.
-        expiry_month:
-          type: string
-          description: Card expiry month. A string representing the month, valid values are 01 to 12.
-        expiry_year:
-          type: string
-          description: Card expiry year. A string representing the last two digits of the year, e.g. 19 for 2019.
-        token:
-          type: string
-          description: The token representing the payment card.
-        encrypted_data:
-          type: string
-          description: This field will contain the encryption data of card_number, expiry_month, expiry_year and cvv fields. Encryption data generated by client-side-encryption SDK.
-        initial_scheme_transaction_id:
-          type: string
-          description: The unique scheme transaction Id returned during customer initiated transaction. This value will be required when recurring_type is "mit"
-        network_token:
-          description: Network token.
-          $ref: '#/components/schemas/NetworkToken'
-    PaymentRequest:
-      type: object
-      required:
-      - amount
-      - capture_now
-      - card
-      - merchant_reference
-      properties:
-        account:
-          type: string
-          description: The ID of the account. Acts as an override. Must be submitted if organisation and currency are not used in the request.
-        organisation:
-          type: string
-          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
-        currency:
-          type: string
-          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
-        amount:
-          type: number
-          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
-        capture_now:
-          type: string
-          description: True will auto-capture the transaction. False will only authorise the transaction.
-        dynamic_descriptor:
-          type: string
-          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
-        merchant_reference:
-          type: string
-          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
-        card:
-          description: The new card number, also known as PAN.
-          $ref: '#/components/schemas/CardDetailsWithApm'
-        items:
-          type: array
-          description: Items
-          items:
-            $ref: '#/components/schemas/Items'
-        customer:
-          description: customer
-          $ref: '#/components/schemas/AuthorisePaymentCustomer'
-        customer_ip:
-          type: string
-          description: The IP address of the customer
-        browser_screen_height:
-          type: integer
-          format: int32
-          description: The height of the customer’s browser at point of submission
-        browser_screen_width:
-          type: integer
-          format: int32
-          description: The width of the customer’s browser at point of submission
-        recurring_type:
-          type: string
-          description: This field is to be used only when a transaction is part of a series of recurring transactions. If it's the initial transaction, set the value to 'first', and if it's not, set it to 'recurring'. This field must not be included in transactions that will not be part of a series of repeated transactions. (All values are written in lowercase letters).
-          enum:
-          - first
-          - recurring
-          - mit
-          - cit
-          - oneclick
-          - install
-        user_agent:
-          type: string
-          description: The full user agent string of the device the customer used to submit the transaction
-        webhook_transaction_update:
-          type: string
-          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
-        billing_address:
-          description: Billing address details for the customer
-          $ref: '#/components/schemas/BillingAddress'
-        shopper_interaction:
-          type: string
-          description: Determines the point of sale of a customer.
-          enum:
-          - ecommerce
-          - pos
-          - moto
-          - unknown
-        three_ds:
-          description: Enroll a given transaction for 3D-secure to verify whether authentication is supported for the card being used.
-          $ref: '#/components/schemas/ThreeDs'
-        fraud_predictions:
-          type: array
-          items:
-            $ref: '#/components/schemas/FraudPredictions'
-        card_brand:
-          type: string
-          description: Card brand for the card used for processing
-          enum:
-          - amex
-          - diners
-          - discover
-          - elo
-          - jcb
-          - maestro
-          - mastercard
-          - visa
-          - visa electron
-          - carte bancaire
-        delivery_address:
-          description: Some fields may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information.
-          $ref: '#/components/schemas/deliveryAddress'
-        duplicate_check:
-          type: string
-          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
-        external_risk_data:
-          description: ExternalRiskData
-          $ref: '#/components/schemas/ExternalRiskData'
-        airline_data:
-          description: airlineData
-          $ref: '#/components/schemas/airlineData'
-        external_authentication:
-          description: ExternalAuthentication
-          $ref: '#/components/schemas/ExternalAuthentication'
-        tra_exemption:
-          type: string
-          description: "\"This indicates that exemption from SCA is requested for the transaction. Valid values as mentioned below:\n\n \"\"external\"\" - Transaction risk analysis conducted by approved external source\n\n \"\"acquirer\"\" - Transaction risk analysis conducted by the acquirer\n\n \"\"scp\"\" - scp stands for Secure Corporate Payment\n\n \"\"lvp\"\" - lvp stands for Low-Value Payment\n\n \"\"delegated\"\" - Exemption indicator for delegated authentication.\n\n This flag specifies whether the transaction is exempt from strong customer authentication (SCA) requirements in Europe because the authentication was delegated to a different provider, such as an acquirer or payment technology provider (PTP).\""
-        merchant_data:
-          description: Merchant Data
-          $ref: '#/components/schemas/MerchantData'
-        installment_information:
-          description: Please note that the specific request here will override any general configuration that is set against your MID. by the acquirer. This does not apply to AMEX where the config at the MID takes priority
-          $ref: '#/components/schemas/InstallmentInformation'
-        travel_data:
-          description: travelData
-          $ref: '#/components/schemas/travelData'
-        pay_fac_sub_merchant_id:
-          type: string
-          description: Payment Facilitator submerchant account Identifier in the marketplace.
-        device_information:
-          description: deviceInformation
-          $ref: '#/components/schemas/deviceInformation'
-        aft_type:
-          type: string
-          description: 'Type of Account Funding transaction.
-
-
-            SVWF - Stored value wallet funding
-
-
-            SDWT - Staged digital wallet pre-funding
-
-
-            A2A - Account-to-account (me-to-me) money transfer
-
-
-            P2P - Person-to-Person (P2P) money transfer
-
-
-            CLA - Cryptocurrency and liquid assets
-
-
-            BIT - Financial Institution offe red Bank-Initiated P2P Money Transfer
-
-
-            FD - Funds Disbursement
-
-
-            FT - Funds Transfer
-
-
-            PD - Payroll Disbursement
-
-
-            PL - Prepaid load / reload2
-
-
-            B2B - Business to Business
-
-
-            CBP - Card Bill Payment
-
-
-            GP - Gambling Payouts
-
-
-            GFD - General funds disbursement
-
-
-            GD - Government Disbursement
-
-
-            LP - Loyalty Payments
-
-
-            MD - Funding small business disbursements
-
-
-            MP - Merchant Payment
-
-
-            NCBP - Non card bill payment
-
-
-            OGP - Online gaming payout
-
-
-            ZDA - Zero dollar authorisation
-
-
-            TO - Top off'
-          enum:
-          - SVWF
-          - SDWT
-          - A2A
-          - P2P
-          - CLA
-          - BIT
-          - FD
-          - FT
-          - PD
-          - TPL
-          - B2BCBP
-          - GP
-          - GFD
-          - GD
-          - LP
-          - MD
-          - MP
-          - NCBP
-          - OGP
-          - ZDA
-          - TO
-    CustomerServiceDetails:
-      type: object
-      properties:
-        phone_number:
-          type: string
-          description: Toll-free customer service phone number.
-    deliveryAddress:
-      type: object
-      properties:
-        address:
-          type: string
-          description: Street address of the delivery customer.
-        city:
-          type: string
-          description: City of the delivery customer
-        country:
-          type: string
-          description: "A 2-letter ISO3166 alpha-2. country code for the address. \n\nNote: Alphabets upto two characters (e.g. GB, RU etc..)"
-        email:
-          type: string
-          description: 'Email address of the card holder.
-
-
-            Note: Only alphabets, numeric, @, comma(,) dot(.), plus(+), underscore(_), dash(-) and apostrophe(â€˜)'
-        phone:
-          type: string
-          description: 'Numbers only, no dash or any other separator.
-
-
-            Note: Length - min(3) & max(20)'
-        postal_code:
-          type: string
-          description: A postal code for the address.
-        state:
-          type: string
-          description: A region / state / province for the address.
-    AccountHistoryDTO:
-      type: object
-      properties:
-        first_use_of_shipping_address:
-          type: string
-          description: Applicable when this is not a guest account.
-        shipping_address_usage_date:
-          type: string
-          description: Date when the shipping address for this transaction was first used. Recommended for Discover ProtectBuy. If firstUseOfShippingAddress is false and not a guest account, then this date is entered.
-    GooglePay:
-      type: object
-      required:
-      - cryptogram
-      - dpan
-      - expiry_month
-      - expiry_year
-      properties:
-        cryptogram:
-          type: string
-          description: "Required only if using the PSP decryption method. This value should be base64 encoded if the intermediary PSP is Cybersource or ACI\n\n Google pay online payment cryptogram for 3d secure which maps to the paymentData.onlinePaymentCryptogram property in the encrypted payment data."
-        expiry_month:
-          type: string
-          description: "Required only if using the merchant decryption method\n\n Card expiry month - A string representing the month, valid values are 01 to 12. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Month from the received data."
-        expiry_year:
-          type: string
-          description: "Required only if using the merchant decryption method\n\n Card expiry year - A string representing the last two digits of the year, e.g. 19 for 2019. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Year from the received data."
-        dpan:
-          type: string
-          description: "Required only if using the merchant decryption method\n\n Device specific PAN - Maps to the applicationPrimaryAccountNumber property in the encrypted payment data."
-        eci:
-          type: string
-          description: "Required only if using the merchant decryption method\n\n Electronic Commerce Indicator - Maps to the paymentData.eciIndicator property in the encrypted payment data."
-        googlepay_transaction_id:
-          type: string
-          description: Googlepay Transaction id received from googlepay.
-    FraudPredictions:
-      type: object
-      properties:
-        error_message:
-          type: string
-          description: A description of the error.
-        rec:
-          type: string
-        rules_triggered:
-          type: array
-          description: The rules triggered for the fraud predictions
-          items:
-            type: string
-        score:
-          type: integer
-          format: int32
-          description: Total score calculated for this order. The value cannot be negative
-    TaxDetail:
-      type: object
-      properties:
-        room_tax_type:
-          type: string
-          description: Type of tax.
-          enum:
-          - Sales Tax
-          - Value Added Tax (VAT)
-          - Transient Occupancy Tax (TOT)
-          - Occupancy Tax
-          - Resort Tax
-          - Tourism Tax
-          - City Tax
-          - County Tax
-          - Municipal Tax
-          - State Tax
-          - Bed Tax
-          - Resort Fee
-          - Hospitality Tax
-          - Other
-        room_tax_amount:
-          type: string
-          description: Total tax for the room.
-        total_tax_amount:
-          type: string
-          description: Total tax amount
-    passengers:
-      type: object
-      properties:
-        passenger_index:
-          type: integer
-          format: int32
-          description: Index number to identify passenger
-        salutation:
-          type: string
-          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr", etc.
-        first_name:
-          type: string
-          description: First name of the passenger
-        last_name:
-          type: string
-          description: Last name of the passenger
-        date_of_birth:
-          type: string
-          description: 'D.O.B. of passenger. Format: YYYY-MM-DD'
-    RiskInformationResponseDTO:
-      type: object
-      properties:
-        case_priority:
-          type: string
-        info_codes:
-          $ref: '#/components/schemas/InfoCodesDTO'
-        local_time:
-          type: string
-        profile_response:
-          $ref: '#/components/schemas/ProfileDTO'
-        providers:
-          $ref: '#/components/schemas/ProvidersDTO'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/RuleDTO'
-        score:
-          $ref: '#/components/schemas/ScoreDTO'
-    ThreeDSCardEnrolRequest:
-      type: object
-      properties:
-        three_ds_enrollment:
-          type: boolean
-          example: false
-          description: 'Card’s enrollment status.
-
-
-            **Note:** This field is required by certain acquirers, please ask your implementation manager for details.'
-        three_ds_required:
-          type: string
-          description: Enroll a given transaction for 3D-secure to verify whether authentication is supported for the card being used.
-        three_ds_version:
-          type: string
-          description: The 3-D Secure version used for the authentication.
-          enum:
-          - '1.0'
-          - '2.0'
-          - 1.0.2
-          - 2.1.0
-          - 2.2.0
-        term_url:
-          type: string
-          description: The return url to which the customer is redirected after a transaction is processed.
-        eci:
-          type: string
-          description: The Electronic Commerce Indicator (ECI).
-        xid:
-          type: string
-          description: 3-D Secure X id.
-        cavv:
-          type: string
-          description: 3-D Secure "Cardholder Authentication Verification Value"
-        pares:
-          type: string
-          description: 'Result of the authentication check. This field can contain one of these values:
-
-
-            A: Proof of authentication attempt was generated.
-
-
-            N: Customer failed or canceled authentication. Transaction denied.
-
-
-            U: Authentication not completed regardless of the reason.
-
-
-            Y: Customer was successfully authenticated.'
-        veres:
-          type: string
-          description: 'Result of the enrollment check. This field can contain one of these values:
-
-
-            Y: Card enrolled or can be enrolled; you must authenticate. Liability shift.
-
-
-            N: Card not enrolled; proceed with authorization. Liability shift.
-
-
-            U: Unable to authenticate regardless of the reason. No liability shift.
-
-
-            B: Indicates that authentication was bypassed.'
-        authentication_result:
-          type: string
-          description: 'Raw authentication data that comes from the cardissuing bank. Primary authentication field that indicates if authentication was successful and if liability shift occurred. You should examine first the result of this field. This field contains one of these values:
-
-
-            -1: Invalid PARes.
-
-
-            0: Successful validation.
-
-
-            1: Cardholder is not participating, but the attempt to authenticate was recorded.
-
-
-            6: Issuer unable to perform authentication.
-
-
-            9: Cardholder did not complete authentication.'
-    ThreeDs:
-      type: object
-      properties:
-        three_ds_required:
-          type: string
-          description: "Valid values: \"true\"\t\"false\"\t\n\ntrue if 3DS required for this transaction, false otherwise."
-        three_ds_version:
-          type: string
-          description: "Valid values: \"1.0\"\t\"2.0\"\t\n\nThe 3-D Secure version used for the authentication"
-        term_url:
-          type: string
-          description: The return url to which the customer is redirected after a transaction is processed.
-        reference_id:
-          type: string
-          description: Cardinal Session ID sent in the response after initialization of JWT with Cardinal. This is mandatory when three_ds_version is 2.0.
-    AdjustedAmount:
-      type: object
-      properties:
-        indicator:
-          type: string
-          description: Adjusted amount indicator code that indicates any miscellaneous charges incurred after the auto was returned or Audit indicator code that indicates any adjustment for mileage, fuel, auto damage, etc. made to a rental agreement and whether the cardholder was notified.
-          enum:
-          - Drop-off charges
-          - Delivery charges
-          - Parking expenses
-          - Extra hours
-          - Violations
-          - Multiple adjustments
-        value:
-          type: string
-          description: Adjusted Amount indicates whether any miscellaneous charges were incurred after the vehicle was returned.
-    ApplePay:
-      type: object
-      required:
-      - cryptogram
-      - dpan
-      - expiry_month
-      - expiry_year
-      properties:
-        cryptogram:
-          type: string
-          description: Applepay online payment cryptogram for 3d secure which maps to the paymentData.onlinePaymentCryptogram property in the encrypted payment data.
-        expiry_month:
-          type: string
-          description: Card expiry month - A string representing the month, valid values are 01 to 12. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Month from the received data.
-        expiry_year:
-          type: string
-          description: Card expiry year - A string representing the last two digits of the year, e.g. 19 for 2019. Maps to the applicationExpirationDate property in the encrypted payment data. Need to send only Year from the received data.
-        dpan:
-          type: string
-          description: Device specific PAN - Maps to the applicationPrimaryAccountNumber property in the encrypted payment data.
-        eci:
-          type: string
-          description: Electronic Commerce Indicator - Maps to the paymentData.eciIndicator property in the encrypted payment data.
-        applepay_transaction_id:
-          type: string
-          description: Applepay Transaction id received from applepay.
-    DeviceInformationDTO:
-      type: object
-      properties:
-        cookies_accepted:
-          type: string
-          description: Whether the customer’s browser accepts cookies.
-          enum:
-          - 'True'
-          - 'False'
-        host_name:
-          type: string
-          description: DNS resolved hostname from ipAddress.
-        http_browser_email:
-          type: string
-          description: Email address set in the customer’s browser, which may differ from customer email
-        http_accept_browser_value:
-          type: string
-          description: Value of the Accept header sent by the customer’s web browser. Note If the customer’s browser provides a value, you must include it in your request.
-        http_accept_content:
-          type: string
-          description: The exact content of the HTTP accept header.
-        http_accept_language:
-          type: string
-          description: Value represents the browser language as defined in IETF BCP47. Example:en-US
-        http_java_enabled:
-          type: string
-          description: A Boolean value that represents the ability of the cardholder browser to execute Java. Value is returned from the navigator.javaEnabled property.
-          enum:
-          - 'True'
-          - 'False'
-        http_java_script_enabled:
-          type: string
-          description: 'A Boolean value that represents the ability of the cardholder browser to execute JavaScript. Note: Merchants should be able to know the values from fingerprint details of cardholder''s browser.'
-          enum:
-          - 'True'
-          - 'False'
-        http_color_depth:
-          type: string
-          description: 'Value represents the bit depth of the color palette for displaying images, in bits per pixel. Example : 24'
-        http_screen_height:
-          type: string
-          description: 'Total height of the Cardholder''s scree in pixels. Example: 864.'
-        http_screen_width:
-          type: string
-          description: 'Total width of the cardholder''s screen in pixels. Example: 1536.'
-        http_time_difference:
-          type: string
-          description: Time difference between UTC time and the cardholder browser local time, in minutes. Example:300
-        user_agent_browser_value:
-          type: string
-          description: Value of the User-Agent header sent by the customer’s web browser. Note If the customer’s browser provides a value, you must include it in your request.
-    MerchantData:
-      type: object
-      properties:
-        brand_name:
-          type: string
-          description: Merchant Brand name
-        custom_data:
-          type: object
-        website_url:
-          type: string
-          description: Merchant website.
-    EncryptedCardDTO:
-      type: object
-      required:
-      - encryptedPayload
-      properties:
-        encryptedPayload:
-          type: string
-          description: Encrypted request body with encrypted key passed in header. This field will contain the encryption data of all the fields from the cardPayRequest above and will be processed only when encrypted key is passed in header.
-    ExternalRiskData:
-      type: object
-      properties:
-        session_id:
-          type: string
-          description: Session ID of the transaction. This session id can be used to obtain device fingerprint information. You can use any id that you are already generating, such as an order number or web session ID.
-        provider:
-          type: string
-          description: Third party provider for the risk check.
-          enum:
-          - CYBERSOURCE
-        cs_dm:
-          description: CybersourceDecisionManagerRequest
-          $ref: '#/components/schemas/CybersourceDecisionManagerRequest'
-    PreauthCheck:
-      type: object
-      properties:
-        provider:
-          type: string
-          description: Third party provider for the risk check.
-        score:
-          type: number
-          format: double
-          description: Total score calculated for this order. The value cannot be negative.
-        status:
-          type: string
-          description: Status of the risk check.
-        created_at:
-          type: string
-          format: date-time
-          description: The time at which the transaction was created
-        timestamp:
-          type: integer
-          format: int64
-          description: Current timestamp
-        rules_triggered:
-          type: array
-          items:
-            $ref: '#/components/schemas/RuleTraceDTO'
-        is_fraud:
-          type: boolean
-          example: false
-    FailureResponseDTO:
-      type: object
-      properties:
-        _id:
-          type: string
-          description: This is the unique transaction id generated by Apexx.
-        organisation_id:
-          type: string
-          description: The ID of an organisation.
-        code:
-          type: string
-          description: An alphanumeric code which uniquely identify an error.
-        status:
-          type: string
-          description: It will indicate what is the final result of the request.
-        message:
-          type: string
-          description: A description of the response.
-        timestamp:
-          type: integer
-          format: int64
-          description: Current timestamp.
-        details:
-          type: string
-          description: Optional details concerning the error.
-        errors:
-          type: array
-          description: Details of each error occured.
-          items:
-            $ref: '#/components/schemas/Errors'
-        trace_id:
-          type: string
-          description: Unique trace id created by APEXX platform to trace this request.
-        merchant_reference:
-          type: string
-          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
-    Items:
-      type: object
-      required:
-      - gross_unit_price
-      - item_description
-      - net_unit_price
-      - product_id
-      - quantity
-      properties:
-        distributor_sku:
-          type: string
-        item_name:
-          type: string
-        merchant_sku:
-          type: string
-        product_id:
-          type: string
-          description: Merchant Product identification number
-        group_id:
-          type: string
-          description: Item group ID. The group this item belongs to. Provided by the merchant
-        item_description:
-          type: string
-          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
-        net_unit_price:
-          type: integer
-          format: int64
-          description: 'Net unit price.
-
-
-            Note: net_unit_price is only required if the vat_percent is not provided.'
-        gross_unit_price:
-          type: integer
-          format: int64
-          description: Gross price per item
-        quantity:
-          type: integer
-          format: int64
-          description: Quantity
-        vat_percent:
-          type: number
-          format: double
-          description: Tax percent
-        vat_amount:
-          type: integer
-          format: int64
-          description: Tax amount per item
-        product_image_url:
-          type: string
-          description: URL for the image of this product. It will be turned into a thumbnail and displayed in MyAfterPay, on the invoice line next to the order item. The linked image must be a rectangle or square, width between 100 pixels and 1280 pixels.
-        product_url:
-          type: string
-          description: URL to the product
-        additional_information:
-          type: string
-          description: Extended description of the order item
-    InfoCodesDTO:
-      type: object
-      properties:
-        address:
-          type: array
-          items:
-            type: string
-        customer_list:
-          type: array
-          items:
-            type: string
-        global_velocity:
-          type: array
-          items:
-            type: string
-        identity_change:
-          type: array
-          items:
-            type: string
-        internet:
-          type: array
-          items:
-            type: string
-        phone:
-          type: array
-          items:
-            type: string
-        suspicious:
-          type: array
-          items:
-            type: string
-        velocity:
-          type: array
-          items:
-            type: string
-    FlightDetails:
-      type: object
-      properties:
-        carrier_code:
-          type: string
-          description: Travel carrier code
-        flight_number:
-          type: integer
-          format: int32
-          description: Flight number excluding carrier code.
-        origin_airport:
-          type: string
-          description: Origin airport/city IATA code.
-        origin_city:
-          type: string
-          description: Origin city name.
-        service_class:
-          type: string
-          description: Ticket category/class (“0” if no class).
-          enum:
-          - economy
-          - premium economy
-          - business class
-          - first class
-          - '0'
-        stop_over_code:
-          type: string
-          description: 'Stop over code -
-
-
-            O (capital letter "O") or 0 (zero) : Stopover allowed
-
-
-            X (capital letter "X") or 1 : Stopover not allowed'
-          enum:
-          - X
-          - O
-          - '1'
-          - '0'
-        departure_date:
-          type: string
-          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
-        destination_airport:
-          type: string
-          description: Destination airport/city IATA code.
-        destination_city:
-          type: string
-          description: Destination city name
-        fare_basis_code:
-          type: string
-          description: Fare basis code
-        departure_tax_amount:
-          type: integer
-          format: int32
-          description: Amount of departure tax for this leg of the trip.
-        conjunction_ticket:
-          type: string
-          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments.
-        exchange_ticket_number:
-          type: string
-          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
-        coupon_number:
-          type: string
-          description: Coupon number for the leg
-        endorsements_restrictions:
-          type: string
-          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
-        total_fare_amount:
-          type: integer
-          format: int32
-          description: Total fare for this leg of the trip.
-        fee_amount:
-          type: integer
-          format: int32
-          description: Fee for this leg of the trip, such as an airport fee or country fee.
-        tax_amount:
-          type: integer
-          format: int32
-          description: Tax for this leg of the trip.
-    Point:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type or category of points
-        scheme:
-          type: string
-          description: Name of points scheme provider
-        used:
-          type: integer
-          format: int32
-          description: Points used this transaction
-        balance:
-          type: integer
-          format: int32
-          description: Remaining points balance
-    Legs:
-      type: object
-      properties:
-        insurance:
-          type: array
-          items:
-            $ref: '#/components/schemas/Insurance'
-        amount:
-          type: integer
-          format: int32
-          description: Amount of leg of booking
-        passenger_index:
-          type: array
-          description: Array of passenger index values of passengers present for this leg of booking.
-          items:
-            type: number
-        check_in_date:
-          type: string
-          description: 'For booking_type= “hotel”
-
-            Start date of reservation.
-
-            For booking_type= “car”
-
-            Date-time the auto was picked up from the rental agency. Format: YYYY-MM-DD HH:mm:ss'
-        check_out_date:
-          type: string
-          description: "For booking_type= “hotel”\nEnd date of reservation. \nFor booking_type= “car”\nDate-time the auto was returned to the rental agency. Format: YYYY-MM-DD HH:mm:ss"
-        provider_group:
-          type: string
-          description: Name of hotel parent group
-        provider_name:
-          type: string
-          description: Name of hotel chain
-        room_count:
-          type: integer
-          format: int32
-          description: Number of rooms under booking
-        traveller_count:
-          type: integer
-          format: int32
-          description: Number of travellers under booking
-        origin_address:
-          type: string
-          description: "Street address of origin point.\n \n  Note: Supports only ISO-8859-1 characters."
-        origin_city:
-          type: string
-          description: City Journey begins
-        origin_postal_code:
-          type: string
-          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
-        origin_country_code:
-          type: string
-          description: 'A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
-        origin_state:
-          type: string
-          description: State Journey begins
-        origin_location_id:
-          type: string
-          description: The agency code, address, phone number, etc., used to identify the location of origin
-        origin_location:
-          type: string
-          description: The location where a taxi passenger was picked up or where an auto rental vehicle was picked up.
-        route_stops:
-          type: array
-          description: Array of stopping points on trip
-          items:
-            $ref: '#/components/schemas/RouteStops'
-        destination_address:
-          type: string
-          description: "Address of accomodation.\n \n  Note: Supports only ISO-8859-1 characters."
-        destination_city:
-          type: string
-          description: Final destination City
-        destination_postal_code:
-          type: string
-          description: 'A postal/zip code for the address. Note: Only alpha-numeric characters, Special characters allowed are hyphen(-) and spaces.'
-        destination_country_code:
-          type: string
-          description: 'Destination country. A 2-letter ISO3166 alpha-2. country code for the address. Note: Alphabets upto two characters (e.g. GB, RU, etc.)'
-        destination_state:
-          type: string
-          description: Final destination State.
-        destination_location_id:
-          type: string
-          description: The agency code, address, phone number, etc., used to identify the location of destination.
-        destination_location:
-          type: string
-          description: The location where a taxi passenger was dropped or where an auto rental vehicle was returned.
-        adults_count:
-          type: integer
-          format: int32
-          description: Number of adults under booking
-        booking_type:
-          type: string
-          description: The type of booking being made.
-          enum:
-          - hotel
-          - rental
-          - car
-          - cruise
-          - flight
-          - train
-          - coach
-        data:
-          type: array
-          description: Array of provider specific key values pairs, should be an array of the 'key_name' value and the 'value' value - Please speak to your Implementation manager for details on usage.
-          items:
-            $ref: '#/components/schemas/data'
-        child_count:
-          type: integer
-          format: int32
-          description: Number of children under booking
-        beds_count:
-          type: integer
-          format: int32
-          description: Number of rooms under booking
-        vehicle_type:
-          type: string
-          description: Name of vehicle being rented
-        class:
-          type: string
-          description: Class of travel or stay. e.g. "first", "premium", "luxury suite" - free text field, not enum
-        carrier_code:
-          type: string
-          description: Travel carrier code
-        travel_mode_reference:
-          type: integer
-          format: int32
-          description: Flight/Travel mode number excluding carrier code
-        origin_port:
-          type: string
-          description: Origin airport/port/city IATA code
-        service_class:
-          type: string
-          description: Service Class. Send "0" if Ticket category/class or if no class.
-          enum:
-          - first class
-          - Second class
-          - business
-          - Economic
-          - '0'
-        stop_over_code:
-          type: string
-          description: 'Stop over code -
-
-
-            O (capital letter "O") or 0 (zero) : Stopover allowed
-
-
-            X (capital letter "X") or 1 : Stopover not allowed'
-          enum:
-          - X
-          - O
-          - '1'
-          - '0'
-        departure_date:
-          type: string
-          description: Departure date. Format - YYYY-MM-DD HH:mm:ss
-        arrival_date:
-          type: string
-          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
-        destination_port:
-          type: string
-          description: Destination airport/port/city IATA code
-        fare_basis_code:
-          type: string
-          description: Fare basis code
-        departure_tax_amount:
-          type: integer
-          format: int32
-          description: Amount of departure tax for this leg of the trip
-        conjunction_ticket:
-          type: string
-          description: Ticket that contains additional coupons for this leg of the trip on an itinerary that has more than four segments
-        exchange_ticket_number:
-          type: string
-          description: New ticket number that is issued when the ticket is exchanged for this leg of the trip.
-        coupon_number:
-          type: string
-          description: Coupon number for the leg
-        endorsements_restrictions:
-          type: string
-          description: Notes or notations about endorsements and restrictions for this leg of the trip. Endorsements can be notations added by the travel agency, including mandatory government required notations such as value added tax. Restrictions are limitations for the ticket based on the type of fare, such as a nonrefundable tic.
-        total_fare_amount:
-          type: integer
-          format: int32
-          description: Total fare for this leg of the trip.
-        fee_amount:
-          type: integer
-          format: int32
-          description: Fee for this leg of the trip, such as an airport/port fee or country/city fee
-        tax_amount:
-          type: integer
-          format: int32
-          description: Tax for this leg of the trip
-        delivery:
-          type: string
-          description: The way the item is being delivered
-          enum:
-          - delivery
-          - collection
-          - email
-    ExternalAuthentication:
-      type: object
-      required:
-      - 3ds_status
-      - 3ds_version
-      - cavv
-      - eci
-      properties:
-        cavv:
-          type: string
-          description: 3-D Secure "Cardholder Authentication Verification Value".
-        xid:
-          type: string
-          description: 3-D Secure Xid.
-        cavv_algorithm:
-          type: string
-          description: 3-D Secure "Cardholder Authentication Verification Value" algorithm(0-9).
-        3ds_status:
-          type: string
-          description: "3-D Secure status:\n\n y = authentication successful\n\n n = not authenticated\n\n u = authentication unavailable\n\n a = authentication attempted\n\n r = authentication rejected"
-        eci:
-          type: string
-          description: The Electronic Commerce Indicator (ECI).
-        3ds_enrolled:
-          type: string
-          description: "Card's enrollment status. \n\n **Note:** This field may be mandatory for certain acquirers. Please speak to your Implementation Manager for further information."
-        directory_server_transaction_id:
-          type: string
-          description: 'The 3-D Secure Directory Server transaction ID that is used for the 3D Authentication.
-
-
-            **Note:** This field is required when 3ds 2.0 is used.'
-        3ds_transaction_status_reason:
-          type: string
-          description: "3-D Secure out of scope reason. Shall be used if the transaction type is out of scope of Strong Customer Authentication (SCA). The following transaction types are out of scope of SCA:\n\n mit Merchant Initiated Transactions\n\n moto Mail Order/Telephone Order\n\n one_leg_out\n\n anonymous_prepaid_card"
-        3ds_score:
-          type: string
-          description: CB scoring. Mandatory for CB transactions.
-        3ds_preference:
-          type: string
-          description: "3DS Requestor Challenge Indicator. Mandatory for CB.\n\n Acccepted values:\n\n  sca ask for a strong authentication;\n\n frictionless ask for a frictionless authentication;\n\n nopref or absent, the decision will be made by Dalenys;\n\n scamandate strong authentication required by regulation"
-        3ds_mode:
-          type: string
-          description: "Applied authentification mode:\n sca Strong authentication;\n frictionless Frictionless authentication;"
-        3ds_version:
-          type: string
-          description: The 3-D Secure version used for the authentication.
-        3ds_result:
-          type: string
-          description: 6 character value composed of 3DSECURESTATUS converted to hexadecimal concatenated with the result VRes converted to hexadecimal
-        3ds_server_transaction_id:
-          type: string
-          description: The 3-D Secure Server transaction ID that is used for the 3-D Secure version 2 Authentication.
-        3ds_acs_transaction_id:
-          type: string
-          description: Unique transaction identifier assigned by the ACS to identify the transaction.
-        authentication_outage:
-          type: boolean
-          example: false
-          description: Authentication outage used for 3ds transactions if there is an authentication outage. Set the value as true for these type of scenarios. The field is applicable only for acquirers.
-    TransactionChargeback:
-      type: object
-      properties:
-        transaction_chargeback_id:
-          type: string
-          description: Identifier of the chargeback
-        case_id:
-          type: string
-          description: Case ID of the chargeback
-        original_transaction_date:
-          type: string
-          description: Original date and time of the transaction
-        terminal_id:
-          type: string
-          description: Terminal ID of the chargeback
-        reference_number:
-          type: string
-          description: Case identifier for the chargeback
-        merchant_service_fee:
-          type: boolean
-          example: false
-          description: Merchant service fee applied on the transaction
-        settlement_currency:
-          type: string
-          description: Settlement currency of the transaction
-        arn:
-          type: string
-          description: Acquirer reference number, Unique card scheme identifier of sales transaction
-    WebhookResponse:
-      type: object
-      properties:
-        immediate:
-          type: boolean
-        webhook_transaction_update:
-          type: string
-          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
-    ScoreDTO:
-      type: object
-      properties:
-        factorCodes:
-          type: array
-          items:
-            type: string
-        modelUsed:
-          type: string
-        result:
-          type: string
-    Errors:
-      type: object
-      properties:
-        error_code:
-          type: integer
-          format: int32
-          description: Error Code
-        property:
-          type: string
-          description: 'Property on which error occurs. e.g : it can be class name , field name'
-        error_message:
-          type: string
-          description: Error message
-    ProfileDTO:
-      type: object
-      properties:
-        name:
-          type: string
-        selectorRule:
-          type: string
-    airlineData:
-      type: object
-      properties:
-        pnr:
-          type: string
-          description: Reference number for the airline booking. Required if ticket numbers are not issued.
-        airline_name:
-          type: string
-          description: Name of the airline.
-        agency:
-          description: Agency
-          $ref: '#/components/schemas/Agency'
-        airline_numeric_code:
-          type: integer
-          format: int32
-          description: Airline numeric code
-        ticket_number:
-          type: string
-          description: Ticket/document number, or PNR locator code.
-        check_digit:
-          type: integer
-          format: int32
-          description: 'Check digit for the ticket number with Discover and Diners Club, a valid ticket number has these characteristics:
-
-
-            1. The value is numeric.
-
-            2. The first three digits are a valid IATA2 license plate carrier code.
-
-            3. The last digit is a check digit or zero (0).
-
-            4. All remaining digits are nonzero.'
-        is_restricted:
-          type: string
-          description: " Flag that indicates whether or not the ticket is restricted (nonrefundable). \ntrue - Restricted (nonrefundable). false - No restriction (refundable)."
-          enum:
-          - 'true'
-          - 'false'
-        transaction_type:
-          type: string
-          description: 'Indicates the type of charge if it is for an airline ticket or another type of expense. 01: Charge is for an airline ticket. 02: Charge is for an item that is not an airline ticket'
-          enum:
-          - '01'
-          - '02'
-        extended_payment_code:
-          type: string
-          description: 'Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
-
-            '
-        passenger_title:
-          type: string
-          description: Title of the passenger.
-        passenger_name:
-          type: string
-          description: 'Name of passenger.
-
-
-            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,) and apostrophe(‘)).'
-        passenger_age_group:
-          type: string
-          description: Travelling passenger's age group.
-        is_lead:
-          type: string
-          description: Indicates whether the passenger is a lead passenger within the group.
-          enum:
-          - 'true'
-          - 'false'
-        customer_code:
-          type: string
-          description: '1. Reference number or code that identifies the cardholder.
-
-            2. Code provided by the cardholder.
-
-            3. Address of the ticket issuer. The first 13 characters will appear onthe cardholder’s statement.
-
-            4. Customer reference..'
-        document_type:
-          type: integer
-          format: int32
-          description: Airline document type code that specifies the purpose of the transaction. For the possible values, see Appendix A, "Airline Document Type Codes".
-        document_number:
-          type: string
-          description: Ticket number or a value that might be a booking reference number.
-        travel_legs_count:
-          type: integer
-          format: int32
-          description: 'Number of travel legs. Numbering for the travel legs: 0 to 3.'
-        invoice_number:
-          type: string
-          description: Invoice number of the ticket.
-        invoice_date:
-          type: string
-          description: Invoice date. The format is YYYY-MM-DD. If this value is included in the request, it is used in the creation of the invoice number.
-        additional_charge_description:
-          type: string
-          description: Description of the charge.
-        total_fee_amount:
-          type: integer
-          format: int32
-          description: Total fee for the ticket.
-        clearing_sequence:
-          type: integer
-          format: int32
-          description: Total number of captures when requesting multiple partial captures for one authorization.
-        clearing_count:
-          type: integer
-          format: int32
-          description: Total number of clearing count associated with the authorization request.
-        total_clearing_count:
-          type: integer
-          format: int32
-        passenger_count:
-          type: integer
-          format: int32
-          description: Number of passengers for whom the ticket was issued.
-        reservation_system_code:
-          type: string
-          description: Code that specifies the computerized reservation system used to make the reservation and purchase the ticket.
-        process_identifier:
-          type: string
-          description: Airline process identifier. This value is the airline’s three-digit IATA1 code which is used to process extended payment airline tickets.
-        issue_date:
-          type: string
-          description: 'Date on which the ticket was issued. Format: YYYY-MM-DD'
-        is_eticket:
-          type: string
-          description: Indicates whether the issued ticket was electronic or not.
-          enum:
-          - 'true'
-          - 'false'
-        original_ticket_number:
-          type: string
-          description: Original ticket number when the transaction is for a replacement ticket.
-        purchase_type:
-          type: string
-          description: 'Type of purchase
-
-            EXC: Exchange ticket, MSC: Miscellaneous, REF: Refund, TKT: Ticket'
-          enum:
-          - EXC
-          - MSC
-          - REF
-          - TKT
-        credit_reason:
-          type: string
-          description: 'Reason for the credit.A: Cancellation of the ancillary passenger transport purchase,
-
-            B: Cancellation of the airline ticket and the passenger transport ancillary purchase,
-
-            C: Cancellation of the airline ticket,
-
-            O: Other,
-
-            P: Partial refund of the airline ticket.'
-          enum:
-          - A
-          - B
-          - C
-          - O
-          - P
-        ticket_change_indicator:
-          type: string
-          description: 'Type of update.C: Change to the existing ticket., N: New ticket.'
-          enum:
-          - C
-          - N
-        plan_number:
-          type: string
-          description: Plan number based on the fare. This value is provided by the airline.
-        arrival_date:
-          type: string
-          description: 'Inbound arrival date and time of the booking. Format: YYYY-MM-DD HH:mm:ss'
-        restricted_ticket_description:
-          type: string
-          description: Text that describes the ticket limitations, such as nonrefundable.
-        exchange_ticket_amount:
-          type: integer
-          format: int32
-          description: Amount of the exchanged ticket.
-        exchange_ticket_fee_amount:
-          type: integer
-          format: int32
-          description: Fee for exchanging the ticket.
-        reservation_type:
-          type: string
-          description: Type of journey such as one way or round trip.
-        boarding_fee_amount:
-          type: string
-          description: Boarding fee.
-        issuer_city:
-          type: string
-          description: City of the issuer
-        legs:
-          type: array
-          description: Leg
-          items:
-            $ref: '#/components/schemas/FlightDetails'
-    ProviderNameDTO:
-      type: object
-      properties:
-        field_name:
-          type: string
-        field_value:
-          type: string
-    ProfileDataDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the active profile chosen by the profile selector. If no profile selector exists, the default active profile is chosen.
-    Agency:
-      type: object
-      properties:
-        agency_code:
-          type: string
-          description: Travel agency code
-        agency_name:
-          type: string
-          description: Travel agency name
-        agency_address:
-          type: string
-          description: "Street address of the card holder. \n\nNote:  All characters support "
-        agency_city:
-          type: string
-          description: 'City of the card holder.
-
-
-            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
-        agency_state:
-          type: string
-          description: 'A region / state / province for the address.
-
-
-            Note: Only alphabetic characters, Special characters allowed are (hyphen(-), underscore(_), dot(.), comma(,))'
-        agency_postal_code:
-          type: string
-          description: 'A postal code for the address.
-
-
-            Note: Only alpha-numeric characters'
-        agency_country:
-          type: string
-          description: 'A 2-letter ISO3166 alpha-2. country code for the address
-
-
-            . Note: Alphabets upto two characters (e.g. GB, RU etc..)'
-    MerchantDefinedInformationDTO:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Fields that you can use to store information. The value appears in the Case Management Details window in the Business Center. The first four fields are the same fields that are used by the Secure Data services. See request code examples. Warning Merchant-defined data fields are not intended to and must not be used to capture personally identifying information. Accordingly, merchants are prohibited from capturing, obtaining, and/or transmitting any personally identifying information in or via the merchant-defined data fields.Personally identifying information includes, but is not limited to, address, credit card number, social security number, driver's license number, state-issued identification number, passport number, and card verification numbers (CVV, CVC2, CVV2, CID, CVN). In the event CyberSource discovers that a merchant is capturing and/or transmitting personally identifying information via the merchant-defined data fields, whether or not intentionally, CyberSource will immediately suspend the merchant's account, which will result in a rejection of any and all transaction requests submitted by the merchant after the point of suspension.
-        value:
-          type: string
-          description: String value for the key
-    Room:
-      type: object
-      properties:
-        number_of_nights:
-          type: integer
-          format: int32
-          description: Number of nights billed at the rate specified in daily_rate.
-        room_bed_type:
-          type: string
-          description: Type of room, such as queen, king, or two doubles.
-          enum:
-          - Single bed
-          - Double bed
-          - Queen bed
-          - King bed
-          - Twin bed
-          - Sofa bed
-          - Bunk bed
-          - Murphy bed
-          - Trundle bed
-          - Day bed
-          - Other
-        room_location:
-          type: string
-          description: Location of room, such as lake view or ocean view.
-        smoking_preference:
-          type: string
-          description: "Smoking preference of the guest. Y: smoking room \nN: non-smoking room"
-          enum:
-          - Y
-          - N
-        room_rate_type:
-          type: string
-          description: Type of rate, such as corporate or senior citizen.
-        daily_rate:
-          type: string
-          description: Daily cost of the room.
-    CustomerAccountDTO:
-      type: object
-      properties:
-        last_change_date:
-          type: string
-          description: Date the cardholder’s account was last changed. This includes changes to the billing or shipping address, new payment accounts or new users added. Recommended for Discover ProtectBuy.
-        creation_history:
-          type: string
-          description: 'The values from the enum can be: GUEST NEW_ACCOUNT EXISTING_ACCOUNT'
-        modification_history:
-          type: string
-          description: 'This field is applicable only in case of EXISTING_ACCOUNT in creationHistory. Possible values: ACCOUNT_UPDATED_NOW ACCOUNT_UPDATED_PAST'
-        password_history:
-          type: string
-          description: 'This only applies for EXISTING_ACCOUNT in creationHistory. The values from the enum can be: PASSWORD_CHANGED_NOW PASSWORD_CHANGED_PAST PASSWORD_NEVER_CHANGED'
-        create_date:
-          type: string
-          description: Date the cardholder opened the account. Recommended for Discover ProtectBuy. This only applies for EXISTING_ACCOUNT in creationHistory.
-        password_change_date:
-          type: string
-          description: Date the cardholder last changed or reset password on account. Recommended for Discover ProtectBuy. This only applies for PASSWORD_CHANGED_PAST in passwordHistory.
-    Insurance:
-      type: object
-      properties:
-        agency_name:
-          type: string
-          description: Name of insurer
-        type:
-          type: string
-          description: Type of insurance
-          enum:
-          - cancellation
-          - travel
-          - cancellation_travel
-          - car
-          - bankruptcy
-        amount:
-          type: integer
-          format: int32
-          description: Amount of order charged without a decimal place e.g. $1.50 = 150
-    FraudCheckResponse:
-      type: object
-      properties:
-        provider:
-          type: string
-          description: Third party provider for the risk check.
-        score:
-          type: number
-          format: double
-          description: Total score calculated for this order. The value cannot be negative.
-        status:
-          type: string
-          description: Status of the risk check.
-        created_at:
-          type: string
-          format: date-time
-          description: The time at which the transaction was created
-        cs_dm:
-          $ref: '#/components/schemas/CybersourceDecisionManagerResponse'
-        code:
-          type: string
-          description: An alphanumeric code which uniquely identify an error.
-        details:
-          type: string
-          description: Optional details concerning the error.
-        message:
-          type: string
-          description: A description of the error.
-        timestamp:
-          type: integer
-          format: int64
-          description: Current timestamp
-    data:
-      type: object
-      properties:
-        key_name:
-          type: string
-          description: The name of the key for the key value pair. e.g. "meal type", "Extra Towels"
-        value:
-          type: string
-          description: The value for the key value pair. e.g. "vegitarian"
-    CarTaxDetail:
-      type: object
-      properties:
-        tax_type:
-          type: string
-          description: Different taxes the rental agency applies to the rental agreement such as tourist tax, airport tax, or rental tax.
-        rate:
-          type: string
-          description: "Rate of VAT or other tax for the order.Example 0.040 (=4%) \nValid range: 0.01 to 0.99 (1% to 99%, with only whole percentage values accepted; values with additional \ndecimal places will be truncated)"
-        amount:
-          type: string
-          description: Indicates the amount of tax based on the type field as described in fields above
-        applied:
-          type: boolean
-          example: false
-          description: "Flag that indicates whether the tax amount (travel_data.car.tax_details.amount) is \nincluded in the request.\"true\": tax amount is included in the request.\n\"false\": tax amount is not included in the request."
-        exemption_code:
-          type: string
-          description: Status code for exemption from sales and use tax. This field is a pass-through.
-        tax_summary:
-          type: string
-          description: Summary of all tax types
-    ConsumerAuthenticationInformationDTO:
-      type: object
-      properties:
-        token:
-          type: string
-    RentalInformation:
-      type: object
-      properties:
-        company_id:
-          type: string
-          description: Corporate Identifier provides the unique identifier of the corporation or entity renting the vehicle
-        no_show_indicator:
-          type: boolean
-          example: false
-          description: No Show Indicator provides an indicator noting that the individual did not show up after making a reservation for a vehicle.
-        commodity_code:
-          type: string
-          description: Commodity code or International description code used to classify the item. Contact your acquirer for a list of codes.
-    ProvidersDTO:
-      type: object
-      properties:
-        provider_name:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderNameDTO'
-    RouteStops:
-      type: object
-      properties:
-        stop:
-          type: string
-          description: Location of stop off
-    BuyerHistoryDTO:
-      type: object
-      properties:
-        customer_account:
-          description: CustomerAccount
-          $ref: '#/components/schemas/CustomerAccountDTO'
-        account_history:
-          description: AccountHistory
-          $ref: '#/components/schemas/AccountHistoryDTO'
-        account_purchases:
-          type: string
-          description: Number of purchases with this cardholder account during the previous six months. Recommended for Discover ProtectBuy.
-        add_card_attempts:
-          type: string
-          description: Number of add card attempts in the last 24 hours. Recommended for Discover ProtectBuy.
-        prior_suspicious_activity:
-          type: string
-          description: Indicates whether the merchant experienced suspicious activity (including previous fraud) on the account. Recommended for Discover ProtectBuy.
-        payment_account_history:
-          type: string
-          description: 'This only applies for NEW_ACCOUNT and EXISTING_ACCOUNT in creationHistory. Possible values are: PAYMENT_ACCOUNT_EXISTS PAYMENT_ACCOUNT_ADDED_NOW'
-        payment_account_date:
-          type: string
-          description: Date applicable only for PAYMENT_ACCOUNT_EXISTS in paymentAccountHistory
-        transaction_count_day:
-          type: string
-          description: Number of transaction (successful or abandoned) for this cardholder account within the last 24 hours. Recommended for Discover ProtectBuy.
-        transaction_count_year:
-          type: string
-          description: Number of transaction (successful or abandoned) for this cardholder account within the last year. Recommended for Discover ProtectBuy.
-    Charge:
-      type: object
-      properties:
-        food_and_beverage:
-          type: string
-          description: Cost for all food and beverages.
-        phone_cost:
-          type: string
-          description: Cost of telephone services.
-        restaurant_cost:
-          type: string
-          description: Cost of restaurant purchases
-        room_service:
-          type: string
-          description: Cost of room service
-        mini_bar_counter:
-          type: string
-          description: Cost of mini-bar purchases.
-        laundary_cost:
-          type: string
-          description: Cost of laundry services.
-        miscellaneous_cost:
-          type: string
-          description: Miscellaneous costs.
-        gift_shop_cost:
-          type: string
-          description: Cost of gift shop purchases.
-        movie_cost:
-          type: string
-          description: Cost of movies.
-        health_club_cost:
-          type: string
-          description: Cost of health club services.
-        valet_parking_cost:
-          type: string
-          description: Cost of valet parking services.
-        cash_disbursement_cost:
-          type: string
-          description: Cost of the cash that was disbursed plus any associated service fees
-        non_room_cost:
-          type: string
-          description: Cost of non-room purchases, such as meals and gifts.
-        business_centre_cost:
-          type: string
-          description: Cost of business center services.
-        lounge_bar_cost:
-          type: string
-          description: Cost of lounge and bar purchases.
-        transportation_cost:
-          type: string
-          description: Cost of transportation services.
-        gratuity_cost:
-          type: string
-          description: Gratuity.
-        conference_room_cost:
-          type: string
-          description: Cost of conference room services.
-        audio_visual_cost:
-          type: string
-          description: Cost of audio visual services.
-        banquet_cost:
-          type: string
-          description: Cost of banquet services.
-        non_room_tax_amount:
-          type: string
-          description: Tax on non-room purchases.
-        early_check_out_cost:
-          type: string
-          description: Service fee for early departure.
-        internet_access_cost:
-          type: string
-          description: Cost of Internet access.
-    Details:
-      type: object
-    PaymentInformationResponseDTO:
-      type: object
-      properties:
-        accountType:
-          type: string
-        bin:
-          type: string
-        binCountry:
-          type: string
-        issuer:
-          type: string
-        scheme:
-          type: string
-    CybersourceDecisionManagerRequest:
-      type: object
-      properties:
-        device_information:
-          description: deviceInformation
-          $ref: '#/components/schemas/DeviceInformationDTO'
-        risk_information:
-          $ref: '#/components/schemas/RiskInformationDTO'
-        merchant_defined_information:
-          type: array
-          items:
-            $ref: '#/components/schemas/MerchantDefinedInformationDTO'
-    NetworkToken:
-      type: object
-      required:
-      - network_token
-      properties:
-        network_token:
-          type: string
-          description: The network token cryptogram representing the payment card.
-        create_network_token:
-          type: boolean
-          example: false
-          description: Whether to create a network token or not for the card. Defaults to 'false'. Setting it to 'true' will create the network token for the card.
-    PspErrorDTO:
-      type: object
-      properties:
-        apexx_return_code:
-          type: string
-          description: A return code assigned by the APEXX payment platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
-        apexx_return_message:
-          type: string
-          description: A return message assigned by the APEXX payment platform. Reason message will return if reason_code is not 0
-        field_reference:
-          type: string
-          description: Reference to field that caused an error.
-        psp_return_code:
-          type: string
-          description: A return code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
-        psp_return_message:
-          type: string
-          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
     ClientReferenceInformationDTO:
       type: object
       properties:
         code:
           type: string
-    Distance:
-      type: object
-      properties:
-        travelled:
-          type: string
-          description: Total number of miles driven by the customer
-        unit:
-          type: string
-          description: Miles/Kilometers Indicator shows whether the “miles” fields are expressed in miles or kilometers.
-          enum:
-          - K
-          - M
-        time_period:
-          type: string
-          description: Indicates the time period for which the vehicle rental rate applies (e.g., daily, weekly or monthly).
-          enum:
-          - Daily
-          - Weekly
-          - Monthly

@@ -69,19 +69,6 @@ paths:
         description: ' '
 components:
   schemas:
-    Errors:
-      type: object
-      properties:
-        error_code:
-          type: integer
-          format: int32
-          description: Error Code
-        property:
-          type: string
-          description: 'Property on which error occurs. e.g : it can be class name , field name'
-        error_message:
-          type: string
-          description: Error message
     FailureResponseDTO:
       type: object
       properties:
@@ -118,15 +105,6 @@ components:
         merchant_reference:
           type: string
           description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
-    EncryptedPayloadResponseDTO:
-      type: object
-      properties:
-        encryptedKey:
-          type: string
-          description: Encrypted key associated to the encrypted payload.
-        encryptedPayload:
-          type: string
-          description: Encrypted payload of all the fields sent in the request.
     EncryptedPayloadRequestDTO:
       type: object
       properties:
@@ -139,3 +117,25 @@ components:
         key3:
           type: string
           description: Value
+    EncryptedPayloadResponseDTO:
+      type: object
+      properties:
+        encryptedKey:
+          type: string
+          description: Encrypted key associated to the encrypted payload.
+        encryptedPayload:
+          type: string
+          description: Encrypted payload of all the fields sent in the request.
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
