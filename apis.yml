@@ -27,6 +27,12 @@ tags:
 - Company
 - Payments
 - Fintech
+- Orchestration
+- Global
+tags_raw:
+- Company
+- Payments
+- Fintech
 - API
 - Orchestration
 - Global
@@ -38,6 +44,9 @@ maintainers:
   email: info@apis.io
 
 common:
+- type: CapabilityMap
+  url: capabilities/apexxfintech-capability-edges.yml
+  name: Apexxfintech Business Capability Map
 - type: Spectral
   url: rules/apexxfintech-rules.yml
 - type: Vocabulary
