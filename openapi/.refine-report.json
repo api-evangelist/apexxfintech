@@ -23,7 +23,20 @@
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "apexxfintech-openapi.json: upgraded swagger 2.0 -> OpenAPI 3.2.0; renamed 20 component key(s) illegal in 3.x (e.g. BNPL:BillingAddress)",
-    "apis.yml register: written (+12 apis, 13 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "apexxfintech-alternative-payment-methods-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-buy-now-pay-later-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-create-and-manage-card-token-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-credit-transaction-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-get-transactions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-hosted-token-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-sdk-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-server-side-encryption-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-standalone-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-transaction-hosted-payment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-transaction-payment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apexxfintech-transaction-update-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

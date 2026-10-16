@@ -44,6 +44,9 @@ maintainers:
   email: info@apis.io
 
 common:
+- type: CapabilityMap
+  url: capabilities/apexxfintech-capability-edges.yml
+  name: Apexxfintech Business Capability Map
 - type: Spectral
   url: rules/apexxfintech-rules.yml
 - type: Vocabulary
@@ -304,6 +307,14 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/apexxfintech-transaction-update-api-openapi.yml
+x-coverage:
+  state: unreadable
+  reason: no-machine-readable-spec
+  method: derived
+  generated: '2026-09-25'
+  generator: derive-coverage.py (pre-flight evidence)
+  detail: the company publishes developer documentation but serves no machine-readable contract from it
+  evidence: apexx.global
 x-enrichment:
   date: '2026-09-25'
   status: enriched
