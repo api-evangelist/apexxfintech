@@ -69,6 +69,19 @@ paths:
         description: ' '
 components:
   schemas:
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
     FailureResponseDTO:
       type: object
       properties:
@@ -126,16 +139,3 @@ components:
         encryptedPayload:
           type: string
           description: Encrypted payload of all the fields sent in the request.
-    Errors:
-      type: object
-      properties:
-        error_code:
-          type: integer
-          format: int32
-          description: Error Code
-        property:
-          type: string
-          description: 'Property on which error occurs. e.g : it can be class name , field name'
-        error_message:
-          type: string
-          description: Error message

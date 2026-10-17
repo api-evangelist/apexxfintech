@@ -76,21 +76,6 @@ paths:
         required: true
 components:
   schemas:
-    BinIssuerCountry:
-      type: object
-      properties:
-        alpha2:
-          type: string
-          description: Two-letter ISO country code identifying the country of issuance.
-        alpha3:
-          type: string
-          description: Three-letter ISO country code identifying the country of issuance.
-        name:
-          type: string
-          description: Country name of the issuance.
-        numeric:
-          type: string
-          description: Issuer country code number.
     BinResponseDTO:
       type: object
       properties:
@@ -161,6 +146,21 @@ components:
         bin:
           type: string
           description: First 6 or 8 digits of a card number (BIN/IIN)
+    BinIssuerCountry:
+      type: object
+      properties:
+        alpha2:
+          type: string
+          description: Two-letter ISO country code identifying the country of issuance.
+        alpha3:
+          type: string
+          description: Three-letter ISO country code identifying the country of issuance.
+        name:
+          type: string
+          description: Country name of the issuance.
+        numeric:
+          type: string
+          description: Issuer country code number.
     FailureResponseDTO:
       type: object
       properties:

@@ -154,94 +154,25 @@ paths:
         description: ' '
 components:
   schemas:
-    PaypalEncryptedRequest:
-      type: object
-      required:
-      - amount
-      - capture_now
-      - merchant_reference
-      properties:
-        organisation:
-          type: string
-          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
-        currency:
-          type: string
-          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
-        amount:
-          type: number
-          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
-        capture_now:
-          type: string
-          description: True will auto-capture the transaction. False will only authorise the transaction.
-        dynamic_descriptor:
-          type: string
-          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
-        merchant_reference:
-          type: string
-          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
-        customer_ip:
-          type: string
-          description: The IP address of the customer
-        webhook_transaction_update:
-          type: string
-          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
-        shopper_interaction:
-          type: string
-          description: Determines the point of sale of a customer.
-          enum:
-          - ecommerce
-          - pos
-          - moto
-          - unknown
-        duplicate_check:
-          type: string
-          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
-        customer:
-          description: Customer details
-          $ref: '#/components/schemas/PaypalSDKCustomer'
-        order:
-          description: Order details
-          $ref: '#/components/schemas/SdkPaypalOrderIDTO'
-        paypal:
-          description: Paypal details
-          $ref: '#/components/schemas/PaypalSDK'
-        merchant_data:
-          description: Merchant Data
-          $ref: '#/components/schemas/MerchantData'
-        travel_data:
-          description: Travel data - data relating to hotel bookings, cruise/trip details/car rental/accomodation rental
-          $ref: '#/components/schemas/PaypalSDK_TravelData'
-    PaypalCustomerResponse:
+    Passengers:
       type: object
       properties:
-        billing:
-          description: BillingAddress
-          $ref: '#/components/schemas/BillingAddressDetails'
-        delivery:
-          description: DeliveryAddress
-          $ref: '#/components/schemas/DeliveryCustomerSDK'
-    PaypalSTC:
-      type: object
-      properties:
-        key:
-          type: string
-          description: The key for the pair
-        value:
-          type: string
-          description: The value for the pair
-    Errors:
-      type: object
-      properties:
-        error_code:
+        passenger_index:
           type: integer
           format: int32
-          description: Error Code
-        property:
+          description: Index number to identify passenger
+        salutation:
           type: string
-          description: 'Property on which error occurs. e.g : it can be class name , field name'
-        error_message:
+          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr", etc.
+        first_name:
           type: string
-          description: Error message
+          description: First name of the passenger
+        last_name:
+          type: string
+          description: Last name of the passenger
+        date_of_birth:
+          type: string
+          description: 'D.O.B. of passenger. Format: YYYY-MM-DD'
     PaypalSDK_TravelData:
       type: object
       properties:
@@ -450,6 +381,86 @@ components:
         affiliate_name:
           type: string
           description: Unique affiliate name identifier. This will help us support our merchant by attaching more details with the transaction.
+    Point:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type or category of points
+        scheme:
+          type: string
+          description: Name of points scheme provider
+        used:
+          type: integer
+          format: int32
+          description: Points used this transaction
+        balance:
+          type: integer
+          format: int32
+          description: Remaining points balance
+    PspInformation:
+      type: object
+      properties:
+        routing_sequence_id:
+          type: integer
+          format: int32
+        psp_id:
+          type: string
+          description: The ID of the payment service provider.
+        psp_name:
+          type: string
+          description: The name of the payment service provider as setup within the APEXX payment gateway.
+        apexx_name:
+          type: string
+          description: Name of the psp as setup within the APEXX payment gateway.
+        acquirer_name:
+          type: string
+          description: The name of the acquirer as setup within the APEXX payment gateway.
+        cascading_acquirer:
+          type: string
+          description: The name of the acquirer which declined/authorised the cascaded transaction.
+        organisation_psp_name:
+          type: string
+          description: The name of the processor as setup within the APEXX payment gateway. i.e. Merchant Name - Acquirer Name.
+        transport_method:
+          type: string
+        start_time_stamp:
+          type: string
+        end_time_stamp:
+          type: string
+        ellapsed_time:
+          type: string
+        status:
+          type: string
+          description: The status of the transaction as provided by the psp.
+        sub_status:
+          type: string
+        time_out:
+          type: integer
+          format: int32
+        response_code:
+          type: string
+          description: The response code received from the payment service provider for the transaction.
+        response_message:
+          type: string
+          description: The response message received from the payment service provider for the transaction.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PspErrorDTO'
+        mid_country:
+          type: string
+          description: The country setup for the “mid” used to process the transaction as setup within the APEXX payment gateway.
+        psp_transaction_reference:
+          type: string
+          description: The unique id provided by the payment service provider for the transaction.
+        category_code:
+          type: string
+        category_message:
+          type: string
+        reconciliation_id:
+          type: string
+          description: Reference number for the transaction generated by the PSP or Acquirer to provide end to end traceability for reconciliation purposes. Only supported by some PSP or Acquirers. Please speak to your implementation number to understand more.
     bnplLegs:
       type: object
       properties:
@@ -628,65 +639,6 @@ components:
         delivery:
           type: string
           description: 'Valid values: "delivery", "collection", "email". The way the item is being delivered'
-    PspErrorDTO:
-      type: object
-      properties:
-        apexx_return_code:
-          type: string
-          description: A return code assigned by the APEXX payment platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
-        apexx_return_message:
-          type: string
-          description: A return message assigned by the APEXX payment platform. Reason message will return if reason_code is not 0
-        field_reference:
-          type: string
-          description: Reference to field that caused an error.
-        psp_return_code:
-          type: string
-          description: A return code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
-        psp_return_message:
-          type: string
-          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
-    SdkPaypalOrderIDTO:
-      type: object
-      properties:
-        invoice_number:
-          type: string
-          description: Invoice id of the order
-        total_tax_amount:
-          type: string
-          description: The total tax for all items. Required if the request includes purchase_units.items.tax. Must equal the sum of (order.items[].tax_amount * order.items[].quantity) for all items.
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Items'
-    data:
-      type: object
-      properties:
-        key_name:
-          type: string
-          description: The name of the key for the key value pair. e.g. "meal type", "Extra Towels"
-        value:
-          type: string
-          description: The value for the key value pair. e.g. "vegitarian"
-    Insurance:
-      type: object
-      properties:
-        agency_name:
-          type: string
-          description: Name of insurer
-        type:
-          type: string
-          description: Type of insurance
-          enum:
-          - cancellation
-          - travel
-          - cancellation_travel
-          - car
-          - bankruptcy
-        amount:
-          type: integer
-          format: int32
-          description: Amount of order charged without a decimal place e.g. $1.50 = 150
     PaypalCompleteOrderFailureResponseDTO:
       type: object
       required:
@@ -715,231 +667,62 @@ components:
         trace_id:
           type: string
           description: Unique trace id created by APEXX platform to trace this request.
-    PaypalCompleteOrder:
+    Items:
       type: object
+      required:
+      - gross_unit_price
+      - item_description
+      - net_unit_price
+      - product_id
+      - quantity
       properties:
-        status:
+        distributor_sku:
           type: string
-          description: Status of the request.
-          enum:
-          - APPROVED
-          - FAILED
-          - CANCELLED
-    PaypalErrorResponseDTO:
-      type: object
-      properties:
-        _id:
+        item_name:
           type: string
-          description: This is the unique transaction id generated by Apexx.
-        code:
+        merchant_sku:
           type: string
-          description: An alphanumeric code which uniquely identify an error.
-        details:
+        product_id:
           type: string
-          description: Optional details concerning the error.
-        message:
+          description: Merchant Product identification number
+        group_id:
           type: string
-          description: A description of the response.
-        status:
+          description: Item group ID. The group this item belongs to. Provided by the merchant
+        item_description:
           type: string
-          description: It will indicate what is the final result of the request.
-        merchant_reference:
-          type: string
-          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
-        timestamp:
+          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
+        net_unit_price:
           type: integer
           format: int64
-          description: Current timestamp.
-    PaypalSDK:
-      type: object
-      properties:
-        funding_sources:
-          type: string
-          example: paypal, credit, venmo,paylater
-          description: Comma-separated Values
-          enum:
-          - paypal
-          - credit
-          - venmo
-          - paylater
-        page_type:
-          type: string
-          description: checkout,product
-          enum:
-          - checkout
-          - product
-        stc:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaypalSTC'
-    BillingAddressDetails:
-      type: object
-      properties:
-        first_name:
-          type: string
-          description: First name of the card holder
-        last_name:
-          type: string
-          description: Last name of the card holder
-        email:
-          type: string
-          description: Email address of the card holder
-        address:
-          type: string
-          description: Street address of the card holder
-        city:
-          type: string
-          description: City of the card holder
-        state:
-          type: string
-          description: A region / state / province for the address
-        postal_code:
-          type: string
-          description: A postal code for the address
-        country:
-          type: string
-          description: 'A 2-letter ISO3166 alpha-2. Country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
-        phone:
-          type: string
-          description: Numbers only, no dash or any other separator
-    EncryptedPayloadResponseDTO:
-      type: object
-      properties:
-        encryptedKey:
-          type: string
-          description: Encrypted key associated to the encrypted payload.
-        encryptedPayload:
-          type: string
-          description: Encrypted payload of all the fields sent in the request.
-    Passengers:
-      type: object
-      properties:
-        passenger_index:
-          type: integer
-          format: int32
-          description: Index number to identify passenger
-        salutation:
-          type: string
-          description: Salutation of the customer e.g. "Mr", "Mrs", "Dr", etc.
-        first_name:
-          type: string
-          description: First name of the passenger
-        last_name:
-          type: string
-          description: Last name of the passenger
-        date_of_birth:
-          type: string
-          description: 'D.O.B. of passenger. Format: YYYY-MM-DD'
-    MerchantData:
-      type: object
-      properties:
-        brand_name:
-          type: string
-          description: Merchant Brand name
-        custom_data:
-          type: object
-        website_url:
-          type: string
-          description: Merchant website.
-    FailureResponseDTO:
-      type: object
-      properties:
-        _id:
-          type: string
-          description: This is the unique transaction id generated by Apexx.
-        organisation_id:
-          type: string
-          description: The ID of an organisation.
-        code:
-          type: string
-          description: An alphanumeric code which uniquely identify an error.
-        status:
-          type: string
-          description: It will indicate what is the final result of the request.
-        message:
-          type: string
-          description: A description of the response.
-        timestamp:
+          description: 'Net unit price.
+
+
+            Note: net_unit_price is only required if the vat_percent is not provided.'
+        gross_unit_price:
           type: integer
           format: int64
-          description: Current timestamp.
-        details:
-          type: string
-          description: Optional details concerning the error.
-        errors:
-          type: array
-          description: Details of each error occured.
-          items:
-            $ref: '#/components/schemas/Errors'
-        trace_id:
-          type: string
-          description: Unique trace id created by APEXX platform to trace this request.
-        merchant_reference:
-          type: string
-          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
-    PspInformation:
-      type: object
-      properties:
-        routing_sequence_id:
+          description: Gross price per item
+        quantity:
           type: integer
-          format: int32
-        psp_id:
-          type: string
-          description: The ID of the payment service provider.
-        psp_name:
-          type: string
-          description: The name of the payment service provider as setup within the APEXX payment gateway.
-        apexx_name:
-          type: string
-          description: Name of the psp as setup within the APEXX payment gateway.
-        acquirer_name:
-          type: string
-          description: The name of the acquirer as setup within the APEXX payment gateway.
-        cascading_acquirer:
-          type: string
-          description: The name of the acquirer which declined/authorised the cascaded transaction.
-        organisation_psp_name:
-          type: string
-          description: The name of the processor as setup within the APEXX payment gateway. i.e. Merchant Name - Acquirer Name.
-        transport_method:
-          type: string
-        start_time_stamp:
-          type: string
-        end_time_stamp:
-          type: string
-        ellapsed_time:
-          type: string
-        status:
-          type: string
-          description: The status of the transaction as provided by the psp.
-        sub_status:
-          type: string
-        time_out:
+          format: int64
+          description: Quantity
+        vat_percent:
+          type: number
+          format: double
+          description: Tax percent
+        vat_amount:
           type: integer
-          format: int32
-        response_code:
+          format: int64
+          description: Tax amount per item
+        product_image_url:
           type: string
-          description: The response code received from the payment service provider for the transaction.
-        response_message:
+          description: URL for the image of this product. It will be turned into a thumbnail and displayed in MyAfterPay, on the invoice line next to the order item. The linked image must be a rectangle or square, width between 100 pixels and 1280 pixels.
+        product_url:
           type: string
-          description: The response message received from the payment service provider for the transaction.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/PspErrorDTO'
-        mid_country:
+          description: URL to the product
+        additional_information:
           type: string
-          description: The country setup for the “mid” used to process the transaction as setup within the APEXX payment gateway.
-        psp_transaction_reference:
-          type: string
-          description: The unique id provided by the payment service provider for the transaction.
-        category_code:
-          type: string
-        category_message:
-          type: string
-        reconciliation_id:
-          type: string
-          description: Reference number for the transaction generated by the PSP or Acquirer to provide end to end traceability for reconciliation purposes. Only supported by some PSP or Acquirers. Please speak to your implementation number to understand more.
+          description: Extended description of the order item
     PaypalSDKCustomer:
       type: object
       properties:
@@ -976,6 +759,50 @@ components:
         delivery:
           description: DeliveryAddress
           $ref: '#/components/schemas/DeliveryCustomerSDK'
+    Errors:
+      type: object
+      properties:
+        error_code:
+          type: integer
+          format: int32
+          description: Error Code
+        property:
+          type: string
+          description: 'Property on which error occurs. e.g : it can be class name , field name'
+        error_message:
+          type: string
+          description: Error message
+    PaypalSDK:
+      type: object
+      properties:
+        funding_sources:
+          type: string
+          example: paypal, credit, venmo,paylater
+          description: Comma-separated Values
+          enum:
+          - paypal
+          - credit
+          - venmo
+          - paylater
+        page_type:
+          type: string
+          description: checkout,product
+          enum:
+          - checkout
+          - product
+        stc:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaypalSTC'
+    data:
+      type: object
+      properties:
+        key_name:
+          type: string
+          description: The name of the key for the key value pair. e.g. "meal type", "Extra Towels"
+        value:
+          type: string
+          description: The value for the key value pair. e.g. "vegitarian"
     PaypalCompleteOrderResponce:
       type: object
       required:
@@ -1039,85 +866,188 @@ components:
         capture_id:
           type: string
           description: This is the unique capture identifier returned in the capture API as _id. Capture Id is a mandatory field for partial captures.
-    Items:
+    PaypalSTC:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key for the pair
+        value:
+          type: string
+          description: The value for the pair
+    BillingAddressDetails:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the card holder
+        last_name:
+          type: string
+          description: Last name of the card holder
+        email:
+          type: string
+          description: Email address of the card holder
+        address:
+          type: string
+          description: Street address of the card holder
+        city:
+          type: string
+          description: City of the card holder
+        state:
+          type: string
+          description: A region / state / province for the address
+        postal_code:
+          type: string
+          description: A postal code for the address
+        country:
+          type: string
+          description: 'A 2-letter ISO3166 alpha-2. Country code for the address. Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+        phone:
+          type: string
+          description: Numbers only, no dash or any other separator
+    PspErrorDTO:
+      type: object
+      properties:
+        apexx_return_code:
+          type: string
+          description: A return code assigned by the APEXX payment platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        apexx_return_message:
+          type: string
+          description: A return message assigned by the APEXX payment platform. Reason message will return if reason_code is not 0
+        field_reference:
+          type: string
+          description: Reference to field that caused an error.
+        psp_return_code:
+          type: string
+          description: A return code assigned by the acquiring platform; '0' in case of AUTHORISED/CAPTURED, see reason codes section for declined scenarios and error codes section for failed scenarios.
+        psp_return_message:
+          type: string
+          description: A reason message assigned by the acquiring platform. Reason message will return if reason_code is not 0
+    FailureResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        organisation_id:
+          type: string
+          description: The ID of an organisation.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+        message:
+          type: string
+          description: A description of the response.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        errors:
+          type: array
+          description: Details of each error occured.
+          items:
+            $ref: '#/components/schemas/Errors'
+        trace_id:
+          type: string
+          description: Unique trace id created by APEXX platform to trace this request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+    SdkPaypalOrderIDTO:
+      type: object
+      properties:
+        invoice_number:
+          type: string
+          description: Invoice id of the order
+        total_tax_amount:
+          type: string
+          description: The total tax for all items. Required if the request includes purchase_units.items.tax. Must equal the sum of (order.items[].tax_amount * order.items[].quantity) for all items.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Items'
+    PaypalEncryptedRequest:
       type: object
       required:
-      - gross_unit_price
-      - item_description
-      - net_unit_price
-      - product_id
-      - quantity
+      - amount
+      - capture_now
+      - merchant_reference
       properties:
-        distributor_sku:
+        organisation:
           type: string
-        item_name:
+          description: The ID of an organisation. Must be submitted along with currency if account is not used in the request.
+        currency:
           type: string
-        merchant_sku:
-          type: string
-        product_id:
-          type: string
-          description: Merchant Product identification number
-        group_id:
-          type: string
-          description: Item group ID. The group this item belongs to. Provided by the merchant
-        item_description:
-          type: string
-          description: Product name. For example "Black music player 64GB". Everything over 255 characters will be truncated
-        net_unit_price:
-          type: integer
-          format: int64
-          description: 'Net unit price.
-
-
-            Note: net_unit_price is only required if the vat_percent is not provided.'
-        gross_unit_price:
-          type: integer
-          format: int64
-          description: Gross price per item
-        quantity:
-          type: integer
-          format: int64
-          description: Quantity
-        vat_percent:
+          description: Currency using which transaction needs to be processed. Must be submitted if account is not used in the request. This field is ignored if submitted along with the account, Apexx uses the currency configured with the account to process the transaction when account is submitted. A 3-letter ISO 4217 currency code, see Currencies Section for more details.
+        amount:
           type: number
-          format: double
-          description: Tax percent
-        vat_amount:
-          type: integer
-          format: int64
-          description: Tax amount per item
-        product_image_url:
+          description: Amount is charged without a decimal place e.g. $1.50 = 150. Currencies can have different decimals/exponentials, see Currencies Section for more details.
+        capture_now:
           type: string
-          description: URL for the image of this product. It will be turned into a thumbnail and displayed in MyAfterPay, on the invoice line next to the order item. The linked image must be a rectangle or square, width between 100 pixels and 1280 pixels.
-        product_url:
+          description: True will auto-capture the transaction. False will only authorise the transaction.
+        dynamic_descriptor:
           type: string
-          description: URL to the product
-        additional_information:
+          description: A short reference/descriptor that will show up on the customers bank statement. Only supported by some acquirers. Please confirm with your Implementation Manager for supported acquirers and formats.
+        merchant_reference:
           type: string
-          description: Extended description of the order item
-    Point:
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        customer_ip:
+          type: string
+          description: The IP address of the customer
+        webhook_transaction_update:
+          type: string
+          description: 'A webhook url that is called when a transaction is updated. Note: This overrides any URL set on the account'
+        shopper_interaction:
+          type: string
+          description: Determines the point of sale of a customer.
+          enum:
+          - ecommerce
+          - pos
+          - moto
+          - unknown
+        duplicate_check:
+          type: string
+          description: This indicates the system whether to perform duplicate check on the transaction or not. A request is considered duplicate if the merchant_reference has already been used within last 24 hours.
+        customer:
+          description: Customer details
+          $ref: '#/components/schemas/PaypalSDKCustomer'
+        order:
+          description: Order details
+          $ref: '#/components/schemas/SdkPaypalOrderIDTO'
+        paypal:
+          description: Paypal details
+          $ref: '#/components/schemas/PaypalSDK'
+        merchant_data:
+          description: Merchant Data
+          $ref: '#/components/schemas/MerchantData'
+        travel_data:
+          description: Travel data - data relating to hotel bookings, cruise/trip details/car rental/accomodation rental
+          $ref: '#/components/schemas/PaypalSDK_TravelData'
+    Insurance:
       type: object
       properties:
+        agency_name:
+          type: string
+          description: Name of insurer
         type:
           type: string
-          description: The type or category of points
-        scheme:
-          type: string
-          description: Name of points scheme provider
-        used:
+          description: Type of insurance
+          enum:
+          - cancellation
+          - travel
+          - cancellation_travel
+          - car
+          - bankruptcy
+        amount:
           type: integer
           format: int32
-          description: Points used this transaction
-        balance:
-          type: integer
-          format: int32
-          description: Remaining points balance
-    RouteStops:
-      type: object
-      properties:
-        stop:
-          type: string
-          description: Location of stop off
+          description: Amount of order charged without a decimal place e.g. $1.50 = 150
     DeliveryCustomerSDK:
       type: object
       properties:
@@ -1167,6 +1097,42 @@ components:
           - GET_FROM_FILE
           - NO_SHIPPING
           - SET_PROVIDED_ADDRESS
+    EncryptedPayloadResponseDTO:
+      type: object
+      properties:
+        encryptedKey:
+          type: string
+          description: Encrypted key associated to the encrypted payload.
+        encryptedPayload:
+          type: string
+          description: Encrypted payload of all the fields sent in the request.
+    RouteStops:
+      type: object
+      properties:
+        stop:
+          type: string
+          description: Location of stop off
+    MerchantData:
+      type: object
+      properties:
+        brand_name:
+          type: string
+          description: Merchant Brand name
+        custom_data:
+          type: object
+        website_url:
+          type: string
+          description: Merchant website.
+    PaypalCompleteOrder:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the request.
+          enum:
+          - APPROVED
+          - FAILED
+          - CANCELLED
     Agency:
       type: object
       properties:
@@ -1203,3 +1169,37 @@ components:
 
 
             . Note: Alphabets upto two characters (e.g. GB, RU etc..)'
+    PaypalCustomerResponse:
+      type: object
+      properties:
+        billing:
+          description: BillingAddress
+          $ref: '#/components/schemas/BillingAddressDetails'
+        delivery:
+          description: DeliveryAddress
+          $ref: '#/components/schemas/DeliveryCustomerSDK'
+    PaypalErrorResponseDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: This is the unique transaction id generated by Apexx.
+        code:
+          type: string
+          description: An alphanumeric code which uniquely identify an error.
+        details:
+          type: string
+          description: Optional details concerning the error.
+        message:
+          type: string
+          description: A description of the response.
+        status:
+          type: string
+          description: It will indicate what is the final result of the request.
+        merchant_reference:
+          type: string
+          description: A reference specified by the merchant to identify the transaction. Please ensure the reference is unique per transaction.
+        timestamp:
+          type: integer
+          format: int64
+          description: Current timestamp.
