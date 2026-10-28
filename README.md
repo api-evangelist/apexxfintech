@@ -64,5 +64,119 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Apexxfintech is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://equityzen.com/company/apexxfintech
+Apexxfintech provides a cloud‑native payment orchestration platform that consolidates global payment providers into a single integration point. It offers intelligent routing, cost routing, decline cascading, network tokenisation, and a suite of APIs for merchants to optimise transaction processing, reduce costs, and improve acceptance rates across multiple regions and payment methods.
+
+**Areas:** Company · Payments · Fintech · Orchestration · Global
+
+## Apexxfintech on APIs.io
+
+Everything profiled for Apexxfintech is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/apexxfintech/](https://apis.io/providers/apexxfintech/)** — or go straight to one of the APIs or properties below.
+
+### APIs (13)
+
+- [Apexx API](https://apis.io/apis/apexxfintech/apexx-api/) — Apexx provides a payment orchestration platform with APIs for merchants.
+- [Apexxfintech Alternative Payment Methods API](https://apis.io/apis/apexxfintech/apexxfintech-alternative-payment-methods-api/) — The Alternative Payment Methods API from Apexxfintech — 13 operation(s) for alternative payment methods.
+- [Apexxfintech Buy Now Pay Later API](https://apis.io/apis/apexxfintech/apexxfintech-buy-now-pay-later-api/) — BNPL Controller
+- [Apexxfintech Create And Manage Card Token API](https://apis.io/apis/apexxfintech/apexxfintech-create-and-manage-card-token-api/) — The Create And Manage Card Token API from Apexxfintech — 3 operation(s) for create and manage card token.
+- [Apexxfintech Credit Transaction API](https://apis.io/apis/apexxfintech/apexxfintech-credit-transaction-api/) — The Credit Transaction API from Apexxfintech — 2 operation(s) for credit transaction.
+- [Apexxfintech Get Transactions API](https://apis.io/apis/apexxfintech/apexxfintech-get-transactions-api/) — The Get Transactions API from Apexxfintech — 2 operation(s) for get transactions.
+- [Apexxfintech Hosted Token API](https://apis.io/apis/apexxfintech/apexxfintech-hosted-token-api/) — Hosted Token Controller
+- [Apexxfintech SDK API](https://apis.io/apis/apexxfintech/apexxfintech-sdk-api/) — <h2>JavaScript SDK Integration 1.0.0 </h2> The Apexx Payment Integration SDK is a comprehensive solution designed to streamline payment processing for…
+- [Apexxfintech SERVER-SIDE ENCRYPTION API](https://apis.io/apis/apexxfintech/apexxfintech-server-side-encryption-api/) — Server Side Encryption Controller
+- [Apexxfintech STANDALONE SERVICES API](https://apis.io/apis/apexxfintech/apexxfintech-standalone-services-api/) — The STANDALONE SERVICES API from Apexxfintech — 1 operation(s) for standalone services.
+- [Apexxfintech Transaction Hosted Payment API](https://apis.io/apis/apexxfintech/apexxfintech-transaction-hosted-payment-api/) — The Transaction Hosted Payment API from Apexxfintech — 4 operation(s) for transaction hosted payment.
+- [Apexxfintech Transaction Payment API](https://apis.io/apis/apexxfintech/apexxfintech-transaction-payment-api/) — The Transaction Payment API from Apexxfintech — 3 operation(s) for transaction payment.
+- [Apexxfintech Transaction Update API](https://apis.io/apis/apexxfintech/apexxfintech-transaction-update-api/) — The Transaction Update API from Apexxfintech — 6 operation(s) for transaction update.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [apexxfintech-mcp.yml](https://apis.io/servers/apexxfintech/apexxfintech-mcp-yml/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Apexxfintech Openapi Overlay](https://apis.io/overlays/apexxfintech/apexxfintech-openapi-overlay/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Apexxfintech API Rules](https://apis.io/rules/apexxfintech/apexxfintech-rules/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Apexxfintech Authentication](https://apis.io/security/apexxfintech/apexxfintech-authentication/)
+- [Apexxfintech Domain Security](https://apis.io/security/apexxfintech/apexxfintech-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://equityzen.com/company/apexxfintech)
+- [API reference](https://sandbox.apexx.global/atomic/redoc/api/doc)
+- [Support](https://support.apexx.global/support/home/)
+- [Blog](https://apexx.global/blog)
+- [Terms of service](https://apexx.global/terms-and-conditions/)
+- [Privacy policy](https://apexx.global/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 27.6** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 53.6 |
+| Contract quality | 42.7 |
+| Contract governance | 19.7 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 26.2 |
+| Access clarity | 21.1 |
+
+**Agent readiness 22.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 22.3** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/apexxfintech/](https://apis.io/providers/apexxfintech/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Apexxfintech: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/apexxfintech/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
